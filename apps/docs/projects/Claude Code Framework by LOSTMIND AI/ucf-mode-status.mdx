@@ -1,0 +1,191 @@
+---
+title: "Ucf Mode Status"
+description: "Check current SDLC mode and project development status"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-status
+
+## Your Role: SDLC Mode Status Reporter
+
+This command displays the current SDLC mode and provides context about the project's development stage and Claude's current behavioral configuration.
+
+## Your Workflow
+
+1. **Check Project Setup**: Verify project has been onboarded
+   ```bash
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Extract the current mode information
+
+3. **Parse Mode Section**: Look for the "CURRENT SDLC MODE" section
+
+4. **Display Status Report**: Show comprehensive mode and project status
+
+## Status Information to Display
+
+### Current Mode Detection
+Extract and display:
+- **Current SDLC Mode**: [IDEA/DESIGN/DEV/TEST/PROD/NOT SET]
+- **Mode Set**: [Timestamp when mode was last changed]
+- **Mode Context**: [Description of current phase]
+
+### Mode-Specific Status
+
+**For IDEA Mode:**
+```
+🎯 IDEA Mode Active
+   • Focus: Exploration and decision-making
+   • Behavior: Research, discuss, analyze (no implementation)
+   • Last Activity: [Timestamp from Guardian context]
+```
+
+**For DESIGN Mode:**
+```
+🏗️ DESIGN Mode Active
+   • Focus: Architecture planning and technical specification
+   • Behavior: Plan, document, verify, specify
+   • Design Artifacts: [List key files created]
+```
+
+**For DEV Mode:**
+```
+⚙️ DEV Mode Active
+   • Focus: Active development and implementation
+   • Behavior: Code, test, configure (full technical assistance)
+   • Development Status: [Files created, features implemented]
+```
+
+**For TEST Mode:**
+```
+🔍 TEST Mode Active
+   • Focus: Quality assurance and validation
+   • Behavior: Test, lint, secure, optimise
+   • Quality Status: [Last test results summary]
+```
+
+**For PROD Mode:**
+```
+🚀 PROD Mode Active
+   • Focus: Production deployment preparation
+   • Behavior: Maximum quality standards (zero compromise)
+   • Readiness Status: [Production checklist completion]
+```
+
+### Project Health Overview
+
+Display additional context:
+- **Guardian Integration**: [Active/Inactive]
+- **Last Context Update**: [Timestamp]
+- **Project Type**: [Detected from PROJECT_MAP.md]
+- **API Verification Status**: [Current/Needs Update]
+
+## Expected Output Format
+
+```
+📊 SDLC Mode Status Report
+========================
+
+🎯 Current Mode: DEV
+   Set: 2025-09-20 14:30:25
+   Context: Active development and implementation phase
+
+⚙️ DEV Mode Behaviors:
+   • Creating complete implementations with tests
+   • Handling dependencies and setup automatically
+   • Including proper error handling
+   • Following quality standards
+   • Filling technical implementation gaps
+
+📋 Project Overview:
+   • Guardian Context: Active (last updated 2 hours ago)
+   • Project Type: AI/ML Application
+   • API Verification: Current (verified today)
+   • Files Modified Today: 8
+   • Last Quality Check: Not run
+
+💡 Available Mode Commands:
+   • /ucf-mode-idea - Switch to exploration mode
+   • /ucf-mode-design - Switch to architecture planning
+   • /ucf-mode-dev - Continue development (current)
+   • /ucf-mode-test - Begin quality assurance
+   • /ucf-mode-prod - Prepare for production
+
+🔄 Next Suggested Action:
+   Based on current development progress, consider running /ucf-mode-test
+   to validate recent changes before continuing.
+```
+
+## Mode Recommendations
+
+Based on detected project state, suggest appropriate mode transitions:
+
+**If no recent activity in current mode:**
+- Suggest reviewing mode appropriateness
+- Recommend mode that matches current needs
+
+**If quality issues detected:**
+- Recommend switching to TEST mode
+- Highlight specific issues to address
+
+**If ready for deployment:**
+- Suggest PROD mode transition
+- Show production readiness checklist
+
+## Integration Information
+
+**Guardian Context Integration:**
+- Show last context synthesis
+- Display recent conversation patterns
+- Indicate context freshness level
+
+**Quality Metrics:**
+- Last linting results
+- Test coverage (if available)
+- Dependency status
+- Security scan results
+
+## Error Handling
+
+**If no mode is set:**
+```
+⚠️ No SDLC mode currently set
+
+🎯 Available modes:
+   • /ucf-mode-idea - Start with exploration
+   • /ucf-mode-design - Begin architecture planning
+   • /ucf-mode-dev - Jump into development
+   • /ucf-mode-test - Focus on quality assurance
+   • /ucf-mode-prod - Prepare for production
+
+💡 Recommendation: Start with /ucf-mode-idea to explore your project goals
+```
+
+**If mode section is corrupted:**
+```
+❌ Mode information corrupted in .claude/CLAUDE.md
+
+🔧 To fix: Run any /ucf-mode-* command to reset mode configuration
+```
+
+## Benefits
+
+- **Instant Context**: Understand current development stage
+- **Mode Appropriateness**: Verify Claude's behavioral configuration
+- **Progress Tracking**: See development progress and next steps
+- **Quality Overview**: Quick health check of project status
+- **Smart Recommendations**: Suggested next actions based on context
+
+This command helps maintain awareness of where 
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,151 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "guide"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# 🚀 LostMind AI TurboRepo Integration Guide for Ask App
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🧠 RAG Guide](RAG_EMBEDDINGS_INTEGRATION_GUIDE.md)**
+
+**TARGET PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/ask.lostmindai.com/LostMind-AI---Orb-2.0-1`
+
+## 📋 Mission Overview
+
+You are tasked with preparing the **Ask App** (LostMind AI Orb 2.0) for seamless integration into our new **LostMind AI TurboRepo** monorepo architecture. This integration will transform a standalone Next.js application into a modern monorepo package while maintaining all existing functionality.
+
+## 🎯 Integration Objectives
+
+### Primary Goals
+1. **Migrate** the Ask App into `apps/ask/` within the TurboRepo structure
+2. **Refactor** to use shared packages (UI components, auth, database, etc.)  
+3. **Maintain** existing functionality and user experience
+4. **Optimize** for monorepo development workflow
+5. **Prepare** for production deployment on Vercel
+
+### Success Criteria
+- ✅ App runs successfully within TurboRepo structure
+- ✅ Uses shared @lostmind/* packages instead of duplicated code
+- ✅ Maintains existing AI functionality and UI/UX
+- ✅ Integrates with shared authentication and database
+- ✅ Follows monorepo conventions and best practices
+
+## 🏗️ Target Architecture Analysis
+
+### Current TurboRepo Structure
+```
+LostMindAI-TurboRepo/
+├── apps/
+│   ├── marketing/          # Main landing site
+│   ├── ask/               # ← YOUR TARGET LOCATION
+│   ├── chatcrawler/       # Web crawling chat
+│   ├── justdropit/        # Document processing
+│   └── admin/             # Internal admin
+├── packages/
+│   ├── ui/                # Shared shadcn/ui components
+│   ├── config/            # ESLint, TypeScript, Tailwind configs
+│   ├── auth/              # Auth.js v5 implementation
+│   ├── db/                # Prisma schema + client
+│   ├── billing/           # Stripe integration
+│   ├── ai-clients/        # Google Generative AI abstraction
+│   ├── rag/               # RAG utilities with pgvector
+│   └── utils/             # Shared utilities
+└── services/
+    ├── document-processor/ # FastAPI PDF processing
+    ├── crawler-engine/     # FastAPI web scraping
+    └── ai-compute/         # FastAPI ML operations
+```
+
+### Tech Stack Alignment
+- **Frontend**: Next.js 15 (App Router) + React 19 + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui components from `@lostmind/ui`
+- **Authentication**: Auth.js v5 via `@lostmind/auth` 
+- **Database**: PostgreSQL + Prisma via `@lostmind/db`
+- **AI**: Google Generative AI via `@lostmind/ai-clients`
+- **Payments**: Stripe via `@lostmind/billing`
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Project Preparation & Analysis
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New Ongoing Projects/ask.lostmindai.com/LostMind-AI---Orb-2.0-1
+   git checkout -b integration/turbo-repo-migration
+   ```
+
+2. **Analyze Current Dependencies**
+   - Identify all npm packages currently used
+   - Map dependencies to shared packages in TurboRepo
+   - Document custom components that need migration
+   - List API routes and their functionality
+
+3. **Document Current Features**
+   - AI query interface functionality
+   - Authentication system (if any)
+   - Database models and operations
+   - UI components and styling approach
+   - Environment variables and configuration
+
+### Phase 2: Code Analysis & Mapping
+1. **Component Inventory**
+   - List all React components
+   - Identify components that can use `@lostmind/ui`
+   - Note custom components that need to be created/migrated
+
+2. **API Route Analysis**
+   - Document all API endpoints
+   - Identify database operations
+   - Note AI integration patterns
+   - Map authentication requirements
+
+3. **Dependency Mapping**
+   ```typescript
+   // Current Ask App → TurboRepo Package Mapping
+   // UI Components → @lostmind/ui
+   // Auth Logic → @lostmind/auth  
+   // Database → @lostmind/db
+   // AI Clients → @lostmind/ai-clients
+   // Utils → @lostmind/utils
+   ```
+
+### Phase 3: Migration Execution
+1. **Setup App Structure**
+   ```bash
+   # Copy app to TurboRepo (will be done by main Claude instance)
+   # Create: /Users/sumitm1/Documents/New Ongoing Projects/LostMindAI-TurboRepo/apps/ask/
+   ```
+
+2. **Package.json Configuration**
+   ```json
+   {
+     "name": "@lostmind/ask",
+     "version": "0.0.0",
+     "private": true,
+     "scripts": {
+       "dev": "next dev --port 3001",
+       "build": "next build",
+       "start": "next start",
+       "lint": "next lint",
+       "type-check": "tsc --noEmit"
+     },
+     "dependencies": {
+       "@lostmind/ui": "workspace:*",
+       "@lostmind/auth": "workspace:*",
+       "@lostmind/db": "workspace:*",
+       "@lostmind/ai-clients": "workspace:*",
+       "@lostmind/utils": "workspace:*",
+       "next": "15.0.0",
+       "react": "^19.0.0",
+       "react-dom": "^19.0.0"
+     }
+   }
+   ```
+
+3. **Configuration Updates**
+  
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

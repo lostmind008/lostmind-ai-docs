@@ -1,0 +1,249 @@
+---
+title: "API Documentation"
+description: "api-reference for Back End Architecture for Turborepo with RAG Embeddings"
+category: "api-reference"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "api-reference,main-platform"
+---
+
+# API Documentation
+
+This document provides comprehensive documentation for the Backend Intelligence API, which offers a unified interface to all backend services including RAG, Excel Intelligence, Web Scraping, and Job Discovery services.
+
+## Base URL
+
+```
+https://your-api-gateway-url.com
+```
+
+## Authentication
+
+All API endpoints require Bearer Token authentication. Include the token in the `Authorization` header:
+
+```
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+## Rate Limiting
+
+Rate limits are applied per IP address. The default rate limits are:
+
+- **General:** 100 requests per minute
+- **RAG Queries:** 30 requests per minute
+- **Document Ingestion:** 10 requests per minute
+- **Excel Analysis:** 5 requests per minute
+- **Web Scraping:** 3 requests per minute
+- **Job Discovery:** 5 requests per minute
+
+If you exceed the rate limit, you will receive a `429 Too Many Requests` response.
+
+---
+
+## RAG Service Endpoints
+
+### `POST /api/v1/rag/query`
+
+Process a RAG query and generate a response.
+
+**Request Body:**
+
+```json
+{
+  "query": "What are the latest trends in AI?",
+  "conversation_id": "conv_12345",
+  "top_k_documents": 5,
+  "similarity_threshold": 0.7,
+  "stream_response": false
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "response": "The latest trends in AI include...",
+  "sources": [
+    {
+      "content": "...",
+      "metadata": {
+        "title": "AI Trends 2025",
+        "source": "https://example.com/ai-trends"
+      },
+      "score": 0.85
+    }
+  ],
+  "conversation_id": "conv_12345",
+  "query": "What are the latest trends in AI?",
+  "processing_time": 2.5,
+  "token_usage": {
+    "prompt_tokens": 512,
+    "completion_tokens": 256
+  },
+  "confidence_score": 0.9
+}
+```
+
+### `POST /api/v1/rag/ingest`
+
+Ingest a document into the RAG system.
+
+**Request Body:**
+
+```json
+{
+  "content": "This is the content of the document to be ingested.",
+  "metadata": {
+    "source": "internal_document",
+    "author": "John Doe"
+  },
+  "title": "My Document"
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "status": "success",
+  "document_id": "doc_67890",
+  "title": "My Document",
+  "chunks_created": 3,
+  "processing_time": 1.2
+}
+```
+
+---
+
+## Excel Intelligence Endpoints
+
+### `POST /api/v1/excel/analyze`
+
+Analyze an Excel file and get comprehensive insights.
+
+**Request Body:**
+
+```json
+{
+  "file_path": "/path/to/your/excel_file.xlsx"
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "file_name": "excel_file.xlsx",
+  "overall_complexity": 6.5,
+  "worksheets": [
+    {
+      "name": "Sheet1",
+      "row_count": 100,
+      "column_count": 20,
+      "formula_count": 50
+    }
+  ],
+  "formulas": [
+    {
+      "formula": "=SUM(A1:A10)",
+      "cell_reference": "B1",
+      "complexity_score": 1.5,
+      "description": "Calculates the sum of range A1:A10."
+    }
+  ],
+  "summary": "The Excel file contains...",
+  "recommendations": [
+    "Consider simplifying high-complexity formulas."
+  ]
+}
+```
+
+---
+
+## Web Scraping Endpoints
+
+### `POST /api/v1/scraping/analyze`
+
+Scrape and analyze a website.
+
+**Request Body:**
+
+```json
+{
+  "url": "https://example.com",
+  "max_depth": 2,
+  "max_pages": 10
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "target": {
+    "url": "https://example.com"
+  },
+  "pages_scraped": [
+    {
+      "url": "https://example.com",
+      "title": "Example Domain",
+      "content": "...",
+      "page_type": "homepage",
+      "quality_score": 8.5
+    }
+  ],
+  "statistics": {
+    "pages_scraped_successfully": 10,
+    "success_rate": 1.0
+  },
+  "analysis_summary": "Scraped 10 pages successfully..."
+}
+```
+
+---
+
+## Job Discovery Endpoints
+
+### `POST /api/v1/jobs/discover`
+
+Discover and analyze job opportunities.
+
+**Request Body:**
+
+```json
+{
+  "keywords": ["Software Engineer", "Python"],
+  "location": "San Francisco, CA",
+  "remote_ok": true
+}
+```
+
+**Response (200 OK):**
+
+```json
+{
+  "total_jobs_found": 50,
+  "jobs_analyzed": [
+    {
+      "title": "Senior Software Engineer",
+      "company": "Tech Corp",
+      "location": "San Francisco, CA",
+      "match_score": 85.5,
+      "ai_summary": "This job is a great fit..."
+    }
+  ],
+  "market_trends": {
+    "remote_percentage": 60.0
+  },
+  "skill_demand": {
+    "python": 45,
+    "react": 30
+  }
+}
+```
+
+
+
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

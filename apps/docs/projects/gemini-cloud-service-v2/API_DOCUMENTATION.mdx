@@ -1,0 +1,263 @@
+---
+title: "API DOCUMENTATION"
+description: "api-reference for gemini-cloud-service-v2"
+category: "api-reference"
+project: "gemini-cloud-service-v2"
+lastUpdated: "2025-09-21"
+tags: "api-reference,backend-services"
+---
+
+# Gemini Cloud Service V2 - API Documentation
+
+## Base URL
+```
+https://gemini-processor-v2-1036747351658.us-central1.run.app
+```
+
+## Authentication
+Currently, the service is open access. Future versions will support API key authentication via the `X-API-Key` header.
+
+## Endpoints
+
+### 1. Health Check
+Check service status and capabilities.
+
+**Endpoint:** `GET /`
+
+**Response:**
+```json
+{
+  "service": "Gemini Cloud Service V2",
+  "status": "healthy",
+  "version": "2.0.0",
+  "capabilities": {
+    "file_types": ["pdf", "txt", "rtf", "docx", "mp4", "mp3", "..."],
+    "features": [
+      "YouTube URL processing (with limitations)",
+      "Google Search grounding (with proper API access)",
+      "Code analysis",
+      "All file types",
+      "Structured output",
+      "Caching"
+    ],
+    "models": {
+      "stable": "gemini-2.5-flash",
+      "multimodal": "gemini-1.5-pro"
+    }
+  },
+  "cached_results": 0
+}
+```
+
+### 2. Universal Processing
+Process any type of file or URL with Gemini.
+
+**Endpoint:** `POST /process`
+
+**Request Body:**
+```json
+{
+  "file_source": "string",  // Required: URL, file path, or base64 data
+  "file_type": "string",    // Optional: auto-detected if not provided
+  "prompt": "string",       // Required: instruction for processing
+  "features": {             // Optional: advanced features
+    "grounding": false,
+    "code_execution": false,
+    "youtube_chapters": true,
+    "structured_output": null,
+    "temperature": 0.7,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain"
+  },
+  "cache_enabled": true     // Optional: use caching (default: true)
+}
+```
+
+**File Source Formats:**
+- **URL**: `https://example.com/document.pdf`
+- **YouTube**: `https://youtube.com/watch?v=VIDEO_ID`
+- **Base64**: `data:application/pdf;base64,BASE64_CONTENT`
+- **File Path**: `/path/to/file.txt` (for local development)
+
+**Response:**
+```json
+{
+  "success": true,
+  "result": "Analysis results here...",
+  "metadata": {
+    "source_type": "url",
+    "file_type": "document",
+    "prompt_length": 45,
+    "processing_time": 3.456,
+    "features_used": {
+      "grounding": false,
+      "temperature": 0.7
+    },
+    "cache_hit": false
+  },
+  "cache_key": "abc123..."
+}
+```
+
+### 3. YouTube Processing
+Specialized endpoint for YouTube video analysis.
+
+**Endpoint:** `POST /youtube`
+
+**Request Body:**
+```json
+{
+  "url": "https://youtube.com/watch?v=VIDEO_ID",
+  "prompt": "Summarize the key points",
+  "features": {
+    "temperature": 0.7,
+    "max_output_tokens": 8192
+  },
+  "extract_captions": true,
+  "time_range": {
+    "start": 0,
+    "end": 300  // seconds
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "video_id": "VIDEO_ID",
+  "analysis": "Video analysis results...",
+  "metadata": {
+    "model": "gemini-2.5-flash",
+    "features_used": {...}
+  }
+}
+```
+
+### 4. Code Analysis
+Analyze and improve code snippets.
+
+**Endpoint:** `POST /code`
+
+**Request Body:**
+```json
+{
+  "code": "def hello():\n    print('world')",
+  "language": "python",
+  "prompt": "Optimize this function",
+  "test_inputs": [1, 2, 3],
+  "execute": true
+}
+```
+
+**Supported Languages:**
+- Python, JavaScript, Java, C++, C, Go, Rust, PHP, Ruby, Swift, Kotlin, Scala, SQL, YAML
+
+**Response:**
+```json
+{
+  "success": true,
+  "language": "python",
+  "original_code": "...",
+  "analysis": "Code analysis and improvements...",
+  "improvements": "See analysis above"
+}
+```
+
+### 5. Research Assistant
+Research topics with comprehensive analysis.
+
+**Endpoint:** `POST /research`
+
+**Form Data:**
+- `topic` (required): Topic to research
+- `depth` (optional): "quick", "moderate", "comprehensive" (default)
+- `include_citations` (optional): true/false (default: true)
+
+**Response:**
+```json
+{
+  "topic": "quantum computing",
+  "depth": "comprehensive",
+  "research": "Detailed research report...",
+  "model": "gemini-2.5-flash"
+}
+```
+
+## Supported File Types
+
+### Documents
+- PDF (`.pdf`)
+- Plain Text (`.txt`)
+- Markdown (`.md`)
+- Rich Text Format (`.rtf`)
+- Microsoft Word (`.doc`, `.docx`)
+- HTML (`.html`)
+- XML (`.xml`)
+- JSON (`.json`)
+- CSV (`.csv`)
+
+### Images
+- PNG (`.png`)
+- JPEG (`.jpg`, `.jpeg`)
+- WebP (`.webp`)
+- HEIC/HEIF (`.heic`, `.heif`)
+
+### Videos
+- MP4 (`.mp4`)
+- AVI (`.avi`)
+- MOV (`.mov`)
+- MKV (`.mkv`)
+- WebM (`.webm`)
+- FLV (`.flv`)
+- WMV (`.wmv`)
+- MPG/MPEG (`.mpg`, `.mpeg`)
+- 3GP/3GPP (`.3gp`, `.3gpp`)
+
+### Audio
+- MP3 (`.mp3`)
+- WAV (`.wav`)
+- M4A (`.m4a`)
+- AAC (`.aac`)
+- OGG (`.ogg`)
+- FLAC (`.flac`)
+- WMA (`.wma`)
+- AIFF (`.aiff`)
+- Opus (`.opus`)
+
+### Code Files
+- Python (`.py`)
+- JavaScript (`.js`)
+- Java (`.java`)
+- C++ (`.cpp`)
+- C (`.c`)
+- Go (`.go`)
+- Rust (`.rs`)
+- PHP (`.php`)
+- Ruby (`.rb`)
+- Swift (`.swift`)
+- Kotlin (`.kt`)
+- Scala (`.scala`)
+- Shell (`.sh`)
+- SQL (`.sql`)
+- YAML (`.yaml`, `.yml`)
+
+## Error Handling
+
+All endpoints return consistent error responses:
+
+```json
+{
+  "success": false,
+  "error": "Error description",
+  "error_type": "ValueError",
+  "processing_time": 0.123
+}
+```
+
+Common HTTP status codes:
+- `200`: Success
+- `4
+
+---
+*This content was automatically extracted from gemini-cloud-service-v2. For the most up-to-date information, refer to the source project.*

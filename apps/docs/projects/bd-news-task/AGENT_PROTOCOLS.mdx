@@ -1,0 +1,159 @@
+---
+title: "AGENT PROTOCOLS"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# AGENT PROTOCOLS: Autonomous Multi-Agent Communication
+
+## 📋 DOCUMENT OVERVIEW
+
+**Document Version:** 1.0  
+**Created:** 2025-08-12T21:00:00 (Australia/Sydney)  
+**Purpose:** Phase 1.5 Critical Deliverable - Agent communication protocols for autonomous operation  
+**Client:** Animesh Kar (get.mitun@gmail.com)  
+**System:** Multi-agent autonomous news extraction platform  
+
+**AUTONOMOUS OPERATION REQUIREMENT:**
+System must operate completely autonomously via terminal command with zero external intervention:
+```bash
+python news_extraction_app.py --websites "url1,url2" --max-articles 50
+```
+
+## 🔄 AGENT COMMUNICATION ARCHITECTURE
+
+### Multi-Agent Coordination Flow
+
+```
+Terminal Command → Autonomous Orchestrator → Agent Coordination → Results Output
+       ↓                     ↓                      ↓               ↓
+User Input              Message Bus              4 Specialized     Local File
+Validation           State Management           Agent Pipeline     Organization
+Error Recovery       Performance Monitor       Progress Report    Optional GCS
+```
+
+### Agent Pipeline Sequence
+
+```
+1. ReconnaissanceAgent  → Analyzes website structure and strategy
+                        ↓
+2. DiscoveryAgent      → Finds and validates news article links  
+                        ↓
+3. ExtractionAgent     → Extracts clean RAW content from articles (NO ANALYSIS)
+                        ↓
+4. StorageAgent        → Organizes in local directory, optional GCS backup
+```
+
+### CRITICAL PROCESSING BOUNDARY
+**ExtractionAgent Scope Limitation:**
+- PERMITTED: HTML parsing, ad removal, text cleaning, format conversion
+- FORBIDDEN: Content analysis, summarization, categorization, sentiment analysis
+- DELIVERABLE: Raw extracted text in multiple formats only
+
+### CRITICAL STORAGE BOUNDARY
+**StorageAgent Priority:**
+- PRIMARY: Local `/output/` directory with organized folder structure (REQUIRED)
+- SECONDARY: GCS backup (OPTIONAL - only if credentials available)
+- FAILURE MODE: Must succeed with local storage even if GCS fails
+
+## 🧠 AUTONOMOUS ORCHESTRATOR PROTOCOL
+
+### Central Coordination Engine
+
+```python
+class AutonomousOrchestrator:
+    """
+    Central coordination engine for autonomous multi-agent operation
+    Manages agent lifecycle, message routing, and system state
+    """
+    
+    def __init__(self):
+        self.message_bus = AutonomousMessageBus()
+        self.state_manager = SharedStateManager()
+        self.performance_monitor = PerformanceMonitor()
+        self.agents = {}
+        self.system_status = "initializing"
+        
+    async def initialize_system(self, config: Dict) -> Dict:
+        """
+        Initialize autonomous system with all agents
+        
+        Returns:
+            Dict: System initialization result
+        """
+        initialization_protocol = {
+            "steps": [
+                "validate_environment",
+                "initialize_agents", 
+                "register_message_handlers",
+                "verify_system_readiness",
+                "start_monitoring"
+            ],
+            "timeout_seconds": 60,
+            "failure_action": "graceful_shutdown"
+        }
+        
+        for step in initialization_protocol["steps"]:
+            result = await self._execute_initialization_step(step, config)
+            if not result.get("success"):
+                return {
+                    "system_ready": False,
+                    "failed_step": step,
+                    "error": result.get("error")
+                }
+        
+        self.system_status = "ready"
+        return {
+            "system_ready": True,
+            "agents_active": len(self.agents),
+            "initialization_time_seconds": 0.0
+        }
+    
+    async def execute_news_extraction(
+        self,
+        websites: List[str],
+        max_articles: int,
+        session_id: str
+    ) -> Dict:
+        """
+        Execute autonomous news extraction workflow
+        
+        Args:
+            websites: List of website URLs to process
+            max_articles: Maximum articles to extract across all sites
+            session_id: Unique session identifier
+            
+        Returns:
+            Dict: Complete extraction results
+        """
+        extraction_protocol = {
+            "workflow_steps": [
+                "create_extraction_session",
+                "distribute_website_analysis", 
+                "coordinate_link_discovery",
+                "manage_content_extraction",
+                "finalize_storage_organization"
+            ],
+            "error_recovery": "continue_with_partial_results",
+            "performance_monitoring": "real_time",
+            "progress_reporting": "terminal_output"
+        }
+        
+        # Execute workflow with autonomous coordination
+        return await self._execute_extraction_workflow(
+            websites, max_articles, session_id, extraction_protocol
+        )
+```
+
+### System State Management Protocol
+
+```python
+class SharedStateManager:
+    """
+    Thread-safe shared state manag
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

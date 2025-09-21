@@ -1,0 +1,189 @@
+---
+title: "Reactbits Cookboook"
+description: "documentation for New Website Template - Claude Code Engineering"
+category: "documentation"
+project: "New Website Template - Claude Code Engineering"
+lastUpdated: "2025-09-21"
+tags: "documentation,websites"
+---
+
+# The Complete ReactBits.dev Cookbook
+
+## Master the art of building stunning animated React interfaces
+
+ReactBits.dev offers **135+ animated components** that transform ordinary React applications into extraordinary experiences. Created by David Haz, this open-source library provides production-ready "statement pieces" - unique animated components like Hyperspeed backgrounds, TrueFocus text effects, and Crosshair interactions that aren't found anywhere else. With support for GSAP, Three.js, and Framer Motion, plus variants for both CSS and Tailwind, ReactBits enables developers to build memorable interfaces without the complexity of creating animations from scratch.
+
+## Getting Started with ReactBits
+
+### Installation and setup fundamentals
+
+ReactBits uses **jsrepo CLI** as its primary installation method, offering granular control over which components you add to your project:
+
+```bash
+# Install jsrepo globally (optional)
+npm i -g jsrepo
+
+# Initialize your project with ReactBits
+npx jsrepo init https://reactbits.dev/default/  # For CSS variant
+npx jsrepo init https://reactbits.dev/tailwind/ # For Tailwind variant
+
+# Browse and add components interactively
+npx jsrepo add
+
+# Add specific components directly
+npx jsrepo add https://reactbits.dev/default/TextAnimations/SplitText
+npx jsrepo add https://reactbits.dev/tailwind/Animations/ClickSpark
+```
+
+For projects requiring broader access, there's also an **NPM package** available:
+
+```bash
+npm install @appletosolutions/reactbits
+
+# Install peer dependencies as needed
+npm install gsap                                    # For GSAP animations
+npm install three @react-three/fiber @react-three/drei  # For 3D components
+npm install framer-motion                           # For Framer Motion components
+npm install matter-js                               # For physics-based animations
+```
+
+Each component comes in **four variants** to match your project setup:
+- JavaScript + CSS (lightweight, vanilla approach)
+- JavaScript + Tailwind CSS (utility-first styling)
+- TypeScript + CSS (type-safe development)
+- TypeScript + Tailwind CSS (best of both worlds)
+
+## Complete Component Catalog
+
+### Text animations that captivate
+
+ReactBits provides **20+ text animation components** that transform static typography into dynamic experiences. The **SplitText** component breaks text into individual characters for staggered animations:
+
+```jsx
+import { SplitText } from '@appletosolutions/reactbits';
+
+function HeroTitle() {
+  return (
+    <SplitText 
+      text="Welcome to the Future"
+      className="text-6xl font-bold"
+      animationDuration={0.6}
+      staggerDelay={0.05}
+      animationType="fadeUp"
+    />
+  );
+}
+```
+
+For more sophisticated effects, combine multiple text animations:
+
+```jsx
+function AnimatedHero() {
+  return (
+    <div className="hero-section">
+      <ShinyText 
+        text="Premium Experience"
+        shimmerColor="#FFD700"
+        shimmerDuration={3}
+      />
+      <BlurText 
+        text="Discover Amazing Products" 
+        blurAmount={10}
+        animateOnScroll={true}
+      />
+      <DecryptedText 
+        text="UNLOCK YOUR POTENTIAL"
+        decryptSpeed={50}
+        revealDelay={1000}
+      />
+    </div>
+  );
+}
+```
+
+The **CountUp** component creates engaging number animations perfect for dashboards:
+
+```jsx
+<div className="stats-grid">
+  <CountUp 
+    start={0} 
+    end={1000000}
+    duration={2.5}
+    separator=","
+    prefix="$"
+    suffix=" revenue"
+  />
+  <CountUp 
+    start={0}
+    end={98.7}
+    duration={3}
+    decimals={1}
+    suffix="%"
+  />
+</div>
+```
+
+### Background effects that mesmerize
+
+ReactBits excels at creating **immersive background experiences** using WebGL and Three.js. The **Aurora** component generates northern lights effects:
+
+```jsx
+import { Aurora } from '@appletosolutions/reactbits';
+
+function ImmersiveHero() {
+  return (
+    <div className="relative min-h-screen">
+      <Aurora 
+        colorStops={["#667eea", "#764ba2", "#f093fb"]}
+        animationSpeed={0.5}
+        brightness={0.8}
+        blur={10}
+      />
+      <div className="relative z-10 flex items-center justify-center h-screen">
+        <h1 className="text-white text-7xl font-bold">
+          Experience Magic
+        </h1>
+      </div>
+    </div>
+  );
+}
+```
+
+For sci-fi aesthetics, the **Hyperspeed** component creates a star field effect:
+
+```jsx
+<Hyperspeed 
+  stars={500}
+  speed={2}
+  trailLength={0.3}
+  colorPalette={["#00d4ff", "#ff00ff", "#00ff88"]}
+/>
+```
+
+The **Particles** system offers endless customization:
+
+```jsx
+<Particles
+  count={200}
+  size={2}
+  speed={0.5}
+  mouse={true}  // Interactive with cursor
+  connections={true}  // Draw lines between close particles
+  connectionDistance={100}
+  color="#ffffff"
+  backgroundColor="transparent"
+/>
+```
+
+### Interactive animations that engage
+
+The **ClickSpark** component adds delightful micro-interactions to any clickable element:
+
+```jsx
+function InteractiveButton() {
+  return (
+    <ClickSpark 
+      sparkColor=
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

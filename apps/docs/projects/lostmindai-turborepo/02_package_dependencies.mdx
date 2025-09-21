@@ -1,0 +1,246 @@
+---
+title: "02 Package Dependencies"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Package Dependencies Analysis
+
+**Analysis Date:** $(date)
+**Method:** package.json and requirements.txt examination only
+
+## Package.json Files Found
+
+9 package.json files analyzed across the monorepo:
+
+```
+./package.json                     # Root monorepo configuration
+./apps/ask/package.json            # 3D Interactive Orb App
+./apps/marketing/package.json      # Marketing Website
+./packages/ai-clients/package.json # AI Provider Abstraction
+./packages/auth/package.json       # Authentication Package
+./packages/billing/package.json    # Stripe Integration
+./packages/config/package.json     # Shared Configurations
+./packages/db/package.json         # Database Package
+./packages/ui/package.json         # UI Components
+```
+
+## Root Monorepo Configuration
+
+**File:** ./package.json
+
+### Key Dependencies
+
+- **Package Manager:** pnpm@9.1.0
+- **Build System:** turbo@^2.0.0
+- **TypeScript:** ^5.4.0
+- **Node.js Requirement:** >=20.0.0
+
+### Development Scripts
+
+```json
+{
+  "dev": "turbo dev",
+  "build": "turbo build",
+  "test": "turbo test",
+  "lint": "turbo lint",
+  "type-check": "turbo type-check",
+  "db:generate": "turbo db:generate",
+  "db:push": "turbo db:push",
+  "db:migrate": "turbo db:migrate"
+}
+```
+
+### Safety & Quality Scripts
+
+```json
+{
+  "safety": "node scripts/safety-check.cjs",
+  "checkpoint": "./scripts/checkpoint.sh",
+  "validate": "npm run lint && npm run type-check && npm run build",
+  "rollback": "git reset --hard HEAD~1",
+  "emergency-reset": "git clean -fd && git reset --hard && pnpm install"
+}
+```
+
+## Application Dependencies
+
+### Ask App (3D Interactive Orb)
+
+**File:** ./apps/ask/package.json
+
+#### Core Dependencies
+
+- **Next.js:** ^15.1.3 (Latest)
+- **React:** ^19.0.0 (Latest Stable)
+- **React DOM:** ^19.0.0
+
+#### 3D Graphics Dependencies
+
+- **@react-three/fiber:** ^8.15.0 (React Three.js integration)
+- **@react-three/drei:** ^9.88.0 (Three.js helpers)
+- **three:** ^0.164.1 (3D graphics library)
+- **gsap:** ^3.12.2 (Animation library)
+
+#### State Management & Utilities
+
+- **zustand:** ^4.4.0 (State management)
+- **zod:** ^3.23.8 (Schema validation)
+
+#### Workspace Dependencies
+
+- **@lostmind/auth:** workspace:\*
+- **@lostmind/billing:** workspace:\*
+- **@lostmind/db:** workspace:\*
+
+#### Testing Setup
+
+- **vitest:** ^1.0.4
+- **@testing-library/react:** ^14.1.2
+- **@testing-library/jest-dom:** ^6.1.5
+
+### Marketing App
+
+**File:** ./apps/marketing/package.json
+
+#### Minimal Dependencies
+
+- **Next.js:** ^15.1.3
+- **React:** ^19.0.0
+- **React DOM:** ^19.0.0
+- **@lostmind/ui:** workspace:\* (Shared UI components)
+
+## Package Dependencies Deep Dive
+
+### Database Package
+
+**File:** ./packages/db/package.json
+
+#### Database Dependencies
+
+- **@prisma/client:** ^5.22.0
+- **prisma:** ^5.22.0
+
+#### Utilities
+
+- **zod:** ^3.23.8 (Schema validation)
+
+### AI Clients Package
+
+**File:** ./packages/ai-clients/package.json
+
+#### AI Dependencies
+
+- **google-genai:** ^0.6.0 (NEW Google AI SDK)
+
+#### Development Tools
+
+- **@lostmind/config:** workspace:\*
+- **typescript:** ^5.4.5
+
+### Authentication Package
+
+**File:** ./packages/auth/package.json
+
+#### Auth Dependencies
+
+- **next-auth:** ^5.0.0-beta.25 (Auth.js v5 Beta)
+
+### Billing Package
+
+**File:** ./packages/billing/package.json
+
+#### Payment Dependencies
+
+- **stripe:** ^17.3.1 (Latest Stripe SDK)
+
+### UI Package
+
+**File:** ./packages/ui/package.json
+
+#### UI Framework Dependencies
+
+- **react:** ^19.0.0
+- **react-dom:** ^19.0.0
+- **@radix-ui/react-slot:** ^1.1.0
+- **class-variance-authority:** ^0.7.0
+- **clsx:** ^2.1.1
+- **lucide-react:** ^0.460.0
+- **tailwind-merge:** ^2.5.4
+
+### Configuration Package
+
+**File:** ./packages/config/package.json
+
+#### Build Tools
+
+- **@types/eslint:** ^9.6.1
+- **@typescript-eslint/eslint-plugin:** ^8.15.0
+- **@typescript-eslint/parser:** ^8.15.0
+- **eslint:** ^9.15.0
+- **eslint-config-next:** ^15.1.3
+
+## Python Service Dependencies
+
+### AI Compute Service
+
+**File:** ./services/ai-compute/requirements.txt
+
+#### Core Framework
+
+- **fastapi:** 0.109.0
+- **uvicorn[standard]:** 0.27.0
+- **pydantic:** 2.5.3
+
+#### AI Dependencies
+
+- **google-genai:** >=0.6.0 (NEW Google AI SDK - matches TypeScript)
+- **langchain:** 0.1.25
+- **langchain-google-genai:** 0.0.20
+- **numpy:** 1.26.3
+- **pandas:** 2.1.4
+- **scikit-learn:** 1.4.0
+
+#### Database & Vector Search
+
+- **pgvector:** 0.2.4
+- **sqlalchemy:** 2.0.25
+- **asyncpg:** 0.29.0
+- **psycopg2-binary:** 2.9.9
+
+#### Authentication & Security
+
+- **PyJWT:** 2.8.0
+- **redis:** 5.0.1 (Rate limiting & caching)
+
+#### Document Processing
+
+- **pillow:** 10.2.0
+- **pdf2image:** 1.17.0
+- **pytesseract:** 0.3.10
+- **pypdf:** 3.17.4
+- **python-multipart:** 0.0.6
+
+#### Media Processing
+
+- **moviepy:** 1.0.3
+- **pydub:** 0.25.1
+
+#### Google Cloud Integration
+
+- **google-cloud-storage:** 2.14.0
+- **google-cloud-pubsub:** 2.19.1
+- **google-auth:** 2.27.0
+
+## Dependency Analysis Summary
+
+### Version Consistency
+
+✅ **React 19 Stable** used consistently across all frontend packages
+✅ **Next.js 15.1.3** used cons
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

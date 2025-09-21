@@ -1,0 +1,39 @@
+---
+title: "Help"
+description: "Provides intelligent, context-aware suggestions for the user's next action."
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+allowed-tools: ""
+---
+
+# Command: /help
+
+## Your Task
+
+When the user runs `/help`, you will analyze the current state of the project and provide a concise list of recommended next steps.
+
+### Your Analysis Workflow:
+
+1.  **Check for Framework:** First, check if the `.claude/CLAUDE.md` file exists.
+    *   If **not**, your only suggestion should be: "The Universal Claude Framework is not installed in this project. Run `/init` for a new project or `/audit` for an existing one."
+
+2.  **Read Project State:** If the framework is installed, read the `.claude/CLAUDE.md` and `state/audit_report.md` (if it exists).
+
+3.  **Provide Dynamic Suggestions:** Based on the state, generate a list of 3-4 helpful, actionable suggestions.
+
+### Example Scenarios:
+
+*   **Freshly Initialized Project:** Suggest beginning the brainstorming session.
+*   **Project Defined, No Code Written:** Suggest scaffolding the basic application structure.
+*   **Audited Project with Gaps:** Suggest addressing the first recommendation from the audit report.
+*   **Project in Progress:** Suggest adding a new feature or writing integration tests.
+
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

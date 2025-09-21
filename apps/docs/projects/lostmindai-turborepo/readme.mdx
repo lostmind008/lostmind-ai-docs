@@ -1,201 +1,206 @@
 ---
-title: "README - LostMindAI-TurboRepo"
-description: "Complete project README and setup instructions"
+title: "README"
+description: "readme for LostMindAI-TurboRepo"
+category: "readme"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "readme,main-platform"
 ---
 
-<Info>
-This content was automatically extracted from LostMindAI-TurboRepo.
-For the most up-to-date information, refer to the source project.
-</Info>
+# Document Processor Service
 
-# LostMind AI Monorepo
+FastAPI microservice for document analysis in the LostMind AI Intelligence Hub (JustDropIt MVP).
 
-Production-ready AI-powered SaaS platform built with Next.js 15, Turborepo, and FastAPI.
+## Overview
 
-> 📌 **Source of truth:** [docs/project/CURRENT_PROJECT_STATE.md](./docs/project/CURRENT_PROJECT_STATE.md) is the canonical status document. Update it first whenever scope or implementation changes.
+This service handles document upload, analysis, and result retrieval for the Intelligence Hub. It provides secure, multi-tenant document processing with support for various analysis types.
 
-## Tech Stack
+## Features
 
-- **Frontend**: Next.js 15 (App Router), React 19 Stable, TypeScript
-- **Backend**: FastAPI (Python) for compute-intensive tasks
-- **Database**: PostgreSQL with Prisma ORM and Row Level Security
-- **Authentication**: Auth.js v5 with Google OAuth
-- **Payments**: Stripe
-- **AI**: Google Generative AI (Gemini)
-- **Deployment**: Vercel (Next.js), Google Cloud Run (FastAPI)
-- **Monorepo**: Turborepo with pnpm workspaces
+- **Secure Authentication**: JWT token validation with tenant isolation
+- **File Processing**: Support for Excel (.xlsx, .xls), CSV, and PDF files
+- **Analysis Types**: Accrual analysis with planned expansion to other financial analyses
+- **Background Processing**: Asynchronous job processing with status tracking
+- **Multi-tenant**: Complete tenant isolation and access control
+- **Monitoring**: Health checks and comprehensive logging
 
-## 🛠️ Development Tools & Enhancements
+## API Endpoints
 
-### **Task Management System**
-
-- **Automated task lifecycle management** with status tracking (🟢 Active, ✅ Completed, 🔄 Blocked)
-- **Task cleanup automation** prevents accumulation of completed work
-- **Smart task auditing** with `pnpm run tasks:audit`
-- **Format validation** ensures consistent task file structure
-
-### **TypeScript Configuration Standards**
-
-- **Inheritance-aware configuration** prevents duplicate lib entries
-- **Monorepo-specific patterns** for package organization
-- **Automated validation** catches common configuration issues
-- **Clear inheritance guidelines** for all package configurations
-
-### **File Organization Automation**
-
-- **Standardized directory structures** for apps, packages, and services
-- **Naming convention enforcement** for components, tests, and documentation
-- **Location validation** prevents files in incorrect directories
-- **Automated cleanup** maintains project structure integrity
-
-```bash
-# Task management commands
-pnpm run tasks:audit      # Analyze all task files
-pnpm run tasks:cleanup    # Remove completed tasks
-pnpm run tasks:status     # Show statistics
-pnpm run tasks:validate   # Check format compliance
+### Health Check
+```
+GET /health
 ```
 
-### **AI Development Memory System**
+### Analysis Operations
+```
+POST /api/v1/analyze         # Start analysis job
+GET /api/v1/analysis/{id}    # Get job status and results
+GET /api/v1/jobs             # List user's jobs
+```
 
-- **CLAUDE.md** serves as comprehensive project memory file
-- **Context preservation** across development sessions
-- **Pattern recognition** for consistent code organization
-- **Standards enforcement** for TypeScript and file structure
+## Installation
 
-**📖 [View CLAUDE.md for complete AI development guidelines](./CLAUDE.md)**
+### Using Docker (Recommended)
 
-## Project Structure Overview
+```bash
+# Build the container
+docker build -t document-processor .
 
-For the live directory snapshot, visit the [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md#-repository-structure-current). Highlights below mirror that file:
+# Run the service
+docker run -p 8001:8001 \
+  -e DATABASE_URL="postgresql://..." \
+  -e NEXTAUTH_SECRET="your-secret" \
+  document-processor
+```
 
-### Implemented foundations
-
-- `apps/ask` — Orb experience scaffold (UI locked to current production experience, security upgrades in flight)
-- `apps/marketing` — Marketing shell prepared for redesign
-- `packages/*` — Shared libraries (`config`, `ui`, `db`, `auth`, `ai-clients`, `billing`)
-- `services/ai-compute` — FastAPI service with IAM hooks and Redis rate limiting (needs production hardening)
-- `docker-compose.yml` — Local stack for Postgres, Redis, Next.js apps, FastAPI
-
-### Planned (not yet shipped)
-
-- Additional apps: `private-docs`, `chatcrawler`, `justdropit`, `admin`
-- Additional packages: `security`, `rag`, `utils`
-- Additional services: `document-processor`, `crawler-engine`, `security-monitor`
-
-### 📖 Directory Documentation
-
-Each directory contains its own README.md with specific implementation details:
-
-- **[apps/ask/README.md](./apps/ask/README.md)** - AI query interface documentation
-- **[apps/marketing/README.md](./apps/marketing/README.md)** - Marketing website documentation
-- **[packages/README.md](./packages/README.md)** - Shared packages overview
-- **[services/README.md](./services/README.md)** - Microservices documentation
-- **[infrastructure/README.md](./infrastructure/README.md)** - Infrastructure setup
-
-## Quick Start
+### Local Development
 
 ```bash
 # Install dependencies
-pnpm install
+pip install -r requirements.txt
 
-# Environment
-# Keep secrets out of git. See docs/secrets-policy.md
-# Configure Vercel/GCP Secret Manager for production/staging.
-# For local dev, copy and edit if needed (untracked):
-# cp .env.example .env.local
+# Set environment variables
+cp .env.example .env
+# Edit .env with your configuration
 
-# Push database schema
-pnpm run db:push
+# Run the service
+uvicorn main:app --reload --port 8001
+```
 
-# Start development
-pnpm run dev
+## Environment Variables
+
+Required:
+- `DATABASE_URL`: PostgreSQL connection string
+- `NEXTAUTH_SECRET`: JWT signing secret
+
+Optional:
+- `ENVIRONMENT`: development/staging/production (default: development)
+- `PORT`: Service port (default: 8001)
+- `MAX_FILE_SIZE`: Maximum upload size in bytes (default: 100MB)
+- `UPLOAD_DIRECTORY`: Temporary file storage path (default: /tmp/uploads)
+
+## Usage
+
+### Starting an Analysis
+
+```bash
+curl -X POST "http://localhost:8001/api/v1/analyze" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "file_url": "/path/to/document.xlsx",
+    "analysis_type": "ACCRUAL_ANALYSIS",
+    "parameters": {
+      "sheet_name": "Financial Data"
+    }
+  }'
+```
+
+### Checking Job Status
+
+```bash
+curl -X GET "http://localhost:8001/api/v1/analysis/JOB_ID" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Analysis Types
+
+### ACCRUAL_ANALYSIS
+Analyzes financial documents for accrual-based accounting insights.
+
+**Supported Files**: Excel (.xlsx, .xls), CSV
+**Parameters**:
+- `sheet_name`: Excel sheet to analyze (default: first sheet)
+- `delimiter`: CSV delimiter (default: comma)
+- `encoding`: File encoding (default: utf-8)
+
+**Results**:
+- Total revenue calculations
+- Accrued expenses analysis
+- Net accrual summaries
+- Monthly breakdown reports
+- Recommendations for process improvements
+
+## Security
+
+- **JWT Authentication**: All endpoints require valid JWT tokens
+- **Tenant Isolation**: Multi-tenant data separation
+- **File Validation**: MIME type and content validation
+- **Rate Limiting**: Subscription-based usage limits
+- **Audit Logging**: Comprehensive request/response logging
+
+## Architecture
+
+```
+services/document-processor/
+├── main.py                 # FastAPI application
+├── config.py              # Configuration management
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Container configuration
+├── middleware/            # Authentication and security
+│   ├── auth.py           # JWT token verification
+│   └── tenant_isolation.py # Multi-tenant access control
+└── core/                 # Business logic
+    ├── analyzers/        # Analysis implementations
+    │   └── accrual_analyzer.py
+    └── utils/           # File handling utilities
+        └── file_handler.py
 ```
 
 ## Development
 
+### Adding New Analysis Types
+
+1. Create analyzer in `core/analyzers/`
+2. Implement the `analyze()` method
+3. Add to the analyzer mapping in `main.py`
+4. Update permission checks in `middleware/auth.py`
+
+### Testing
+
 ```bash
-# Run specific app
-pnpm run dev --filter=marketing
+# Install test dependencies
+pip install pytest pytest-asyncio httpx
 
 # Run tests
-pnpm run test
-
-# Build all
-pnpm run build
-
-# Type checking
-pnpm run type-check
+pytest tests/
 ```
 
-## 📚 Documentation
+## Deployment
 
-Comprehensive documentation for the LostMind AI platform is organized for easy navigation:
+The service is designed for deployment on Google Cloud Run with the existing infrastructure.
 
-### 🏠 Documentation Hub
+### Docker Compose (Development)
 
-- **[📖 Complete Documentation Index](./docs/README.md)** - Main documentation hub with all resources
+```yaml
+version: '3.8'
+services:
+  document-processor:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://...
+      - NEXTAUTH_SECRET=your-secret
+    volumes:
+      - ./uploads:/tmp/uploads
+```
 
-### 🚀 Getting Started
+## Monitoring
 
-- **[🔰 Beginner's Quick Start](./docs/guides/beginner/QUICK_START.md)** - Simple guide for non-technical users
-- **[🔐 Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)** - Step-by-step environment configuration
-- **[📋 Session Templates](./docs/CLAUDE_CODE_SESSION_TEMPLATES.md)** - Copy-paste templates for Claude Code
+- Health endpoint: `/health`
+- Logs: Structured JSON logging
+- Metrics: Processing time, success/failure rates
+- Alerts: Failed jobs, service availability
 
-### 🏗️ Architecture & Planning
+## Future Enhancements
 
-- **[🎯 Master Plan](./docs/architecture/lostmind-master-plan.md)** - Overall project vision and strategy
-- **[🗓️ Implementation Roadmap](./docs/architecture/implementation-roadmap.md)** - Timeline, phases, and milestones
-- **[📋 Architecture Decision Records](./docs/architecture/lostmind-adrs.md)** - Key architectural decisions and rationale
+- [ ] Integration with PropTech-Backend analysis algorithms
+- [ ] Support for additional file formats (Word, PowerPoint)
+- [ ] Real-time progress updates via WebSockets
+- [ ] Result caching and optimization
+- [ ] Advanced analytics and reporting
+- [ ] Mach
 
-### 🔧 Integration & Development Guides
-
-- **[🤖 Ask App Integration](./docs/guides/INTEGRATION_GUIDE_FOR_ASK_APP.md)** - AI query interface setup
-- **[🌐 Marketing Website](./docs/guides/MARKETING_WEBSITE_INTEGRATION_GUIDE.md)** - Public site configuration
-- **[🧠 RAG & Embeddings](./docs/guides/RAG_EMBEDDINGS_INTEGRATION_GUIDE.md)** - Vector search implementation
-- **[🕷️ Web Scraper Service](./docs/guides/WEB_SCRAPER_SERVICE_INTEGRATION_GUIDE.md)** - Crawler engine setup
-- **[📦 Dependency Management](./docs/DEPENDENCY_MANAGEMENT.md)** - Managing and updating dependencies
-- **[🔒 Environment Secrets Audit](./docs/ENVIRONMENT_SECRETS_AUDIT.md)** - Complete secrets documentation
-- **[🖥️ Auto Environment Setup](./docs/AUTO_ENVIRONMENT_SETUP.md)** - Automatic dev environment configuration
-
-### 🚨 Production & SDK Standards
-
-- **[🛡️ Security Architecture Audit Report](./docs/security/SECURITY_ARCHITECTURE_AUDIT_REPORT.md)** - **CRITICAL**: Pre-launch security review - **REQUIRED** before v1 production deployment
-- **[⚠️ Production Technical Analysis](./docs/PRODUCTION_TECHNICAL_ANALYSIS.md)** - Critical issues and remediation before deployment
-- **[🤖 Google GenAI Developer Guide](./docs/GOOGLE_GENAI_DEVELOPER_GUIDE.md)** - SDK migration and AI integration standards
-
-### 🚀 Launch & Business Planning
-
-- **[🚀 SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md)** - Complete roadmap from 65% to paying customers (6-8 weeks)
-- **[📊 TurboRepo Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)** - Backend services integration strategy with $2.3M ARR projections
-
-### 📊 Project Management
-
-- **[✅ Claude Code Tasks](./docs/project/CLAUDE_CODE_TASKS.md)** - AI assistant task tracking
-- **[🗺️ Project Map](./docs/project/PROJECT_MAP.md)** - Current file structure and organization
-- **[📈 Current Project State](./docs/project/CURRENT_PROJECT_STATE.md)** - Real-time project status
-
-### 🚀 Quick Navigation
-
-- **New Developer?** Start → [Quick Start Guide](./docs/guides/beginner/QUICK_START.md) → [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)
-- **Planning launch?** See [SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md) for complete roadmap
-- **Backend integration?** Check [Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)
-- **Setting up an app?** Go to [Integration Guides](./docs/guides/)
-- **Architecture questions?** Check [ADRs](./docs/architecture/lostmind-adrs.md)
-- **Project status?** View [Current State](./docs/project/CURRENT_PROJECT_STATE.md)
-
-## Current Status (Snapshot)
-
-**Latest Update (Sept 16, 2025):** Professional Infrastructure Restored - Development Standards Established
-
-- **✅ Completed:** Professional infrastructure restoration, task management system, TypeScript standards, file organization automation, AI development memory system
-- **✅ Operational:** Development tools (task-audit, cleanup, standards-check), automated task lifecycle management, comprehensive CLAUDE.md guidelines
-- **🔄 In Progress:** Frontend integration and user experience development
-- **📋 Next Phase:** Complete SaaS application with production-ready features
-- **📈 Current Focus:** Professional development standards and automated tooling
-
-See detailed status updates in [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md) and complete documentation in [Documentation Hub](./docs/README.md).
-
-## License
-
-Copyright © 2025 LostMind AI. All rights reserved.
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

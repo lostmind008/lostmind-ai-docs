@@ -1,0 +1,93 @@
+---
+title: "Backend Architecture For LostMind AI"
+description: "architecture for Back End Architecture for Turborepo with RAG Embeddings"
+category: "architecture"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "architecture,main-platform"
+---
+
+# Backend Architecture for LostMind AI
+
+This document outlines the proposed backend architecture for the LostMind AI application. The architecture is designed to be modular, scalable, and easy to integrate into a Turborepo structure. It leverages modern technologies like FastAPI, Gemma embeddings, and a microservices-based approach to provide a robust and flexible backend.
+
+## 1. Overall Architecture
+
+The backend will be composed of several independent microservices, each responsible for a specific set of functionalities. These services will communicate with each other through a combination of synchronous REST APIs and an asynchronous message queue for long-running tasks. A central API Gateway will act as a single entry point for all client requests, routing them to the appropriate service.
+
+This modular design offers several advantages:
+
+*   **Scalability:** Each service can be scaled independently based on its specific load.
+*   **Flexibility:** Services can be developed, deployed, and updated independently, allowing for faster iteration and development cycles.
+*   **Resilience:** The failure of one service will not bring down the entire application.
+*   **Technology Agnostic:** Each service can be implemented using the most appropriate technology for its specific task.
+
+
+
+
+
+## 2. Module Structure (Turborepo-Compatible)
+
+The backend will be organized into the following packages within the Turborepo monorepo:
+
+*   `apps/api-gateway`
+*   `packages/core-services`
+*   `packages/rag-pipeline`
+*   `packages/analysis-modules`
+*   `packages/shared-utils`
+
+### 2.1. `apps/api-gateway`
+
+This package will contain the main FastAPI application that serves as the entry point for all client requests. Its responsibilities include:
+
+*   **Request Routing:** Directing incoming requests to the appropriate backend service.
+*   **Authentication and Authorization:** Verifying user credentials and ensuring they have the necessary permissions to access the requested resources.
+*   **Rate Limiting:** Protecting the backend services from abuse and ensuring fair usage.
+*   **Request/Response Transformation:** Formatting requests and responses to and from the backend services.
+
+### 2.2. `packages/core-services`
+
+This package will house the fundamental services that provide the core functionalities of the application. These services include:
+
+*   **Embedding Service:** A dedicated service for generating and managing Gemma embeddings. It will expose an API for other services to create embeddings for text and documents.
+*   **Vector Database Service:** This service will manage the storage and retrieval of embeddings from a vector database (e.g., Pinecone, Weaviate). It will provide an API for searching and querying the embeddings.
+*   **Document Processing Service:** This service will be responsible for processing and preparing documents for embedding and analysis. It will handle tasks like text extraction, data cleaning, and chunking.
+
+### 2.3. `packages/rag-pipeline`
+
+This package will implement the Retrieval-Augmented Generation (RAG) pipeline. It will be responsible for:
+
+*   **Retrieval:** Retrieving relevant documents and context from the vector database based on a user's query.
+*   **Generation:** Using a large language model (LLM) like Gemma to generate a response based on the retrieved context.
+*   **Context Management:** Managing the conversation history and context to provide a more coherent and engaging user experience.
+
+### 2.4. `packages/analysis-modules`
+
+This package will contain the various analysis modules that provide the specialized analytical capabilities of the application. These modules will be built upon the core services and will include:
+
+*   **Excel/VBA Analysis Module:** This module will provide the functionality for analyzing Excel and VBA files, including formula intelligence and relationship analysis.
+*   **Web Scraping Module:** This module will contain the advanced web scraping and content extraction capabilities, leveraging Gemini AI for intelligent data extraction.
+*   **Job Discovery Module:** This module will implement the job discovery and orchestration functionality.
+*   **News Extraction Module:** This module will provide the functionality for extracting and analyzing news articles.
+
+### 2.5. `packages/shared-utils`
+
+This package will contain shared utilities and helper functions that are used across multiple services. This will help to reduce code duplication and ensure consistency across the backend. This will include:
+
+*   **Database Models:** Shared database models and schemas.
+*   **Error Handling:** Centralized error handling and logging mechanisms.
+*   **Configuration:** Shared configuration management.
+
+
+
+
+
+## 3. API Layer and Data Flow
+
+The API Gateway will expose a RESTful API for clients to interact with the backend. The API will be documented using the OpenAPI specification. The data flow will be as follows:
+
+1.  A client sends a request to the API Gateway.
+2.  The API Gateway authenti
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

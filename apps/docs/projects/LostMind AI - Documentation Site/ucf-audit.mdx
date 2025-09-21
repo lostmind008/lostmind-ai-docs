@@ -1,0 +1,49 @@
+---
+title: "Ucf Audit"
+description: "Audits an existing codebase and onboards it into the UCF, including a project-specific MCP toolkit."
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+---
+
+# Command: /ucf-audit
+
+## Your Task
+
+When the user runs `/ucf-audit`, you will adopt the **Auditor Agent** persona and execute the following workflow, respecting the security sandbox:
+
+### Step 1: Analyze Project & Select Tools
+1.  **Analyze Project:** Read local configuration files (`package.json`, `pyproject.toml`, etc.) to determine the project type (e.g., "Web Development", "AI/ML").
+2.  **Consult Guidance:** Read the strategic guidance file from your user-level context at `~/.claude/docs/mcp_project_guidance.md`.
+3.  **Select Servers:** Based on the project type, determine the "Essential Servers" from the guidance.
+4.  **Read Master Config:** Read the master list of all available servers from `~/.claude/mcp_master_config.json`.
+5.  **Build Project Config:** Construct a new JSON object containing the configurations for *only the selected servers*.
+
+### Step 2: Provision Project
+1.  **Write Project MCP Config:** Write the new, filtered JSON object to a file named `.mcp.json` in the root of the current project. Announce which tools you have provisioned.
+2.  **Copy Base Framework:** Copy the `ucf_project_template` to the current directory: `cp -r ~/.claude/ucf_project_template/. .`
+3.  **ENHANCED:** Copy SOP prompts locally: `cp -r ~/.claude/sop_prompts/ .claude/`
+4.  **Generate Audit Report:** Create a `state/audit_report.md` summarizing the tech stack and quality analysis.
+5.  **Dynamically Update `CLAUDE.md`:** Populate the "Technical Specification" and "Audit Recommendations" in the project's `.claude/CLAUDE.md` file.
+
+### Step 3: Conclude
+1.  **Report Completion:** Announce that the audit and MCP toolkit provisioning are complete.
+2.  **Suggest Next Steps:** Point the user to the new `.mcp.json` file, the audit report, and suggest running `/ucf-help`.
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

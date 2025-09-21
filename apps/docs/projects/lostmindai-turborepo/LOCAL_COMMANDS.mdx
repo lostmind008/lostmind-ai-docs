@@ -1,0 +1,36 @@
+---
+title: "LOCAL COMMANDS"
+description: "misc for LostMindAI-TurboRepo"
+category: "misc"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "misc,main-platform"
+---
+
+# LostMindAI docs alignment helper
+# Copy blocks into your PR description or terminal as needed.
+
+---
+PR_TITLE="docs: sync repository guidance with canonical source of truth"
+
+PR_BODY='## Summary
+- designate `docs/project/CURRENT_PROJECT_STATE.md` as the authoritative status document and capture the visitor-token roadmap
+- point README, AGENTS, and CLAUDE guidance back to that source to prevent drift
+- downgrade overstated "production-ready" claims in project map, services, and packages overviews to match the current repo state
+- flag historical/aspirational docs (progress update, audit report, SaaS launch pathway, Turborepo analysis) and link them to the canonical status page
+- add LOCAL_COMMANDS.txt to .gitignore so local helper instructions stay untracked
+
+## Testing
+- pnpm lint
+- pnpm type-check
+- git status (clean after commit)
+'
+
+# Usage:
+# 1. When creating the PR, set the title to the value of $PR_TITLE.
+# 2. Use the contents of $PR_BODY for the description.
+# 3. Adjust the Testing section if you run additional checks.
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

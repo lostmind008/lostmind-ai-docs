@@ -1,0 +1,193 @@
+---
+title: "Worktree"
+description: "Advanced git worktree management for parallel Claude Code development sessions"
+category: "parallel-development"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+argument-hint: "[create|list|remove|sync] [feature-name] [--all]"
+model: "opus"
+allowed-tools: "Read, Write, Bash, Task, Search"
+---
+
+# Git Worktree Manager for Parallel Development
+
+Manage git worktrees for parallel Claude Code development sessions, enabling isolated feature development with automated coordination and integration.
+
+## Core Commands
+
+### Create Parallel Development Environment
+```bash
+/worktree create <feature-name>
+```
+- Analyzes current project to determine optimal parallel development strategy
+- Creates isolated git worktree with feature-specific branch
+- Sets up Claude Code session configuration for the new worktree
+- Initializes feature-specific context and agent teams
+- Configures cross-session communication and synchronization
+
+### List Active Worktrees
+```bash
+/worktree list
+```
+- Shows all active worktrees with development status
+- Displays assigned agent teams and progress indicators
+- Shows quality gate status for each parallel track
+- Indicates readiness for integration and merge status
+
+### Synchronize Worktrees
+```bash
+/worktree sync [--all]
+```
+- Synchronizes shared context across all parallel sessions
+- Updates API contracts and interface definitions
+- Resolves configuration conflicts automatically
+- Ensures consistent quality standards across tracks
+
+### Remove Completed Worktrees
+```bash
+/worktree remove <feature-name>
+```
+- Safely removes completed and merged worktrees
+- Archives feature-specific context and lessons learned
+- Cleans up temporary files and session data
+- Updates project memory with successful patterns
+
+## Automated Worktree Creation Process
+
+### 1. Project Analysis
+```bash
+# Analyze project scope for parallel development opportunities
+analyze_project_scope() {
+  # Identify independent features that can be developed in parallel
+  features = extract_features_from_requirements(user_input)
+  
+  # Assess dependencies between features
+  dependencies = analyze_feature_dependencies(features)
+  
+  # Determine optimal parallel development strategy
+  strategy = create_parallel_strategy(features, dependencies)
+  
+  return strategy
+}
+```
+
+### 2. Worktree Setup
+```bash
+# Create isolated development environment
+setup_feature_worktree() {
+  local feature_name=$1
+  local base_branch=${2:-main}
+  
+  # Create new branch for feature
+  git checkout -b "feature/${feature_name}" "${base_branch}"
+  
+  # Create worktree in parallel directory
+  git worktree add "../${feature_name}" "feature/${feature_name}"
+  
+  # Set up feature-specific Claude configuration
+  setup_claude_session_config "${feature_name}"
+  
+  # Initialize feature-specific memory and context
+  initialize_feature_context "${feature_name}"
+}
+```
+
+### 3. Agent Team Assignment
+```bash
+# Assign specialized agents based on feature requirements
+assign_agent_teams() {
+  local feature_type=$1
+  
+  case $feature_type in
+    "api"|"backend")
+      agents=("backend-architect" "security-auditor" "database-optimizer" "test-automator")
+      ;;
+    "ui"|"frontend") 
+      agents=("frontend-developer" "ui-designer" "accessibility-auditor" "performance-engineer")
+      ;;
+    "infrastructure"|"devops")
+      agents=("deployment-engineer" "cloud-architect" "monitoring-engineer" "security-auditor")
+      ;;
+    "full-stack")
+      agents=("parallel-coordinator" "backend-architect" "frontend-developer" "test-automator" "deployment-engineer")
+      ;;
+  esac
+  
+  initialize_agent_team $agents
+}
+```
+
+## Cross-Session Coordination
+
+### Shared Context Management
+```json
+{
+  "shared_context": {
+    "project_config": "~/.claude/memory/shared/project-config.json",
+    "api_contracts": "~/.claude/memory/shared/api-contracts.yaml", 
+    "quality_standards": "~/.claude/memory/shared/quality-gates.json",
+    "architecture_decisions": "~/.claude/memory/shared/architecture.md"
+  },
+  "session_sync": {
+    "sync_interval": "5 minutes",
+    "conflict_resolution": "automatic",
+    "integration_checks": "continuous"
+  }
+}
+```
+
+### Quality Gate Coordination
+```typescript
+interface ParallelQualityGates {
+  tracks: {
+    [feature: string]: {
+      test_coverage: number;
+      security_scan: 'passed' | 'failed' | 'pending';
+      performance_check: boolean;
+      api_compatibility: boolean;
+      documentation: boolean;
+      ready_for_integration: boolean;
+    }
+  };
+  overall_status: 'developing' | 'ready' | 'integrating' | 'complete';
+}
+```
+
+## Integration Workflow
+
+### Pre-Integration Checks
+```bash
+# Verify all tracks are ready for integration
+check_integration_readiness() {
+  for worktree in $(get_active_worktrees); do
+    # Check quality gates
+    if ! check_quality_gates "$worktree"; then
+      echo "❌ $worktree: Quality gates not passed"
+      return 1
+    fi
+    
+    # Check for conflicts
+    if has_merge_conflicts "$worktree"; then
+      echo "⚠️  $worktree: Merge conflicts detected"
+      return 1
+    fi
+    
+    # Verify API compatibility
+    if ! check_api_compatibility "$worktree"; then
+      echo "❌ $worktree: API compatibility issues"
+      return 1
+    fi
+  done
+  
+  echo "✅ All tracks ready for integration"
+  return 0
+}
+```
+
+### Orchestrated Integration
+```bash
+# Syst
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

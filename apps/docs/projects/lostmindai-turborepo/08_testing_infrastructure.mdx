@@ -1,0 +1,200 @@
+---
+title: "08 Testing Infrastructure"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Testing Infrastructure Analysis
+
+**Analysis Date:** $(date)
+**Method:** Test configuration files and CI/CD pipeline analysis
+
+## Testing Infrastructure Overview
+
+The repository demonstrates a **MINIMAL** testing implementation with infrastructure in place but **LIMITED** actual test coverage:
+
+- **Frontend Testing:** Vitest + Testing Library setup (Ask app only)
+- **Backend Testing:** Pytest configuration (no actual tests implemented)
+- **Package Testing:** Basic Vitest setup (ai-clients package, no tests)
+- **CI/CD Integration:** Testing pipeline configured but gracefully handles missing tests
+
+## Frontend Testing Infrastructure
+
+### Ask App Testing Setup
+
+**Status:** ✅ **COMPREHENSIVE CONFIGURATION, MINIMAL TESTS**
+
+#### Vitest Configuration (apps/ask/vitest.config.ts)
+
+```typescript
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./tests/setup.ts"],
+    css: true,
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: [
+        "node_modules/",
+        "tests/",
+        ".next/",
+        "coverage/",
+        "**/*.d.ts",
+        "**/*.config.ts",
+      ],
+    },
+  },
+})
+```
+
+#### Testing Dependencies (Ask App)
+
+**Complete Testing Stack:**
+
+```json
+{
+  "test": "vitest",
+  "test:ui": "vitest --ui",
+  "test:coverage": "vitest --coverage",
+  // Testing dependencies
+  "@testing-library/jest-dom": "^6.1.5",
+  "@testing-library/react": "^14.1.2",
+  "@testing-library/user-event": "^14.5.1",
+  "@types/jest": "^29.5.8",
+  "@vitest/coverage-v8": "^1.0.4",
+  "@vitest/ui": "^1.0.4",
+  "jsdom": "^23.0.1",
+  "vitest": "^1.0.4"
+}
+```
+
+#### Test Setup File (apps/ask/tests/setup.ts)
+
+**Status:** ✅ **PRODUCTION-READY MOCKING**
+
+**Key Features:**
+
+- **Three.js Mocking:** Complete WebGL context mocking for 3D components
+- **Next.js Mocking:** Router and navigation mocking
+- **Browser API Mocking:** IntersectionObserver, ResizeObserver, matchMedia
+- **Error Suppression:** Filters out React testing noise
+
+```typescript
+// Mock WebGL context for Three.js
+HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation((contextId) => {
+  if (contextId === 'webgl' || contextId === 'webgl2') {
+    return mockWebGLContext
+  }
+  return null
+})
+
+// Mock Next.js components to avoid WebGL issues
+jest.mock('@react-three/fiber', () => ({
+  Canvas: ({ children }: { children: React.ReactNode }) =>
+    <div data-testid="canvas">{children}</div>,
+}))
+```
+
+#### Actual Test Implementation (apps/ask/tests/app.test.tsx)
+
+**Status:** 🟡 **BASIC SMOKE TESTS ONLY**
+
+**Current Tests:**
+
+1. **Basic Layout Rendering:** Tests HTML structure elements
+2. **3D App Structure:** Validates orb portal div for 3D rendering
+3. **Dark Theme Support:** Verifies theme class application
+
+**Coverage Assessment:**
+
+- ❌ **No API Route Tests:** Chat API route with authentication/billing untested
+- ❌ **No Authentication Tests:** Login/logout flows not tested
+- ❌ **No Integration Tests:** No real user flow testing
+- ❌ **No AI Integration Tests:** AI chat functionality untested
+
+### Marketing App Testing
+
+**Status:** ❌ **NO TESTING INFRASTRUCTURE**
+
+- No test configuration files
+- No testing dependencies in package.json
+- No test scripts defined
+- Complete absence of testing setup
+
+## Backend Testing Infrastructure
+
+### AI Compute Service Testing Setup
+
+**Status:** 🟡 **INFRASTRUCTURE PRESENT, NO TESTS IMPLEMENTED**
+
+#### Python Testing Dependencies (services/ai-compute/requirements.txt)
+
+**Testing Stack Configured:**
+
+```python
+# Testing dependencies included
+pytest==7.4.4
+pytest-asyncio==0.23.3  # For async FastAPI testing
+pytest-cov==4.1.0       # Coverage reporting
+```
+
+#### Missing Test Implementation
+
+**Expected Test Structure (NOT IMPLEMENTED):**
+
+```
+services/ai-compute/
+├── tests/                    # ❌ Directory missing
+│   ├── conftest.py          # ❌ Pytest configuration missing
+│   ├── test_auth.py         # ❌ Authentication tests missing
+│   ├── test_billing.py      # ❌ Billing logic tests missing
+│   ├── test_ai_service.py   # ❌ AI generation tests missing
+│   └── test_rate_limiting.py # ❌ Rate limiting tests missing
+```
+
+#### Critical Missing Test Areas
+
+**Authentication & Security:**
+
+- JWT token validation testing
+- Google IAM OIDC authentication
+- API key validation and permissions
+- Tenant isolation verification
+
+**Business Logic:**
+
+- Subscription tier enforcement
+- Rate limiting per tier
+- Usage tracking accuracy
+- Billing calculation logic
+
+**AI Integration:**
+
+- Google GenAI client functionality
+- Error handling for AI service failures
+- Input validation and sanitization
+- Response formatting consistency
+
+**Database Integration:**
+
+- API key service operations
+- Usage tracking database writes
+- Redis rate limiting functionality
+- Tenant context management
+
+## Package Testing Infrastructure
+
+### AI Clients Package Testing
+
+**Status:** 🟡 **VITEST CONFIGURED, NO TESTS**
+
+#### Testing Configuration (packages/ai-clients/package.json
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

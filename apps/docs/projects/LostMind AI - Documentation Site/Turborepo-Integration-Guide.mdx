@@ -1,0 +1,97 @@
+---
+title: "Turborepo Integration Guide"
+description: "guide for LostMind AI - Documentation Site"
+category: "guide"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+<Info>
+This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Turborepo Integration Guide
+
+This guide explains how to integrate the backend intelligence services into your existing Turborepo monorepo.
+
+## Step 1: Add Backend as a Workspace
+
+In your `turbo.json` file, add the `backend-architecture` directory as a new workspace:
+
+```json
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "backend-architecture/apps/*",
+    "backend-architecture/packages/*"
+  ]
+}
+```
+
+## Step 2: Configure Scripts
+
+In your root `package.json`, add scripts to run the backend services:
+
+```json
+{
+  "scripts": {
+    "dev:backend": "turbo run dev --filter=api-gateway...",
+    "build:backend": "turbo run build --filter=api-gateway...",
+    "start:backend": "turbo run start --filter=api-gateway"
+  }
+}
+```
+
+## Step 3: Install Dependencies
+
+Run `npm install` or `yarn install` in the root of your Turborepo to install all dependencies for the backend services.
+
+## Step 4: Environment Variables
+
+Create a `.env` file in the root of your Turborepo and add the necessary environment variables for the backend services. You can copy the contents of the `.env.example` file from the `backend-architecture` directory.
+
+## Step 5: Running the Backend
+
+To run the backend services in development mode, use the following command:
+
+```bash
+npm run dev:backend
+```
+
+This will start the API Gateway and all dependent services. The API will be available at `http://localhost:8000`.
+
+## Step 6: Building for Production
+
+To build the backend services for production, use the following command:
+
+```bash
+npm run build:backend
+```
+
+This will create optimized production builds for all services.
+
+## Step 7: Deployment
+
+Follow the instructions in the [Deployment Guide](./deployment_guide.md) to deploy the backend services to your preferred environment.
+
+
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

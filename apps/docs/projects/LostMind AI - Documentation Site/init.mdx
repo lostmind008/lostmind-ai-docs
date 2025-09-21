@@ -1,0 +1,31 @@
+---
+title: "Init"
+description: "Initializes a new, empty directory with the Universal Claude Framework (UCF)."
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+argument-hint: "[--force]"
+allowed-tools: ""
+---
+
+# Command: /init
+
+## Your Task
+
+When the user runs `/init`, you will perform the following actions:
+
+1.  **Confirm Action:** State that you will set up the current directory with the UCF for a new project. Ask for confirmation to proceed.
+2.  **Check for Existing Files:** Unless the user provides a `--force` argument, verify that the current directory is empty. If it is not, warn the user that this command is intended for empty directories and that files may be overwritten. Ask if they are sure they want to continue.
+3.  **Copy the Framework:** If confirmed, you will use the `run_shell_command` tool to copy the contents of the master template directory (`~/.claude/ucf_project_template/`) into a new `.claude` directory in the current folder.
+    *   **Command:** `cp -r ~/.claude/ucf_project_template/. .claude`
+4.  **Report Completion:** Announce that the framework has been successfully initialized.
+5.  **Suggest Next Step:** Advise the user that the next step is to start the brainstorming session by saying, "Let's begin by defining the project."
+
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

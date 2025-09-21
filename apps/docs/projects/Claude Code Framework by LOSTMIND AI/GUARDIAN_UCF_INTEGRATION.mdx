@@ -1,0 +1,136 @@
+---
+title: "GUARDIAN UCF INTEGRATION"
+description: "documentation for Claude Code Framework by LOSTMIND AI"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Guardian UCF Integration - Complete Implementation Summary
+
+## 🛡️ Overview
+The Guardian context synthesis system has been successfully integrated with the Universal Claude Framework (UCF) command system, providing seamless access to advanced context management through simple bash commands.
+
+## 🚀 What Was Implemented
+
+### Core Components Created
+1. **Enhanced Engine Configuration**: Modified `onboarder.py` to store persistent engine paths and Guardian settings
+2. **Guardian Wrapper Utility**: Created `guardian_wrapper.py` providing unified CLI interface for all Guardian operations
+3. **UCF Command Integration**: Implemented three new UCF commands for effortless Guardian access
+4. **Auto-Configuration System**: Engine paths are automatically detected from stored configuration, eliminating manual path management
+
+### UCF Commands Available
+
+#### `/ucf-guardian-refresh` 
+- **Function**: Updates context with latest conversations from Claude Code
+- **Arguments**: None required (auto-detects configuration)
+- **Output**: Comprehensive context refresh with conversation statistics
+
+#### `/ucf-guardian-status`
+- **Function**: Reports context freshness and Guardian system health
+- **Arguments**: None required
+- **Output**: Status report with freshness indicators and actionable recommendations
+
+#### `/ucf-guardian-auto`
+- **Function**: Configures automatic refresh settings
+- **Arguments**: `[enable|disable] [frequency]`
+- **Options**: manual, hourly, daily, weekly
+- **Output**: Configuration confirmation with scheduled refresh details
+
+#### `/ucf-onboard-project` (Enhanced)
+- **Function**: Complete project onboarding with Guardian integration
+- **Arguments**: `<path_to_lostmind_ai_engine>`
+- **Output**: Full context synthesis + UCF command configuration
+
+## 📊 Test Results (Verified)
+
+### ✅ Guardian Wrapper Functionality
+- **Status Check (Pre-onboarding)**: Correctly detects unconfigured state
+- **Onboarding Process**: Successfully processes 2201 conversations across 23 sessions
+- **Status Check (Post-onboarding)**: Reports fresh context with proper statistics
+- **Refresh Operation**: Updates context successfully with conversation counts
+- **Auto-Refresh Config**: Properly enables/disables with frequency settings
+
+### ✅ Configuration Persistence
+- **Engine Config**: Stored in `.lostmind_ai_context/engine_config.json`
+- **Status Tracking**: Maintained in `.lostmind_ai_context/guardian_status.json`
+- **Auto-Detection**: UCF commands automatically find configuration without user input
+
+### ✅ Context File Generation
+All Guardian context files generated successfully:
+- `conversation_threads.json` (6.5MB) - Complete conversation data
+- `chat_history.md` (1.3MB) - Timeline format conversation history  
+- `context_insights.md` (1.4KB) - AI-generated insights and patterns
+- `session_analysis.md` (5.8KB) - Session breakdown and statistics
+- `decision_timeline.json` (188KB) - Chronological decision tracking
+- `PROJECT_MAP.md` (305KB) - Project structure mapping
+
+## 🎯 User Benefits
+
+### Before Integration
+- Users needed to manually specify engine paths for every Guardian operation
+- Complex command-line arguments required for context updates
+- No visibility into context freshness or Guardian system health
+- Manual tracking of when context was last updated
+
+### After Integration
+- **Zero Configuration**: UCF commands work automatically after initial onboarding
+- **Simple Commands**: Three easy-to-remember UCF commands for all Guardian operations
+- **Status Visibility**: Clear reporting of context freshness and recommendations
+- **Automated Refresh**: Optional scheduled refresh with user-defined frequency
+
+## 🛠️ Technical Architecture
+
+### Configuration Storage
+```json
+{
+  "engine_path": "/path/to/lostmind_ai_engine",
+  "project_path": "/current/project/path", 
+  "configured_at": "2025-09-02T13:14:37.186108",
+  "guardian_enabled": true,
+  "auto_refresh_enabled": true,
+  "auto_refresh_frequency": "daily"
+}
+```
+
+### Status Tracking
+```json
+{
+  "last_update": "2025-09-02T13:15:06.171525",
+  "status": "success",
+  "total_conversations": 2201,
+  "total_sessions": 23
+}
+```
+
+### UCF Command Flow
+1. **User runs UCF command** → `.claude/commands/ucf-guardian-*.md`
+2. **Command executes wrapper** → `python3 .lostmind_ai_context/../lostmind_ai_engine/guardian_wrapper.py`
+3. **Wrapper auto-detects config** → `.lostmind_ai_context/engine_config.json`
+4. **Guardian operation executes** → `bash run_engine.sh guardian`
+5. **Status updated** → `.lostmind_ai_context/guardian_status.json`
+
+## 📋 Usage Examples
+
+### Initial Project Setup
+```bash
+# Run enhanced onboarding (creates Guardian + UCF integration)
+/ucf-onboard-project /path/to/lostmind_ai_engine
+
+# Result: Project fully configured with Guardian context + UCF commands ready
+```
+
+### Daily Workflow
+```bash
+# Check if context needs refresh
+/ucf-guardian-status
+
+# Refresh context with latest conversations  
+/ucf-guardian-refresh
+
+# Configure automatic daily refresh
+/ucf-guardian-auto enable 
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

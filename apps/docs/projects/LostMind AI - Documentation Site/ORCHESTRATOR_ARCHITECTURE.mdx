@@ -1,0 +1,150 @@
+---
+title: "ORCHESTRATOR ARCHITECTURE"
+description: "architecture for BD-News-Task"
+category: "architecture"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "architecture,miscellaneous"
+---
+
+# AutonomousOrchestrator Architecture Specification
+
+## Overview
+
+This document specifies the architecture for the AutonomousOrchestrator main coordination engine, including the missing MessageBus and StateManager foundation classes. The orchestrator coordinates a 4-agent pipeline for autonomous multi-website news extraction.
+
+## Client Requirements Compliance
+- **Memory**: <2GB RAM for 50 concurrent articles
+- **Performance**: <30 minutes processing time
+- **Success Rate**: >80% successful extraction
+- **Autonomy**: Zero external intervention required
+
+## Foundation Classes Architecture
+
+### 1. AutonomousMessageBus
+
+Thread-safe async message passing system for agent coordination:
+
+```python
+class AutonomousMessageBus:
+    """
+    Thread-safe async message bus for multi-agent communication
+    Implements publish-subscribe pattern with direct routing
+    """
+    
+    async def initialize(self) -> Dict[str, Any]
+    async def register_agent(self, agent_id: str, agent_ref: BaseAgent) -> bool
+    async def unregister_agent(self, agent_id: str) -> bool
+    async def send_message(self, message: AgentMessage) -> Dict[str, Any]
+    async def broadcast_message(self, message: AgentMessage) -> Dict[str, Any]
+    async def get_system_status(self) -> Dict[str, Any]
+    async def shutdown(self) -> Dict[str, Any]
+```
+
+**Key Features**:
+- Priority queue message routing (1=critical, 4=low)
+- Automatic retry with exponential backoff
+- Message correlation tracking
+- Dead letter queue for failed messages
+- Performance metrics and monitoring
+
+### 2. AutonomousStateManager  
+
+Shared state management with thread-safe operations:
+
+```python
+class AutonomousStateManager:
+    """
+    Thread-safe shared state manager for agent coordination
+    Maintains session state, progress tracking, and result aggregation
+    """
+    
+    async def initialize_session(self, session_id: str, config: Dict) -> Dict[str, Any]
+    async def update_agent_status(self, agent_id: str, status: str, progress: float) -> bool
+    async def store_intermediate_result(self, agent_id: str, result_type: str, data: Any) -> bool
+    async def get_shared_data(self, data_key: str) -> Any
+    async def set_shared_data(self, data_key: str, data: Any) -> bool
+    async def get_session_summary(self, session_id: str) -> Dict[str, Any]
+    async def cleanup_session(self, session_id: str) -> Dict[str, Any]
+```
+
+**Key Features**:
+- Session-based data isolation
+- Atomic operations with locks
+- Progress tracking across all agents
+- Result aggregation and caching
+- Memory usage monitoring
+
+## AutonomousOrchestrator Architecture
+
+### Core Coordination Engine
+
+```python
+class AutonomousOrchestrator:
+    """
+    Main coordination engine for autonomous 4-agent news extraction pipeline
+    
+    Manages: Reconnaissance → Discovery → Extraction → Storage
+    Ensures: <2GB RAM, <30min processing, >80% success rate
+    """
+    
+    def __init__(self, config: Dict[str, Any])
+    async def initialize_system(self) -> Dict[str, Any]
+    async def orchestrate_news_extraction(self, websites: List[str], max_articles: int) -> Dict[str, Any]
+    async def coordinate_agent_pipeline(self, session_data: Dict) -> Dict[str, Any] 
+    async def monitor_system_performance(self) -> Dict[str, Any]
+    async def handle_autonomous_errors(self, error_context: Dict) -> Dict[str, Any]
+    async def generate_final_report(self, session_id: str) -> Dict[str, Any]
+    async def graceful_shutdown(self) -> Dict[str, Any]
+```
+
+### Agent Pipeline Coordination
+
+**Phase 1: Reconnaissance Agent**
+```python
+async def coordinate_reconnaissance_phase(self, websites: List[str]) -> Dict[str, Any]:
+    """
+    Coordinate website analysis and strategy determination
+    
+    Inputs: Website URLs list
+    Outputs: Site analysis, auth requirements, scraping strategies
+    Autonomous Decisions: Static vs JS rendering, rate limiting, auth approach
+    """
+```
+
+**Phase 2: Discovery Agent**  
+```python
+async def coordinate_discovery_phase(self, reconnaissance_results: Dict) -> Dict[str, Any]:
+    """
+    Coordinate intelligent link discovery across all sites
+    
+    Inputs: Site analysis and scraping strategies
+    Outputs: Validated article URLs (max 50 total)
+    Autonomous Decisions: Link relevance scoring, duplicate detection
+    """
+```
+
+**Phase 3: Extraction Agent**
+```python
+async def coordinate_extraction_phase(self, article_urls: List[str]) -> Dict[str, Any]:
+    """
+    Coordinate content extraction from discovered articles
+    
+    Inputs: Article URLs with extraction strategies
+    Outputs: Clean content in multiple formats (HTML/MD/TXT/JSON)
+    Autonomous Decisions: Content cleaning strategy, ad removal
+    """
+```
+
+**Phase 4: Storage Agent**
+```python
+async def coordinate_storage_phase(self, extracted_content: Dict) -> Dict[str, Any]:
+    """
+    Coordinate file organization and cloud storage
+    
+    Inputs: Extracted content with metadata
+    Outputs: Organized folder structure, GCS backup, summary
+    Autonomous Deci
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

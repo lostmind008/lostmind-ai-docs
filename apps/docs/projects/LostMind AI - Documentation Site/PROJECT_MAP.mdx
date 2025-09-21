@@ -1,0 +1,84 @@
+---
+title: "PROJECT MAP"
+description: "documentation for LostMind AI - Documentation Site"
+category: "documentation"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Project: LostMindAI Monorepo (Next.js 15 + Turborepo)
+
+> [📚 Documentation Hub](../README.md) | [🏠 Main README](../../README.md) | [📈 Current State — canonical](./CURRENT_PROJECT_STATE.md)
+
+Generated: 2025-09-16
+Last Updated: 2025-09-16
+
+## Quick Context
+
+Professional infrastructure restoration is in progress. For the authoritative live status, consult `CURRENT_PROJECT_STATE.md`; this file summarizes the structure only.
+
+## Directory Structure (Current)
+
+```
+LostMindAI-TurboRepo/
+├── README.md
+├── CLAUDE.md
+├── .env.example
+├── docs/
+│   ├── architecture/
+│   ├── guides/
+│   └── project/
+├── apps/
+│   ├── ask/           # 🧪 Orb UI scaffold (public visitor roadmap in progress)
+│   └── marketing/     # 🧱 Marketing shell (awaits redesign + integrations)
+├── packages/
+│   ├── ai-clients/    # 🧪 google-genai abstraction scaffold (methods stubbed)
+│   ├── auth/          # ✅ NextAuth helpers + middleware
+│   ├── billing/       # 🧱 Stripe scaffolding (webhooks/entitlements TODO)
+│   ├── config/        # ✅ Shared ESLint/TS/Tailwind configs
+│   ├── db/            # 🧱 Prisma foundation (RLS + migrations pending)
+│   └── ui/            # ✅ Shared UI components (shadcn-derived)
+├── services/
+│   └── ai-compute/    # 🧪 FastAPI service (IAM + Redis; needs tests & prod setup)
+├── infra/
+│   └── terraform/gcp/ # present
+└── .lostmind_ai_context/
+```
+
+## Implementation Status (Reference only)
+
+Always cross-check the canonical progress tracker before acting. Highlights below mirror `CURRENT_PROJECT_STATE.md`:
+
+### ✅ Foundations in place
+
+- Turborepo + pnpm workspace configured
+- Shared tooling packages (`config`, `ui`, parts of `auth`) available
+- Docker Compose stack covers Postgres, Redis, Next.js apps, FastAPI
+
+### 🧪 Active development
+
+- `apps/ask`: Orb UI live; visitor-token security + persistence work planned
+- `services/ai-compute`: IAM + Redis scaffolding present; tests/deployment pending
+- `packages/ai-clients`, `packages/billing`, `packages/db`: functional stubs requiring completion
+
+### 📋 Planned (not yet shipped)
+
+- Additional apps (`private-docs`, `chatcrawler`, `justdropit`, `admin`)
+- New packages (`security`, `rag`, `utils`)
+- Additional FastAPI services (`document-processor`, `crawler-engine`, `security-monitor`)
+
+## Git & Workflow
+
+- Default branch: `main`
+- Short‑lived feature branches, conventional commits, PRs required
+- See `docs/internal/agent-tasks-prompts.md` for active, prioritized tasks (internal)
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

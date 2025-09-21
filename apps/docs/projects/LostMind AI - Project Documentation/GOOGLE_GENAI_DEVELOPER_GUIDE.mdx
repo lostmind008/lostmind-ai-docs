@@ -1,0 +1,195 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "guide"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# Google GenAI SDK Developer Guide
+## Latest Release Alignment & Comprehensive Development Reference
+
+> ⚠️ **CRITICAL SDK MIGRATION WARNING**
+> 
+> The legacy `google-generativeai` SDK reaches **end-of-life on November 30, 2025**. All new projects MUST use the new `google-genai` SDK. This guide provides comprehensive migration patterns and best practices.
+> 
+> **For production readiness assessment, see:** [Production Technical Analysis](./PRODUCTION_TECHNICAL_ANALYSIS.md)
+
+### Table of Contents
+1. [Overview & Migration Context](#overview--migration-context)
+2. [Installation & Environment Setup](#installation--environment-setup)
+3. [Client Configuration & Authentication](#client-configuration--authentication)  
+4. [Core Models & Capabilities](#core-models--capabilities)
+5. [Content Generation Patterns](#content-generation-patterns)
+6. [File Handling & Multimodal Support](#file-handling--multimodal-support)
+7. [Content Caching Implementation](#content-caching-implementation)
+8. [Grounding & Search Integration](#grounding--search-integration)
+9. [URL Context & External Data](#url-context--external-data)
+10. [Prompt Enhancement Pipeline](#prompt-enhancement-pipeline)
+11. [Task-Specific Implementations](#task-specific-implementations)
+12. [Common Pitfalls & Solutions](#common-pitfalls--solutions)
+13. [Performance & Best Practices](#performance--best-practices)
+14. [Migration from Legacy SDK](#migration-from-legacy-sdk)
+
+---
+
+## Overview & Migration Context
+
+### Critical SDK Transition Information
+
+The Google GenAI SDK (`google-genai`) is the **official replacement** for the legacy `google-generativeai` SDK. This transition became critical with the Gemini 2.0 release in late 2024.
+
+**Key Timeline:**
+- **May 2025**: Google GenAI SDK reached General Availability (GA)
+- **November 30, 2025**: Legacy SDK (`google-generativeai`) end-of-life
+- **Current Status**: All new features exclusively available in `google-genai`
+
+**Why This Matters:**
+```python
+# ❌ DEPRECATED - Legacy SDK (End of Life Nov 2025)
+import google.generativeai as genai
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel('gemini-pro')
+
+# ✅ CURRENT - Google GenAI SDK (Recommended)
+from google import genai
+from google.genai import types
+client = genai.Client(api_key="YOUR_API_KEY")
+```
+
+### Unified API Access
+
+The new SDK provides unified access to:
+- **Gemini Developer API**: Direct access with API key
+- **Vertex AI API**: Enterprise features with Google Cloud integration
+
+---
+
+## Installation & Environment Setup
+
+### Installation
+
+```bash
+# Primary installation
+pip install google-genai
+
+# Optional: For improved async performance
+pip install google-genai[aiohttp]
+```
+
+### Version Verification
+
+```python
+import google.genai
+print(f"Google GenAI SDK Version: {google.genai.__version__}")
+```
+
+### Environment Configuration
+
+#### Gemini Developer API Setup
+```bash
+export GOOGLE_API_KEY='your-gemini-api-key'
+```
+
+#### Vertex AI Setup
+```bash
+export GOOGLE_GENAI_USE_VERTEXAI=True
+export GOOGLE_CLOUD_PROJECT='your-project-id'
+export GOOGLE_CLOUD_LOCATION='us-central1'
+```
+
+---
+
+## Client Configuration & Authentication
+
+### Basic Client Creation
+
+```python
+from google import genai
+from google.genai import types
+
+# Method 1: Environment variables (Recommended)
+client = genai.Client()  # Automatically uses GOOGLE_API_KEY
+
+# Method 2: Explicit API key
+client = genai.Client(api_key='your-api-key')
+
+# Method 3: Vertex AI
+client = genai.Client(
+    vertexai=True,
+    project='your-project-id',
+    location='us-central1'
+)
+```
+
+### API Version Selection
+
+```python
+# Use stable v1 API (Recommended for production)
+client = genai.Client(
+    http_options=types.HttpOptions(api_version='v1')
+)
+
+# Use beta API (For latest features)
+client = genai.Client(
+    http_options=types.HttpOptions(api_version='v1beta')
+)
+```
+
+### Advanced HTTP Configuration
+
+```python
+# Proxy configuration
+http_options = types.HttpOptions(
+    client_args={'proxy': 'http://proxy:8080'},
+    async_client_args={'proxy': 'http://proxy:8080'}
+)
+client = genai.Client(http_options=http_options)
+
+# SOCKS5 proxy
+http_options = types.HttpOptions(
+    client_args={'proxy': 'socks5://user:pass@host:port'},
+    async_client_args={'proxy': 'socks5://user:pass@host:port'}
+)
+```
+
+---
+
+## Core Models & Capabilities
+
+### Current Model Specifications
+
+#### Gemini 2.5 Pro
+```python
+# Specifications:
+# - Input tokens: 1,048,576 (1M)  
+# - Output tokens: 65,535 (default)
+# - Context window: 2,097,152 tokens
+# - Knowledge cutoff: Current
+# - Modalities: Text, Image, Video, Audio, PDF
+
+model_name = "gemini-2.5-pro"
+```
+
+#### Gemini 2.5 Flash  
+```python
+# Specifications:
+# - Input tokens: 32,768
+# - Output tokens: 32,768
+# - Context window: 1,048,576 tokens
+# - Knowledge cutoff: Current
+# - Modalities: Text, Image, Video, Audio
+
+model_name = "gemini-2.5-flash"
+```
+
+#### Gemini 2.0 Flash
+```python
+# Specifications:
+# - Input tokens: 1,000,000
+# - Output tokens: 8,192 (default)
+# - Context window: 1,000,000 
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,179 @@
+---
+title: "Prime"
+description: "Prime Claude with comprehensive project context for optimal performance"
+category: "context-management"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+argument-hint: "[--deep] [--focus=area] [--update]"
+model: "sonnet"
+allowed-tools: "Read, Search, ListFiles, Task"
+---
+
+# Project Context Priming Command
+
+Load and analyze comprehensive project context to optimize Claude's understanding and performance for the current codebase.
+
+## Context Analysis Process
+
+1. **Project Discovery**:
+   - Analyze project structure and architecture patterns
+   - Identify technology stack and frameworks
+   - Detect build tools, package managers, and dependencies
+   - Map directory structure and file organization
+   - Identify key configuration files and settings
+
+2. **Codebase Understanding**:
+   - Scan entry points and main application files
+   - Analyze API endpoints and route definitions
+   - Identify data models, schemas, and database structure
+   - Map component hierarchies and dependencies
+   - Detect testing strategies and coverage
+
+3. **Development Environment**:
+   - Parse package.json, requirements.txt, go.mod, etc.
+   - Analyze Docker configurations and deployment scripts
+   - Identify CI/CD pipelines and automation
+   - Map environment variables and configuration
+   - Understand development and deployment workflows
+
+## Context Categories
+
+### **Architecture & Design**
+- Overall system architecture and patterns
+- Service boundaries and microservice organization
+- Database design and relationships
+- API design patterns and conventions
+- Frontend component architecture
+
+### **Technology Stack**
+- Programming languages and versions
+- Frameworks and libraries in use
+- Build tools and bundlers
+- Testing frameworks and strategies
+- Deployment and infrastructure tools
+
+### **Code Patterns & Conventions**
+- Naming conventions and style guides
+- Error handling patterns
+- Authentication and authorization approaches
+- Logging and monitoring strategies
+- Performance optimization techniques
+
+### **Business Logic & Domain**
+- Core business entities and relationships
+- User workflows and use cases
+- Integration points and external services
+- Data flow and processing logic
+- Security requirements and implementations
+
+## Priming Modes
+
+### **Standard Priming** (Default)
+```bash
+/prime
+```
+- Analyze project structure and main files
+- Identify technology stack and patterns
+- Load key configuration and documentation
+- Generate concise context summary
+
+### **Deep Analysis**
+```bash
+/prime --deep
+```
+- Comprehensive codebase analysis
+- Detailed dependency mapping
+- Performance and security assessment
+- Complete architectural documentation
+- Generate detailed context map
+
+### **Focused Priming**
+```bash
+/prime --focus=frontend
+/prime --focus=backend
+/prime --focus=auth
+/prime --focus=api
+```
+- Target specific areas or domains
+- Deep dive into focused components
+- Load relevant documentation and patterns
+- Optimize for specific development tasks
+
+### **Context Update**
+```bash
+/prime --update
+```
+- Refresh existing context with recent changes
+- Analyze new files and modifications
+- Update technology stack understanding
+- Maintain context freshness during development
+
+## Context Output
+
+### **Project Summary**
+```markdown
+# Project: [Name] - [Type]
+
+## Technology Stack
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Backend**: FastAPI, Python 3.11, PostgreSQL
+- **Infrastructure**: Docker, AWS, Terraform
+- **Testing**: Pytest, Playwright, Jest
+
+## Architecture Overview
+- [High-level architecture description]
+- [Key design patterns and principles]
+- [Service organization and boundaries]
+
+## Key Areas
+- Authentication: OAuth2 + JWT implementation
+- API: RESTful with OpenAPI documentation  
+- Database: PostgreSQL with Alembic migrations
+- Frontend: Server components with client hydration
+```
+
+### **Development Context**
+- Current development priorities
+- Recent changes and ongoing work
+- Known issues and technical debt
+- Performance considerations
+- Security requirements
+
+### **Agent Optimization**
+Based on project analysis, automatically configure:
+- Relevant sub-agents for the technology stack
+- Quality gates appropriate for the project
+- Testing strategies matching current setup
+- Performance optimization focus areas
+- Security considerations for the domain
+
+## Memory Integration
+
+### **Persistent Context**
+- Store project context in `~/.claude/memory/projects/[project-name]/`
+- Create project-specific CLAUDE.md with key insights
+- Build searchable knowledge base of patterns and decisions
+- Maintain version history of architectural changes
+
+### **Context Refresh**
+- Monitor file system changes for context updates
+- Automatically refresh when package.json or dependencies change
+- Update context when new major files are added
+- Maintain context freshness without re-analyzing entire codebase
+
+## Integration with Development Workflow
+
+### **IDE Integration**
+- Export context for IDE extensions and plugins
+- Generate project documentation from context analysis
+- Create development environment setup guides
+- Provide onboarding materials for new team members
+
+### **Team Collaboration**
+- Share context insights with team members
+- Document architectural decisions and rationale
+- Create searchable knowledge b
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

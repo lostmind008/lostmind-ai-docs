@@ -1,0 +1,176 @@
+---
+title: "Ucf Mode Test"
+description: "Set project to TEST mode for quality assurance and pre-deployment validation"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-test
+
+## Your Role: SDLC Mode Manager - TESTING Stage
+
+This command sets the current project to **TEST MODE** - the quality assurance stage where you're ensuring code quality, running comprehensive tests, and validating readiness for deployment.
+
+## Your Workflow
+
+1. **Update Project Mode**: Set the current SDLC mode in the project's CLAUDE.md
+   ```bash
+   # Check if .claude/CLAUDE.md exists
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Load the existing project configuration to preserve content
+
+3. **Update Mode Section**: Add or update the SDLC mode section in CLAUDE.md:
+   ```markdown
+   ## CURRENT SDLC MODE: TEST
+   **Set**: [Current timestamp]
+   **Context**: Quality assurance and pre-deployment validation phase
+
+   ### TEST MODE BEHAVIORS
+   Claude will focus on:
+   - Running all linters and formatters automatically
+   - Checking for missing or outdated dependencies
+   - Verifying all API versions are current and compatible
+   - Generating comprehensive test suites
+   - Checking for security vulnerabilities
+   - Ensuring complete documentation
+   - Validating error handling and edge cases
+   - Performance testing and optimization
+
+   **Quality gates enforced before any deployment consideration**
+   ```
+
+4. **Run Quality Checks**: Execute comprehensive quality validation
+
+5. **Generate Test Report**: Create detailed testing summary
+
+## TEST Mode Guidelines for Claude
+
+When in TEST mode, Claude should:
+
+**🔍 AUTOMATIC QUALITY CHECKS (Run immediately):**
+- Execute all linters (ESLint, Prettier, Black, Ruff, etc.)
+- Check dependency versions and security vulnerabilities
+- Verify all APIs are using current, stable versions
+- Run existing test suites and report coverage
+- Check for hardcoded secrets or credentials
+- Validate environment variable usage
+- Scan for performance bottlenecks
+
+**🧪 TEST GENERATION:**
+- Create missing unit tests for critical functions
+- Generate integration tests for API endpoints
+- Add edge case and error handling tests
+- Create performance/load testing scenarios
+- Implement mock data and test fixtures
+
+**📋 DOCUMENTATION VALIDATION:**
+- Ensure all functions have proper documentation
+- Verify API documentation is current with code
+- Check README.md completeness and accuracy
+- Validate code comments are in Australian English
+- Confirm all API VERIFICATION blocks are current
+
+**🔒 SECURITY CHECKS:**
+- Scan for common security vulnerabilities
+- Verify proper input validation and sanitisation
+- Check authentication and authorisation implementations
+- Validate HTTPS usage and security headers
+- Review error message information disclosure
+
+## Expected Output
+
+```
+✅ Project mode set to: TEST
+📋 Mode Context: Quality assurance and validation
+
+🎯 TEST Mode Active:
+   • Focus: Comprehensive quality validation
+   • Behavior: Test, lint, secure, optimise
+   • All quality gates enforced
+
+🔍 Running comprehensive quality checks...
+
+📊 Test Report:
+   ✅ Linting: [Status]
+   ✅ Type Checking: [Status]
+   ✅ Unit Tests: [Coverage]%
+   ✅ Security Scan: [Issues found]
+   ✅ Dependencies: [Outdated packages]
+   ✅ API Verification: [Current/Stale]
+
+Ready for quality assurance! Running all validation checks...
+```
+
+## Comprehensive Quality Checklist
+
+**Code Quality:**
+- [ ] All linters pass (ESLint, Prettier, Black, etc.)
+- [ ] Type checking passes (TypeScript, mypy)
+- [ ] No code smells or duplications
+- [ ] Proper error handling throughout
+
+**Testing:**
+- [ ] Unit test coverage > 80%
+- [ ] Integration tests for all APIs
+- [ ] Edge cases and error scenarios covered
+- [ ] Performance tests for critical paths
+
+**Security:**
+- [ ] No hardcoded secrets or credentials
+- [ ] Input validation and sanitisation
+- [ ] Proper authentication/authorisation
+- [ ] Security headers configured
+
+**Dependencies:**
+- [ ] All packages up to date
+- [ ] No known security vulnerabilities
+- [ ] API versions verified within 30 days
+- [ ] Unused dependencies removed
+
+**Documentation:**
+- [ ] All functions documented
+- [ ] README.md complete and accurate
+- [ ] API documentation current
+- [ ] Australian English used consistently
+
+## API Verification in TEST Mode
+
+Claude will automatically:
+- Check all API/SDK versions are current
+- Verify no deprecated APIs are in use
+- Update API VERIFICATION blocks with current dates
+- Test API connectivity and responses
+- Validate API rate limits and error handling
+
+## Mode Integration
+
+This mode integrates with:
+- **Guardian Context**: Test results preserved across sessions
+- **LostMind AI Standards**: Full quality compliance enforced
+- **Quality Philosophy**: Professional standards without over-engineering
+- **Solo Developer Support**: Comprehensive quality automation
+
+## Automated Tools Integration
+
+Claude will run:
+```bash
+# JavaScript/TypeScript projects
+npm run lint
+npm run type-check
+npm test
+npm audit
+
+# Python projects
+black --chec
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,139 @@
+---
+title: "Architectural Refactor Task"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Task: Fix LostMind AI Framework Architecture - Proper Claude Code Integration
+
+## 🎯 Mission
+**CRITICAL**: The current PR violates Claude Code architectural principles. The framework must be a **system-level enhancement** that lives within the Claude Code ecosystem, not a user-managed project component that clutters project directories.
+
+## 🚨 Current Problems with PR #15
+
+| **Issue** | **Current Wrong Approach** | **Impact** |
+|-----------|---------------------------|------------|
+| **Engine Location** | `lostmind_ai_engine/` in project directories | ❌ Pollutes projects with framework code |
+| **Manual Path Management** | Users provide engine paths in commands | ❌ Breaks Claude Code UX paradigm |
+| **Non-Standard Integration** | Framework acts like external tool | ❌ Doesn't feel like native Claude Code feature |
+| **CLAUDE.md Location** | Inside `.claude/CLAUDE.md` | ❌ Violates official Claude Code documentation |
+
+## ✅ Required Architecture (Based on Official Claude Code Documentation)
+
+```
+~/.claude/                              # GLOBAL Claude Code system directory
+├── lostmind_ai_engine/                # 🎯 ENGINE LIVES HERE (system component)
+│   ├── context_guardian.py
+│   ├── run_engine.sh
+│   ├── requirements.txt
+│   └── [all engine files]
+├── commands/                          # Global UCF commands
+│   ├── ucf-onboard-project.md        # Auto-detects engine at ~/.claude/lostmind_ai_engine/
+│   ├── ucf-guardian-refresh.md       
+│   ├── ucf-create-task-brief.md
+│   └── ucf-agent-create.md
+├── hooks/                             # Global hooks (optional)
+└── settings.json                      # Global settings
+
+my-project/                            # User's actual project (CLEAN!)
+├── CLAUDE.md                          # 🎯 PROJECT MEMORY (root level, not in .claude/)
+├── .claude/                           # Project-specific Claude Code settings only
+│   ├── hooks/                         # Project-specific hooks (if any)
+│   ├── agents/                        # Generated agents for this project
+│   └── settings.json                  # Project-specific settings
+├── .lostmind_ai_context/              # Framework-generated context files
+└── src/                               # Actual project files
+```
+
+## 📋 TASK BREAKDOWN
+
+### Phase 1: Move Engine to Global Location ✅ REQUIRED
+
+**1.1 Update Installation Script**
+- [ ] Modify `install_lostmind_ai_framework.sh` to install engine to `~/.claude/lostmind_ai_engine/`
+- [ ] Remove all references to user-provided engine paths
+- [ ] Ensure engine is executable and properly permissioned
+
+**1.2 Update Engine Detection Logic**
+- [ ] All UCF commands must auto-detect engine at `~/.claude/lostmind_ai_engine/`
+- [ ] Remove `$ARG1` (engine path) from all command files
+- [ ] Add fallback error if engine not found in expected location
+
+### Phase 2: Fix Command Interface ✅ REQUIRED
+
+**2.1 Update UCF Command Files**
+
+**Before (Wrong):**
+```bash
+# ucf-onboard-project.md
+bash "$ARG1/run_engine.sh" onboard
+```
+
+**After (Correct):**
+```bash
+# ucf-onboard-project.md  
+ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+    echo "❌ LostMind AI engine not found. Please run the framework installer."
+    exit 1
+fi
+bash "$ENGINE_PATH/run_engine.sh" onboard
+```
+
+**Commands to update:**
+- [ ] `.claude/commands/ucf-onboard-project.md`
+- [ ] `.claude/commands/ucf-create-task-brief.md`
+- [ ] `.claude/commands/ucf-agent-create.md`
+- [ ] `.claude/commands/ucf-guardian-refresh.md`
+- [ ] `.claude/commands/ucf-guardian-status.md`
+- [ ] `.claude/commands/ucf-export-chat.md`
+
+**2.2 Update Command Descriptions**
+- [ ] Remove all mentions of "provide engine path"
+- [ ] Update argument hints to remove engine path parameters
+- [ ] Simplify descriptions to reflect auto-detection
+
+### Phase 3: Fix CLAUDE.md Placement ✅ REQUIRED
+
+**3.1 Correct CLAUDE.md Location**
+- [ ] Ensure CLAUDE.md is created in **PROJECT ROOT** (not inside `.claude/`)
+- [ ] Update all onboarding scripts to create `./CLAUDE.md`
+- [ ] Remove any logic creating `.claude/CLAUDE.md`
+
+**3.2 Project Directory Structure**
+```
+project-root/
+├── CLAUDE.md                     # ✅ HERE (project memory)
+├── .claude/                      # Project-specific Claude Code config
+│   ├── agents/                  # Generated agents
+│   └── settings.json            # Project settings (if needed)
+├── .lostmind_ai_context/        # Framework context files
+└── [actual project files]       # Clean project structure
+```
+
+### Phase 4: Update Installation Process ✅ REQUIRED
+
+**4.1 Clean Installation Flow**
+```bash
+# User workflow should be:
+git clone [repo]
+cd [repo]
+./install_lostmind_ai_framework.sh
+cd .. && rm -rf [repo]  # Repository no longer needed!
+
+# Then from any project:
+cd ~/my-actual-project
+/ucf-onboard-project  # Just works, no paths needed
+```
+
+**4.2 Installer Requirements**
+- [ ] Install all components to `~/.claude/`
+- [ ] Make engine globally accessible
+- [ ] No project directory pollution
+- 
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

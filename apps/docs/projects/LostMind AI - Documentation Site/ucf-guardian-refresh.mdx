@@ -1,0 +1,58 @@
+---
+title: "Ucf Guardian Refresh"
+description: "Refresh Guardian context with latest conversations (no arguments required)"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-guardian-refresh
+
+## Your Role: Guardian Context Manager
+
+This command refreshes your project's conversation context using The Guardian system. It automatically detects the engine configuration and updates all context files with the latest conversation data.
+
+## Your Workflow
+
+1.  **Auto-Detection:** The system automatically detects the Guardian engine at the global installation location.
+2.  **Execute Refresh:** Run the Guardian wrapper to update context with latest conversations.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/guardian_wrapper.py" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+    python3 "$ENGINE_PATH/guardian_wrapper.py" refresh
+    ```
+3.  **Report Results:** Display the refresh results including conversation counts, session statistics, and any errors.
+4.  **Status Update:** Inform the user about the updated context and available files.
+
+## Expected Outcomes
+
+After successful execution, the user will have:
+- **Updated conversation context** in `.lostmind_ai_context/`
+- **Fresh insights** from Gemini AI analysis
+- **Current conversation statistics** (total conversations, sessions)
+- **Timestamped status** for future reference
+
+## Error Handling
+
+If the refresh fails:
+- Check if Guardian engine is installed at `~/.claude/lostmind_ai_engine/`
+- Verify the project has been onboarded with `/ucf-onboard-project`
+- Suggest running the framework installer if engine is missing
+- Display clear error messages with troubleshooting steps
+
+## Notes
+
+This command requires no arguments and works automatically after initial project onboarding. It's designed for frequent use during active development to keep context current with ongoing conversations.
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

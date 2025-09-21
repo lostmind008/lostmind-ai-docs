@@ -1,0 +1,39 @@
+---
+title: "Tsconfig"
+description: "misc for New Website Template - Claude Code Engineering"
+category: "misc"
+project: "New Website Template - Claude Code Engineering"
+lastUpdated: "2025-09-21"
+tags: "misc,websites"
+---
+
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+
+---
+*This content was automatically extracted from New Website Template - Claude Code Engineering. For the most up-to-date information, refer to the source project.*

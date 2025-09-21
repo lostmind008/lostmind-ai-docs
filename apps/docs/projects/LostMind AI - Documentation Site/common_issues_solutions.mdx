@@ -1,0 +1,205 @@
+---
+title: "Common Issues Solutions"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Common Issues and Solutions for Claude Code
+
+This guide addresses frequently encountered issues with Claude Code and MCP tool integration, based on community feedback and official troubleshooting advice.
+
+## Installation Issues
+
+### Node.js Version Incompatibility
+
+**Issue:** Claude Code installation fails due to Node.js version requirements.
+
+**Solution:**
+1. Verify your Node.js version:
+   ```bash
+   node --version
+   ```
+2. If below version 18, upgrade using one of these methods:
+   ```bash
+   # Using nvm (recommended)
+   nvm install 18
+   nvm use 18
+   
+   # Direct installation
+   # For macOS:
+   brew install node@18
+   
+   # For Ubuntu/Debian:
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   ```
+3. Reinstall Claude Code:
+   ```bash
+   npm install -g @anthropic-ai/claude-code
+   ```
+
+### Permission Errors During Installation
+
+**Issue:** EACCES permission errors when installing globally.
+
+**Solution:**
+```bash
+# Create a directory for global packages
+mkdir ~/.npm-global
+
+# Configure npm to use this directory
+npm config set prefix '~/.npm-global'
+
+# Add to PATH in your ~/.profile or ~/.bashrc:
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Install without sudo
+npm install -g @anthropic-ai/claude-code
+```
+
+### Auto-Updater Issues
+
+**Issue:** Claude Code auto-updater fails or shows errors.
+
+**Solution:**
+1. Manually update Claude Code:
+   ```bash
+   npm update -g @anthropic-ai/claude-code
+   ```
+2. If that fails, try reinstalling:
+   ```bash
+   npm uninstall -g @anthropic-ai/claude-code
+   npm install -g @anthropic-ai/claude-code
+   ```
+3. For persistent issues, check the npm global prefix directory permissions:
+   ```bash
+   # Find your npm global prefix
+   npm config get prefix
+   
+   # Ensure you have write permissions to that directory
+   ls -la $(npm config get prefix)
+   
+   # Fix permissions if needed
+   sudo chown -R $(whoami) $(npm config get prefix)
+   ```
+
+## MCP Tool Integration Issues
+
+### MCP Tools Not Appearing
+
+**Issue:** Configured MCP tools don't appear in Claude Code.
+
+**Solutions:**
+
+1. Verify MCP server installation:
+   ```bash
+   # Check if the MCP package is installed
+   npm list -g | grep modelcontextprotocol
+   
+   # Install if missing
+   npm install -g @modelcontextprotocol/servers
+   ```
+
+2. Check configuration syntax:
+   - Ensure your config.json file has proper JSON formatting
+   - Verify that the "mcp" section and "servers" array are correctly structured
+
+3. Run MCP servers manually to check for errors:
+   ```bash
+   npx @modelcontextprotocol/servers filesystem
+   ```
+   If you see errors, address them based on the specific message.
+
+4. Restart Claude Code after making configuration changes:
+   ```bash
+   # Close existing sessions and start fresh
+   claude
+   ```
+
+### AMD CPU Compatibility Issues
+
+**Issue:** Installation fails on AMD Ryzen processors.
+
+**Solution:**
+1. Make sure you're using Node.js version 18 specifically (not newer)
+2. For Windows users, install via WSL2:
+   ```bash
+   # Install in WSL2 Ubuntu environment
+   npm install -g @anthropic-ai/claude-code
+   ```
+3. Some users have reported success by using nvm to manage Node.js:
+   ```bash
+   nvm install 18.18.0
+   nvm use 18.18.0
+   npm install -g @anthropic-ai/claude-code
+   ```
+
+### MCP Connection Errors
+
+**Issue:** Claude Code fails to connect to MCP servers.
+
+**Solutions:**
+1. Check for port conflicts:
+   ```bash
+   # Check if anything is using the default MCP port (often 8080)
+   lsof -i :8080
+   
+   # If there's a conflict, terminate the process or change the port in your MCP config
+   ```
+
+2. Verify network permissions:
+   - Check firewall settings if applicable
+   - Ensure localhost connections are allowed
+
+3. For WSL2 users:
+   - Enable WSL integration in Windows Firewall
+   - Ensure proper network connectivity between Windows and WSL
+
+### File System Access Issues
+
+**Issue:** Claude cannot access files or directories.
+
+**Solutions:**
+1. Check file system permissions:
+   ```bash
+   # Ensure Claude has read/write access to the directories you want it to work with
+   ls -la /path/to/your/project
+   ```
+
+2. Explicitly specify allowed directories in your MCP config:
+   ```json
+   {
+     "name": "filesystem",
+     "command": "npx @modelcontextprotocol/servers filesystem",
+     "env": {},
+     "args": [
+       "--allowedDirectories", 
+       "/path/to/your/project,/another/path"
+     ]
+   }
+   ```
+
+3. For the edit_file tool not appearing:
+   - Make sure to include it explicitly in the tools list:
+   ```json
+   "args": ["--tools", "read_file,write_file,edit_file,list_directory,create_directory"]
+   ```
+
+## Authentication Issues
+
+### OAuth Authentication Fails
+
+**Issue:** Cannot complete OAuth process during first-time setup.
+
+**Solutions:**
+1. Ensure you have an active Anthropic account with billing enabled
+2. Clear browser cookies and cache, then try again
+3. Check for browser extensions that might block redirects
+4. Try usin
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,63 @@
+---
+title: "Requirements"
+description: "misc for BD-News-Task"
+category: "misc"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "misc,miscellaneous"
+---
+
+# Scouted Resources Dependencies
+# ================================
+
+# GitHub Repository Analyzer Dependencies
+# ----------------------------------------
+google-genai>=1.0.0          # Google Gemini AI SDK (NOT google-generativeai)
+PyGithub>=2.3.0              # GitHub API client
+requests>=2.32               # HTTP library
+aiohttp>=3.8.0               # Async HTTP for concurrent operations
+psutil>=5.9.0                # System and process utilities
+
+# Batch Processing Dependencies
+# -----------------------------
+tqdm>=4.65.0                 # Progress bars
+concurrent.futures           # Standard library (Python 3.2+)
+
+# Universal Context Resolver Dependencies
+# ---------------------------------------
+# Uses standard library only:
+# - json, re, pathlib, dataclasses, logging, datetime, uuid, hashlib
+
+# Simple File Analyzer Dependencies  
+# ----------------------------------
+# Uses standard library only:
+# - os, json, csv, datetime, zipfile, re, pathlib
+
+# Optional Enhancements
+# ---------------------
+numpy>=1.24.0                # For advanced data processing
+pandas>=1.5.0                # For structured data analysis (if needed)
+
+# Development Dependencies
+# ------------------------
+pytest>=7.2.0                # For testing imported tools
+black>=22.0.0                # Code formatting
+ruff>=0.0.254                # Fast Python linter
+
+# Environment Variables Required
+# ==============================
+# GITHUB_TOKEN      - GitHub Personal Access Token
+# GOOGLE_API_KEY    - Gemini API key from Google AI Studio
+
+# Installation Commands
+# =====================
+# pip install -r requirements.txt
+# 
+# For minimal installation (basic file processing only):
+# pip install tqdm
+#
+# For full GitHub analysis capabilities:
+# pip install google-genai PyGithub requests aiohttp psutil tqdm
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

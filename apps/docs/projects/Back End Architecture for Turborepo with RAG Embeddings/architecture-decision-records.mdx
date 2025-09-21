@@ -1,0 +1,164 @@
+---
+title: "Architecture Decision Records"
+description: "architecture for Back End Architecture for Turborepo with RAG Embeddings"
+category: "architecture"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "architecture,main-platform"
+---
+
+# Architecture Decision Records (ADRs) Template
+
+## ADR-001: Next.js-First Architecture over Pure FastAPI
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+LostMind AI requires rapid go-to-market for multiple AI-powered applications while maintaining long-term scalability. The team has existing FastAPI services but needs to balance development speed with performance requirements.
+
+### Decision
+Adopt Next.js-first architecture with selective FastAPI service retention for compute-intensive operations.
+
+### Alternatives Considered
+1. **Pure FastAPI Architecture**: Separate FastAPI services for all backend operations
+2. **Microservices Architecture**: Multiple specialized FastAPI services
+3. **Hybrid Next.js/FastAPI**: Next.js for frontend + light APIs, FastAPI for heavy compute
+
+### Consequences
+
+**Positive**:
+- 3-5x faster development for CRUD operations
+- Single deployment target reduces DevOps complexity by 60-70%
+- Unified TypeScript codebase eliminates interface synchronization overhead
+- Simplified authentication and session management
+- Better developer experience with hot reloading
+
+**Negative**:
+- Some performance trade-offs for async-heavy workloads
+- Potential vendor lock-in with Vercel ecosystem
+- Learning curve for team members specialized in FastAPI
+
+**Mitigation Strategies**:
+- Retain FastAPI services for document processing, ML inference, and web crawling
+- Implement provider abstraction patterns to avoid vendor lock-in
+- Gradual migration plan to minimize disruption
+
+---
+
+## ADR-002: Turborepo over Nx for Monorepo Management
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Need to choose between Turborepo and Nx for managing the monorepo structure, considering team size, language requirements, and complexity.
+
+### Decision
+Use Turborepo for initial monorepo setup with planned evaluation of Nx at 10+ developers or when Python services exceed 30% of codebase.
+
+### Alternatives Considered
+1. **Nx**: More mature, better polyglot support, advanced caching
+2. **Lerna**: Legacy option, less actively maintained
+3. **Rush**: Microsoft's monorepo tool, more complex setup
+
+### Consequences
+
+**Positive**:
+- Simpler setup and configuration
+- Better integration with Vercel ecosystem
+- Excellent TypeScript/JavaScript support
+- Faster learning curve for team
+
+**Negative**:
+- Limited polyglot support compared to Nx
+- Less advanced caching mechanisms
+- May require migration as team grows
+
+**Decision Criteria**:
+- Migrate to Nx when:
+  - Team size exceeds 10 developers
+  - Python services exceed 30% of codebase
+  - Complex build dependencies emerge
+
+---
+
+## ADR-003: PostgreSQL with RLS for Multi-tenancy
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Multi-tenant SaaS application requires secure data isolation between tenants while maintaining performance and simplicity.
+
+### Decision
+Implement PostgreSQL with Row Level Security (RLS) combined with application-level validation and audit logging.
+
+### Alternatives Considered
+1. **Separate Databases per Tenant**: Maximum isolation, complex management
+2. **Schema-based Isolation**: Good isolation, moderate complexity
+3. **Application-level Isolation Only**: Simple but less secure
+
+### Consequences
+
+**Positive**:
+- Strong security through database-level enforcement
+- Single database simplifies operations
+- Cost-effective for small to medium scale
+- Good performance with proper indexing
+
+**Negative**:
+- Potential performance impact at scale
+- Risk of RLS bypass vulnerabilities
+- Complex query patterns in some cases
+
+**Security Measures**:
+- Multiple layers of tenant validation
+- Comprehensive audit logging
+- Regular security assessments
+- Automated tenant isolation testing
+
+---
+
+## ADR-004: Google Generative AI SDK with Provider Abstraction
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Need to choose primary AI provider while avoiding vendor lock-in and maintaining flexibility for future provider changes.
+
+### Decision
+Use Google Generative AI SDK as primary provider with abstraction layer enabling future provider swaps.
+
+### Alternatives Considered
+1. **OpenAI Only**: Strong API, expensive at scale
+2. **Anthropic Only**: High quality, limited model variety
+3. **Multi-provider from Start**: Complex, increased overhead
+
+### Consequences
+
+**Positive**:
+- Cost-effective scaling with Google's pricing
+- Strong multimodal capabilities
+- Unified SDK for Google AI and Vertex AI
+- Future-proofing through abstraction
+
+**Negative**:
+- Initial abstraction layer development overhead
+- Potential Google ecosystem dependency
+- Need to maintain multiple provider adapters
+
+**Implementation**:
+```typescript
+interface AIProvider {
+  generateText(prompt: string): Promise<string>
+  embedDocument(content: string): Promise<number[]>
+  searchRAG(query: string, context: Documen
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

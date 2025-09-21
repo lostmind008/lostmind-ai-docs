@@ -1,0 +1,186 @@
+---
+title: "USER GUIDE"
+description: "guide for GitHub Repository Analyzer with Gemini 2.5 Pro"
+category: "guide"
+project: "GitHub Repository Analyzer with Gemini 2.5 Pro"
+lastUpdated: "2025-09-21"
+tags: "guide,miscellaneous"
+---
+
+# User Guide - GitHub Repository Analyzer
+
+**Comprehensive usage guide for the GitHub Repository Analyzer with Gemini 2.5 Pro**
+
+## 🎯 Overview
+
+The GitHub Repository Analyzer is a professional-grade tool that provides **honest, evidence-based assessment** of GitHub repositories. Unlike tools that rely solely on descriptions or metadata, this analyzer verifies actual functionality through comprehensive testing and AI-powered evaluation.
+
+### Key Features
+
+- 🔍 **Evidence-Based Verification**: Tests actual deployments and builds
+- 🤖 **AI-Powered Assessment**: Gemini 2.5 Pro provides unbiased evaluation  
+- ⚡ **High-Performance Processing**: 378x faster with concurrent analysis
+- 📊 **Comprehensive Reporting**: JSON and Markdown reports with detailed insights
+- 🚫 **Anti-Hype Protocols**: Prevents overclaiming of functionality
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+1. **GitHub Personal Access Token**
+   - Generate at: https://github.com/settings/tokens
+   - Required scopes: `repo` (for private repos) or `public_repo` (public only)
+
+2. **Google AI Studio API Key**  
+   - Generate at: https://aistudio.google.com/app/apikey
+   - Provides access to Gemini 2.5 Pro/Flash models
+
+### Quick Setup
+
+```bash
+# 1. Clone and install
+git clone https://github.com/example/github-repository-analyzer.git
+cd github-repository-analyzer
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+
+# 2. Configure environment
+export GITHUB_TOKEN="ghp_your_token_here"
+export GOOGLE_API_KEY="your_gemini_key_here"
+
+# 3. Verify setup
+github-analyzer --help
+github-analyzer models
+```
+
+## 📋 Basic Usage
+
+### Analyze Your Own Repositories
+
+```bash
+# Sequential analysis (slower, backward compatible)
+github-analyzer
+
+# Concurrent analysis (recommended - 378x faster)
+github-analyzer --concurrent
+
+# High-performance with custom settings
+github-analyzer --concurrent --max-concurrent 20 --memory-limit 2000
+```
+
+### Analyze Specific Users
+
+```bash
+# Analyze public repositories of any GitHub user
+github-analyzer -u octocat --concurrent
+
+# Analyze with custom output directory
+github-analyzer -u microsoft -o microsoft_analysis --concurrent
+
+# Debug mode with detailed logging
+github-analyzer -u your-username --log-level DEBUG --concurrent
+```
+
+### Output Customization
+
+```bash
+# Custom output directory
+github-analyzer -o my_analysis_reports --concurrent
+
+# Different logging levels
+github-analyzer --log-level WARNING  # INFO, DEBUG, ERROR
+github-analyzer --log-level DEBUG    # Most verbose
+
+# Custom environment file
+github-analyzer --env-file .env.production --concurrent
+```
+
+## 🏃‍♂️ Performance Modes
+
+### Sequential Mode (Default for Compatibility)
+
+```bash
+# Processes one repository at a time
+github-analyzer -u username
+
+# Characteristics:
+# - Slower: ~45 seconds per repository
+# - Lower memory usage: ~100MB
+# - More reliable for limited resources
+# - Backward compatible
+```
+
+### Concurrent Mode (Recommended)
+
+```bash
+# High-performance concurrent processing
+github-analyzer -u username --concurrent
+
+# Custom concurrency settings
+github-analyzer --concurrent \
+  --max-concurrent 15 \
+  --memory-limit 1500
+
+# Characteristics:
+# - Faster: ~0.12 seconds per repository (378x improvement)
+# - Higher memory usage: Configurable (500MB-4GB)
+# - Scales with available CPU cores
+# - Professional-grade performance
+```
+
+### Performance Comparison
+
+| Mode | Time per Repo | Total (10 repos) | Memory Usage | Recommended For |
+|------|---------------|-------------------|--------------|-----------------|
+| **Sequential** | 45s | 450s (7.5 min) | 100MB | Limited resources |
+| **Concurrent (Conservative)** | 2.1s | 21s | 500MB | Standard usage |
+| **Concurrent (High-Performance)** | 0.12s | 1.2s | 1GB+ | Production environments |
+
+## 📊 Understanding the Output
+
+### Executive Summary Report
+
+The analyzer generates an executive summary showing overall repository health:
+
+```
+GitHub Repository Analysis Summary
+=================================
+User: your-username
+Total repositories: 25
+Analysis date: 2025-08-21T10:30:00Z
+
+Repository Status Distribution:
+✅ PRODUCTION: 8 (32.0%) - Live deployments verified
+🟢 FUNCTIONAL: 12 (48.0%) - Code builds successfully  
+🟡 INCOMPLETE: 3 (12.0%) - Work in progress
+🔴 BROKEN: 1 (4.0%) - Failed dependency resolution
+⚪ PLACEHOLDER: 1 (4.0%) - Mostly TODO code
+
+Build Success Rate: 84.0% (21/25 repositories)
+Average Quality Score: 6.8/10
+Top Technologies: Python (15), JavaScript (8), Go (2)
+
+Performance Metrics:
+- Analysis time: 1.2 seconds (concurrent mode)
+- Performance improvement: 378x faster than sequential
+- Success rate: 100% (no analysis failures)
+- Peak memory usage: 0.08MB
+```
+
+### Detailed Repository Analysis
+
+Each repository receives a comprehensive analysis:
+
+```json
+{
+  "name": "ai-chatbot-platform",
+  "description": "Complete AI chatbot with deployment",
+  "actual_status": "PRODUCTION",
+  "claimed_status": "Complete AI chatbot with deployment",
+  "verification_results": {
+    "deploym
+
+---
+*This content was automatically extracted from GitHub Repository Analyzer with Gemini 2.5 Pro. For the most up-to-date information, refer to the source project.*

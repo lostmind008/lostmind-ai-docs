@@ -1,0 +1,157 @@
+---
+title: "Ucf Context Decisions"
+description: "Show chronological decision timeline from Guardian context"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-context-decisions
+
+## Your Role: Decision Timeline Specialist
+
+This command displays the chronological decision timeline from Guardian's synthesized conversation history.
+
+## Your Workflow
+
+1. **Check Guardian Context**:
+   ```bash
+   ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+   PROJECT_CONTEXT="./.claude/context"
+
+   if [ ! -d "$PROJECT_CONTEXT" ]; then
+       echo "❌ No Guardian context found. Run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Display Decision Timeline**:
+   ```bash
+   echo "📋 Guardian Decision Timeline"
+   echo "============================"
+   echo ""
+
+   if [ -f "$PROJECT_CONTEXT/decision_timeline.json" ]; then
+       python3 -c "
+import json
+import sys
+from datetime import datetime
+
+try:
+    with open('$PROJECT_CONTEXT/decision_timeline.json', 'r') as f:
+        data = json.load(f)
+
+    if isinstance(data, list) and len(data) > 0:
+        print(f'📊 Total Decisions Tracked: {len(data)}')
+        print('')
+
+        for i, decision in enumerate(data, 1):
+            if isinstance(decision, dict):
+                timestamp = decision.get('timestamp', 'Unknown time')
+                summary = decision.get('summary', 'Decision')
+                context = decision.get('context', '')
+                impact = decision.get('impact', '')
+
+                print(f'{i}. **{summary}**')
+                print(f'   ⏰ {timestamp}')
+                if context:
+                    print(f'   📝 Context: {context[:100]}...' if len(context) > 100 else f'   📝 Context: {context}')
+                if impact:
+                    print(f'   🎯 Impact: {impact[:100]}...' if len(impact) > 100 else f'   🎯 Impact: {impact}')
+                print('')
+    else:
+        print('📋 No decisions found in timeline')
+        print('   This could mean:')
+        print('   - Project is newly onboarded')
+        print('   - No major decisions have been tracked yet')
+        print('   - Guardian context needs regeneration')
+
+except FileNotFoundError:
+    print('❌ Decision timeline file not found')
+    print('   Run /ucf-onboard-project to initialize Guardian context')
+except json.JSONDecodeError:
+    print('❌ Decision timeline file is corrupted')
+    print('   Guardian context may need regeneration')
+except Exception as e:
+    print(f'❌ Error reading decision timeline: {e}')
+"
+   else
+       echo "📋 No decision timeline found"
+       echo "   Run /ucf-onboard-project to initialize Guardian context"
+   fi
+   ```
+
+3. **Show Recent Activity**: Display most recent decisions prominently
+   ```bash
+   echo ""
+   echo "🔥 **Recent Activity** (Last 3 decisions):"
+   echo "----------------------------------------"
+
+   if [ -f "$PROJECT_CONTEXT/decision_timeline.json" ]; then
+       python3 -c "
+import json
+
+try:
+    with open('$PROJECT_CONTEXT/decision_timeline.json', 'r') as f:
+        data = json.load(f)
+
+    if isinstance(data, list) and len(data) > 0:
+        recent = data[-3:]  # Last 3 decisions
+        for i, decision in enumerate(recent, 1):
+            if isinstance(decision, dict):
+                summary = decision.get('summary', 'Decision')
+                timestamp = decision.get('timestamp', 'Unknown')
+                print(f'{i}. {summary} ({timestamp})')
+    else:
+        print('No recent decisions tracked')
+
+except Exception as e:
+    print(f'Could not load recent decisions: {e}')
+"
+   fi
+   ```
+
+## Benefits
+
+- **Decision History**: See all major project decisions chronologically
+- **Context Understanding**: Understand how decisions evolved over time
+- **Timeline View**: Clear chronological progression of project choices
+- **Immediate Access**: Works in current session without hooks
+
+## Usage Notes
+
+- Requires Guardian context (run `/ucf-onboard-project` first)
+- Shows decisions with timestamps, context, and impact
+- Most recent decisions highlighted for quick reference
+- Works with existing Guardian-generated timeline data
+
+## Example Output
+
+```
+📋 Guardian Decision Timeline
+============================
+
+📊 Total Decisions Tracked: 5
+
+1. **Switch from hooks to pull-based context retrieval**
+   ⏰ 2025-09-20 01:45:23
+   📝 Context: Hooks were failing with timing issues and interference
+   🎯 Impact: More reliable context access, user-controlled timing
+
+2. **Enhanced project mapping with intelligent categorization**
+   ⏰ 2025-09-20 01:30:15
+   📝 Context: Original mapping too generic, showing package manager noise
+   🎯 Impact: Cleaner, more relevant project structure understanding
+
+🔥 **Recent Activity** (Last 3 decisions):
+----------------------------------------
+1. Switch from hooks to pull-based context retrieval (2025-09-20 01:45:23)
+2. Enhanced project mapping with intelligent categorization (2025-09-20 01:30:15)
+3. Fixed Guardian path detection for portable installation (2025-09-20 01:15:08)
+```
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,28 @@
+---
+title: "Logging"
+description: "How we've configured logging in next-forge."
+category: "documentation"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+The logging functionality is abstracted through a simple wrapper that provides a consistent logging interface across environments.
+
+## How it works
+
+In development, logs are output to the console for easy debugging. In production, logs are sent to BetterStack Logs where they can be searched, filtered, and analyzed.
+
+## Usage
+
+To use this logging setup, simply import and use the `log` object. It shares the same interface as the `console` object, so you can replace `console` with `log` in your codebase.
+
+```tsx title="page.tsx"
+import { log } from '@repo/observability/log';
+
+log.info('Hello, world!');
+```
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

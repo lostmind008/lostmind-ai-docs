@@ -1,0 +1,212 @@
+---
+title: "07 Database Schema"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Database Schema Analysis
+
+**Analysis Date:** $(date)
+**Method:** Prisma schema and SQL files analysis
+
+## Database Architecture Overview
+
+The database implementation demonstrates enterprise-grade multi-tenant architecture with:
+
+- **PostgreSQL 15** as the primary database
+- **pgvector extension** for AI/RAG functionality
+- **Row Level Security (RLS)** for tenant isolation
+- **Comprehensive audit logging** for compliance
+- **Performance-optimized indexing** for vector operations
+
+## Prisma Schema Analysis
+
+### Core Multi-Tenant Models
+
+From `packages/db/prisma/schema.prisma`:
+
+#### Tenant Model
+
+```prisma
+model Tenant {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  domain      String?  @unique
+  plan        Plan     @default(FREE)
+  status      TenantStatus @default(ACTIVE)
+
+  // Billing information
+  stripeCustomerId     String?
+  stripePriceId        String?
+  stripeSubscriptionId String?
+
+  // Relationships
+  users       User[]
+  documents   Document[]
+  apiKeys     ApiKey[]
+  auditLogs   AuditLog[]
+}
+```
+
+#### User Model
+
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(MEMBER)
+  status    UserStatus @default(ACTIVE)
+
+  // Multi-tenant relationship
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Authentication fields
+  emailVerified DateTime?
+  image         String?
+  settings      Json?
+  lastLoginAt   DateTime?
+}
+```
+
+#### Document Model with AI/RAG Features
+
+```prisma
+model Document {
+  id          String        @id @default(cuid())
+  title       String
+  content     String?
+  type        DocumentType  @default(TEXT)
+  status      DocumentStatus @default(DRAFT)
+
+  // Multi-tenant isolation
+  tenantId    String
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // AI/RAG features
+  embeddings  Float[]       @default([]) // pgvector for semantic search
+  summary     String?
+  tags        String[]
+}
+```
+
+#### API Key Model
+
+```prisma
+model ApiKey {
+  keyId           String       @id @map("key_id")
+  keyHash         String       @unique @map("key_hash")
+  name            String
+  status          String       @default("active")
+  subscriptionTier String      @default("free") @map("subscription_tier")
+  permissions     String[]     @default([])
+  rateLimit       Int          @default(100) @map("rate_limit")
+
+  // Multi-tenant isolation
+  tenantId    String       @map("tenant_id")
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId      String       @map("user_id")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+#### Audit Log Model
+
+```prisma
+model AuditLog {
+  id          String     @id @default(cuid())
+  action      String     // CREATE, UPDATE, DELETE, etc.
+  resource    String     // Table/resource name
+  resourceId  String     // ID of affected resource
+
+  // Multi-tenant isolation
+  tenantId    String
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Audit details
+  oldValues   Json?      // Previous values
+  newValues   Json?      // New values
+  ipAddress   String?
+  userAgent   String?
+}
+```
+
+### Enums and Types
+
+```prisma
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum DocumentType {
+  TEXT
+  PDF
+  IMAGE
+  VIDEO
+  AUDIO
+  WEBPAGE
+}
+```
+
+## Row Level Security Implementation
+
+### RLS Policies (rls-policies.sql)
+
+**Status:** ✅ COMPREHENSIVE ENTERPRISE-GRADE SECURITY
+
+#### Tenant Isolation Policies
+
+```sql
+-- Users can only access users in their tenant
+CREATE POLICY "tenant_isolation_users" ON "users"
+  FOR ALL TO authenticated
+  USING ("tenantId" = current_setting('app.tenant_id', true));
+
+-- Documents are tenant-isolated
+CREATE POLICY "tenant_isolation_documents" ON "documents"
+  FOR ALL TO authenticated
+  USING ("tenantId" = current_setting('app.tenant_id', true));
+
+-- API keys are tenant-isolated
+CREATE POLICY "tenant_isolation_api_keys" ON "api_keys"
+  FOR ALL TO authenticated
+  USING ("tenantId" = current_setting('app.tenant_id', true));
+```
+
+#### Role-Based Access Control
+
+```sql
+-- Users can only access their own records unless they're admin
+CREATE POLICY "user_self_access" ON "users"
+  FOR ALL TO authenticated
+  USING (
+    "tenantId" = current_setting('app.tenant_id', true) AND (
+      id = current_setting('app.user_id', true) OR
+      current_setting('app.user_role', true) IN ('OWNER', 'ADMIN')
+    )
+  );
+
+-- Document ownership with admin override
+CREATE POLICY "document_ownership" ON "documents"
+  FOR ALL TO authen
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

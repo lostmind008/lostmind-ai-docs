@@ -1,0 +1,145 @@
+---
+title: "MARKETING WEBSITE INTEGRATION GUIDE"
+description: "guide for LostMind AI - Documentation Site"
+category: "guide"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🌟 LostMind AI Marketing Website Integration Guide
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[⚡ CLI Tools](CLI_DEVELOPMENT_TOOLKIT.md)**
+
+**SOURCE PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/LostMindAI.com/lostmindai-website`
+
+**TARGET LOCATION**: `apps/marketing/` within LostMind AI TurboRepo
+
+## 🎯 Mission Overview
+
+You are tasked with migrating the **LostMind AI Marketing Website** into the TurboRepo monorepo structure as the primary marketing application. This will serve as the main landing page for lostmindai.com, showcasing all platform capabilities while maintaining high performance, SEO optimization, and conversion-focused design.
+
+## 🏆 Integration Objectives
+
+### Primary Goals
+1. **Migrate** marketing website to `apps/marketing/` in TurboRepo
+2. **Optimize** for SEO, performance, and conversion tracking
+3. **Integrate** with shared UI components and configuration packages
+4. **Showcase** all platform apps (ask, chatcrawler, justdropit, admin)
+5. **Implement** marketing-specific features (analytics, lead generation, content management)
+
+### Success Criteria
+- ✅ Marketing site runs successfully at root domain (lostmindai.com)
+- ✅ Achieves 90+ Lighthouse performance score
+- ✅ Uses shared @lostmind/* packages for consistency
+- ✅ Integrates comprehensive analytics and conversion tracking
+- ✅ Supports marketing campaigns and A/B testing
+- ✅ Optimized for search engine visibility
+
+## 🏗️ Target Architecture Integration
+
+### Current TurboRepo Marketing Context
+```
+apps/marketing/           # ← YOUR DESTINATION
+├── src/
+│   ├── app/             # Next.js App Router pages
+│   │   ├── page.tsx     # Homepage
+│   │   ├── pricing/     # Pricing pages
+│   │   ├── features/    # Feature showcases
+│   │   ├── blog/        # Content marketing
+│   │   └── legal/       # Terms, Privacy, etc.
+│   ├── components/      # Marketing-specific components
+│   │   ├── hero/        # Hero sections
+│   │   ├── pricing/     # Pricing components
+│   │   ├── testimonials/# Social proof
+│   │   └── cta/         # Call-to-action components
+│   └── lib/             # Marketing utilities
+│       ├── analytics.ts # Tracking implementation
+│       ├── seo.ts      # SEO utilities
+│       └── ab-testing.ts# A/B testing logic
+├── public/              # Static assets
+├── content/             # MDX content for blog
+└── package.json
+```
+
+### Marketing-Specific Tech Stack
+- **Framework**: Next.js 15 (App Router) with React Server Components
+- **Styling**: Tailwind CSS + shadcn/ui components from `@lostmind/ui`
+- **Content**: MDX for blog posts and dynamic content
+- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
+- **SEO**: Next.js metadata API, structured data, sitemap generation
+- **A/B Testing**: PostHog or similar for conversion optimization
+- **Performance**: Image optimization, font optimization, Core Web Vitals
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Project Analysis & Preparation
+
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/LostMindAI.com/lostmindai-website
+   git checkout -b integration/turbo-repo-marketing
+   ```
+
+2. **Analyze Current Marketing Site**
+   - **Content Audit**: Document all pages, sections, and content types
+   - **Component Inventory**: List all React components and their purposes
+   - **Asset Analysis**: Catalog images, videos, fonts, and static assets
+   - **SEO Analysis**: Document current meta tags, structured data, sitemaps
+   - **Analytics Review**: Identify current tracking implementations
+   - **Performance Baseline**: Run Lighthouse audit on current site
+
+3. **Dependencies & Features Documentation**
+   ```typescript
+   // Document current marketing features
+   interface MarketingSiteFeatures {
+     landingPages: string[];        // Hero, features, pricing, etc.
+     contentMarketing: {
+       blog: boolean;
+       caseStudies: boolean;
+       documentation: boolean;
+     };
+     leadGeneration: {
+       newsletters: boolean;
+       contactForms: boolean;
+       demoRequests: boolean;
+     };
+     analytics: {
+       googleAnalytics: boolean;
+       heatmaps: boolean;
+       abTesting: boolean;
+     };
+     seo: {
+       structuredData: boolean;
+       sitemap: boolean;
+       robotsTxt: boolean;
+     };
+   }
+   ```
+
+### Phase 2: TurboRepo Structure Setup
+
+1. **Package.json Configuration**
+   ```json
+   {
+     "name": "@lostmind/marketing",
+     "version": "0.0.0",
+     "private": true,
+     "scripts": {
+       "dev": "next dev --port 3000",
+       "build": "next build",
+       "start": "next start",
+       "lint": "next lint",
+       "type-check": "tsc --noEmit",
+       "analyze": "ANALYZE=true next build"
+     },
+     "dependencies": {
+       "@lostmind/ui": "workspace:
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

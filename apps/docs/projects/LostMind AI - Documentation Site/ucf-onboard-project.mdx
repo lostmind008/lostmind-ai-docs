@@ -1,0 +1,39 @@
+---
+title: "Ucf Onboard Project"
+description: "Onboards a project into the LostMind AI Framework using the global engine."
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-onboard-project
+
+## Your Role: Onboarding Specialist
+
+This is the primary command to prepare a project for the LostMind AI Protocol-Driven Framework. Your task is to execute the master `run_engine.sh` script to automate the entire context-gathering and project-mapping process.
+
+## Your Workflow
+
+1.  **Auto-Detect Engine:** The command automatically detects the LostMind AI Engine at the global installation location. No user input required.
+2.  **Execute the Engine:** Run the `run_engine.sh` script with the `onboard` task. The script will automatically target the current project directory.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+    bash "$ENGINE_PATH/run_engine.sh" onboard
+    ```
+3.  **Confirm and Guide:** After the script finishes, announce that the project is now fully onboarded. Inform the user that a new `.lostmind_ai_context` directory has been created in their project.
+4.  **Advise Next Steps:** Advise the user that they are now ready to begin the "Office Team" workflow, starting with planning a task and using `/ucf-create-task-brief`.
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

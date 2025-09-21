@@ -1,0 +1,216 @@
+---
+title: "SETUP INSTRUCTIONS"
+description: "documentation for Updated MCP Tools"
+category: "documentation"
+project: "Updated MCP Tools"
+lastUpdated: "2025-09-21"
+tags: "documentation,development-tools"
+---
+
+# Claude Code Setup Package for Non-SWE Users
+
+This package contains everything you need to set up Claude Code as a perfect companion for building real-world, revenue-generating applications without deep software engineering knowledge.
+
+## 📦 Package Contents
+
+- `CLAUDE.md` - Core operating principles and philosophy
+- `mcp-config.json` - MCP server configurations
+- `agents/` - Essential AI agents for development
+- `SETUP_INSTRUCTIONS.md` - This file
+
+## 🚀 Quick Setup Guide
+
+### Step 1: Install Claude Code
+```bash
+npm install -g @anthropic/claude-code
+```
+
+### Step 2: Set Up Global Configuration
+
+1. **Copy CLAUDE.md to your home directory:**
+```bash
+cp CLAUDE.md ~/.claude/CLAUDE.md
+```
+
+2. **Set up agents:**
+```bash
+mkdir -p ~/.claude/agents
+cp agents/* ~/.claude/agents/
+```
+
+3. **Configure MCP servers:**
+   - Open `~/.claude.json` (create if doesn't exist)
+   - Copy the `mcpServers` section from `mcp-config.json`
+   - Replace `YOUR_MAGIC_API_KEY_HERE` with your actual API key (get one from 21st.dev)
+   - Update the `filesystem` path to your home directory
+
+### Step 3: Environment Setup
+
+Create a `.env` file in your home directory with:
+```
+ANTHROPIC_API_KEY=your_claude_api_key_here
+```
+
+## 🎯 Essential Agents for Beginners
+
+### Included Agents:
+
+1. **agent-organizer** - Master coordinator for complex tasks
+   - Automatically assembles the right team of agents
+   - Manages workflow and delegates tasks
+   - Use for: Any complex multi-step project
+
+2. **full-stack-developer** - End-to-end application development
+   - Handles both frontend and backend
+   - Database integration
+   - Use for: Complete web applications
+
+3. **frontend-developer** - UI/UX implementation
+   - React, responsive design
+   - User interfaces
+   - Use for: Website design and frontend work
+
+4. **ai-engineer** - AI/LLM integration specialist
+   - API integrations
+   - Prompt engineering
+   - Use for: Adding AI features to your app
+
+5. **debugger** - Problem solver
+   - Fixes errors and bugs
+   - Troubleshooting
+   - Use for: When things aren't working
+
+6. **deployment-engineer** - Gets your app live
+   - CI/CD setup
+   - Cloud deployment
+   - Use for: Making your app accessible online
+
+## 💡 How to Use Claude Code for Building Apps
+
+### For Complete Beginners:
+
+1. **Start with an idea:**
+   ```
+   "I want to build an app that helps people track their expenses"
+   ```
+
+2. **Let Claude Code guide you:**
+   - Claude will ask clarifying questions
+   - Use agent-organizer for complex features
+   - Agents will handle technical details
+
+3. **Common commands:**
+   - `/agents` - See available agents
+   - `/mcp` - Check MCP tools status
+   - `/todo` - Track your progress
+   - `/help` - Get help anytime
+
+### Building Revenue-Generating Apps:
+
+#### Phase 1: MVP Development
+```
+"Use agent-organizer to build an MVP for [your idea] with user authentication and payment integration"
+```
+
+#### Phase 2: Testing
+```
+"Test all features and fix any bugs"
+```
+
+#### Phase 3: Deployment
+```
+"Deploy this app to production with a custom domain"
+```
+
+## 🔧 MCP Tools Explained
+
+### What are MCP Tools?
+Think of them as superpowers for Claude Code:
+
+- **sequential-thinking**: Breaks complex problems into steps
+- **context7**: Gets latest documentation instantly
+- **playwright**: Tests your app automatically
+- **filesystem**: Manages files efficiently
+- **magic**: Creates beautiful UI components
+
+## 📱 Project Templates
+
+### E-commerce Site
+```
+"Create a complete e-commerce site with:
+- Product catalog
+- Shopping cart
+- Stripe payments
+- User accounts
+- Admin dashboard"
+```
+
+### SaaS Application
+```
+"Build a SaaS app with:
+- Subscription tiers
+- User dashboard
+- API access
+- Usage tracking
+- Billing system"
+```
+
+### Mobile App (PWA)
+```
+"Create a progressive web app that:
+- Works offline
+- Has push notifications
+- Feels like a native app
+- Can be installed on phones"
+```
+
+## 🚨 Important Reminders
+
+### For Non-Technical Users:
+
+1. **You don't need to understand the code**
+   - Focus on describing what you want
+   - Let agents handle implementation
+   - Test the features, not the code
+
+2. **Start small, iterate often**
+   - Build one feature at a time
+   - Test each feature before moving on
+   - Get user feedback early
+
+3. **Revenue generation tips:**
+   - Add payment processing early (Stripe/PayPal)
+   - Include user analytics
+   - Build email collection
+   - Add social sharing features
+
+### Common Pitfalls to Avoid:
+
+- ❌ Don't try to build everything at once
+- ❌ Don't skip testing
+- ❌ Don't ignore error messages
+- ❌ Don't deploy without backups
+
+## 🤝 Getting Help
+
+### When stuck:
+1. Use the debugger agent
+2. Ask Claude to explain in simple terms
+3. Break the problem into smaller pieces
+4. Search for similar examples online
+
+### Useful commands:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `git status` - Check what changed
+
+## 💰 Monetization Strategies
+
+### Quick Revenue Paths:
+
+1. **Freemium Model**
+   
+
+---
+*This content was automatically extracted from Updated MCP Tools. For the most up-to-date information, refer to the source project.*

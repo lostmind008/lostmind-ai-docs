@@ -1,0 +1,44 @@
+---
+title: "Ucf Scaffold"
+description: "Scaffolds new files or directory documentation using the global engine."
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "{file|dir_docs} <path> --purpose \"<purpose>\""
+---
+
+# Command: /ucf-scaffold
+
+## Your Role: Scaffolding Orchestrator
+
+You will use the global `run_engine.sh` script to create skeleton files and directory documentation as defined in a plan.
+
+## Your Workflow
+
+1.  **Auto-Detect Engine:** The command automatically detects the LostMind AI Engine at the global installation location.
+2.  **Parse Arguments:** The arguments will define the scaffolding task (e.g., `file python src/main.py --purpose "Main entry point"`).
+3.  **Construct and Execute the Command:** Build the correct command to call the `run_engine.sh` script with the `scaffold` task and all its arguments.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+
+    # Example for scaffolding a file
+    bash "$ENGINE_PATH/run_engine.sh" scaffold file "$ARG1" "$ARG2" --purpose "$ARG3"
+
+    # Example for scaffolding directory docs
+    bash "$ENGINE_PATH/run_engine.sh" scaffold dir_docs "$ARG1" --purpose "$ARG2"
+    ```
+4.  **Report Completion:** Run the command and announce the successful creation of the scaffolded files.
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,131 @@
+---
+title: "Google Genai Migration Guide"
+description: "guide for GitHub Repository Analyzer with Gemini 2.5 Pro"
+category: "guide"
+project: "GitHub Repository Analyzer with Gemini 2.5 Pro"
+lastUpdated: "2025-09-21"
+tags: "guide,miscellaneous"
+---
+
+# Google GenAI SDK Migration Guide: Understanding the Transition from google-generativeai to google-genai
+
+*Version: 1.0*  
+*Date: August 16, 2025*  
+*Author: AI Development Team*
+
+## Executive Summary
+
+Google has officially deprecated the `google-generativeai` package in favor of the new unified `google-genai` SDK. This migration is part of Google's strategic move to create a single, unified interface for all GenAI models (Gemini, Veo, Imagen, etc.) while improving developer experience and ensuring future-proof access to the latest AI capabilities. **All support for the legacy package will permanently end on November 30, 2025.**
+
+## Why This Migration Matters
+
+The confusion you've experienced with LLMs providing incorrect information about Google's SDK stems from the rapid evolution of Google's AI ecosystem. Many AI models have training data cutoffs that predate these changes, leading to outdated recommendations. This document serves as your definitive reference to prevent future development issues.
+
+---
+
+## Table of Contents
+
+1. [Deprecation Timeline and Support Status](#deprecation-timeline-and-support-status)
+2. [Key Architectural Differences](#key-architectural-differences)
+3. [Package Installation Changes](#package-installation-changes)
+4. [API Access and Client Architecture](#api-access-and-client-architecture)
+5. [Model Names and Availability](#model-names-and-availability)
+6. [Core API Changes with Examples](#core-api-changes-with-examples)
+7. [Feature Differences and Capabilities](#feature-differences-and-capabilities)
+8. [Migration Checklist](#migration-checklist)
+9. [Best Practices for AI Agents](#best-practices-for-ai-agents)
+10. [Troubleshooting Common Issues](#troubleshooting-common-issues)
+11. [References and Official Documentation](#references-and-official-documentation)
+
+---
+
+## 1. Deprecation Timeline and Support Status
+
+### Critical Dates
+
+| Package | Status | End of Support | Official Recommendation |
+|---------|--------|----------------|-------------------------|
+| `google-generativeai` | **DEPRECATED** | November 30, 2025 | Migrate to `google-genai` immediately |
+| `google-genai` | **General Availability** | Active Development | Recommended for all new projects |
+
+### Support Plan for Legacy Package[28][161]
+
+- **Current Status**: Limited maintenance with critical bug fixes only
+- **No New Features**: The legacy package will not receive new model support or features
+- **End of Life**: All support (including bug fixes) ends November 30, 2025
+- **Migration Window**: Developers have until November 30, 2025 to migrate
+
+### Why the Migration Happened[161]
+
+Google's official statement from the deprecated repository:
+> "With Gemini 2.0, we took the chance to create a single unified SDK for all developers who want to use Google's GenAI models (Gemini, Veo, Imagen, etc). As part of that process, we took all of the feedback from this SDK and what developers like about other SDKs in the ecosystem to create the Google Gen AI SDK."
+
+---
+
+## 2. Key Architectural Differences
+
+### Legacy SDK: google-generativeai
+
+**Characteristics**[185]:
+- **Direct Model Access**: Provides relatively direct mapping to underlying Google generative model APIs
+- **Fine-grained Control**: Extensive control over sampling parameters, safety filters, and endpoint calls
+- **Object-Oriented Style**: Emphasis on object creation (e.g., `genai.GenerativeModel()`) before use
+- **Protobuf Heavy**: Often exposes Google's Protocol Buffers details in client-facing APIs
+- **Implicit Client Management**: No central client object; scattered API access patterns
+
+```python
+# Legacy approach - No central client
+import google.generativeai as genai
+
+genai.configure(api_key='your-api-key')
+model = genai.GenerativeModel('gemini-pro')
+response = model.generate_content("Hello")
+```
+
+### New SDK: google-genai
+
+**Characteristics**[185]:
+- **Unified Interface**: Single SDK for Gemini Developer API and Vertex AI
+- **Centralized Client**: All operations go through a single `Client` object
+- **Simplified Workflow**: Reduced verbosity for common use cases
+- **Implicit Defaults**: Makes reasonable assumptions for typical use cases
+- **Higher Abstraction**: Focus on use cases rather than API plumbing
+- **Future-Proof**: Designed for Google's expanding AI model ecosystem
+
+```python
+# New approach - Centralized client
+from google import genai
+
+client = genai.Client(api_key='your-api-key')
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents='Hello'
+)
+```
+
+---
+
+## 3. Package Installation Changes
+
+### Python Installation
+
+**Before (Legacy)**[183]:
+```bash
+pip install google-generativeai
+```
+
+**After (New)**[56][158]:
+```bash
+pip install google-genai
+```
+
+### Multi-Language Support[28]
+
+| Language | Legacy Package | New Package |
+|----------|----------------|-------------|
+| Python | `google-generativeai` | `google-genai` |
+| JavaScript/TypeScript | `@google/generativeai` | `@google/genai` |
+| Go | `google.golang.org/generati
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

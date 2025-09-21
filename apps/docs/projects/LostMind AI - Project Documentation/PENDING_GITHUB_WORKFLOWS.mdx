@@ -1,0 +1,195 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "documentation"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# GitHub Workflows to Add Manually
+
+Due to GitHub OAuth permission restrictions, these workflow files need to be added manually through the GitHub web interface or by someone with workflow permissions.
+
+## 1. Dependency Updates Workflow
+
+Create `.github/workflows/dependency-updates.yml`:
+
+```yaml
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9am UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-updates:
+    name: Check for Updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check for outdated packages
+        id: outdated
+        run: |
+          echo "## 📦 Dependency Update Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### Outdated Packages:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          pnpm outdated >> $GITHUB_STEP_SUMMARY 2>&1 || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Security audit
+        run: |
+          echo "### 🔒 Security Audit:" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          pnpm audit --audit-level=moderate >> $GITHUB_STEP_SUMMARY 2>&1 || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Create update summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Recommended Actions:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review outdated packages above" >> $GITHUB_STEP_SUMMARY
+          echo "2. Run \`pnpm run update:check\` locally" >> $GITHUB_STEP_SUMMARY
+          echo "3. Use \`pnpm run update:safe\` for patch updates" >> $GITHUB_STEP_SUMMARY
+          echo "4. Test thoroughly after updates" >> $GITHUB_STEP_SUMMARY
+
+  dependabot-auto-merge:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: Auto-merge patch and minor updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+```
+
+## 2. Safety Net Workflow
+
+Create `.github/workflows/safety-net.yml`:
+
+```yaml
+name: Safety Net
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  secret-scanning:
+    name: Scan for Exposed Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  dependency-check:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - name: Audit dependencies
+        run: |
+          pnpm audit --audit-level=high || echo "::warning::High severity vulnerabilities found"
+      
+      - name: Check for outdated packages
+        run: |
+          pnpm outdated || true
+
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check formatting
+        run: pnpm run format:check
+      
+      - name: ESLint check
+        run: pnpm run lint
+      
+      - name: TypeScript check
+        run: pnpm run type-check
+
+  size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

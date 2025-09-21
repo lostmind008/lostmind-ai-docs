@@ -1,0 +1,156 @@
+---
+title: "API SPECIFICATION"
+description: "api-reference for BD-News-Task"
+category: "api-reference"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "api-reference,miscellaneous"
+---
+
+# API SPECIFICATION: Autonomous News Extraction System
+
+## 📋 DOCUMENT OVERVIEW
+
+**Document Version:** 1.0  
+**Created:** 2025-08-12T20:35:00 (Australia/Sydney)  
+**Purpose:** Phase 1.5 Critical Deliverable - Complete API specification for autonomous operation  
+**Client:** Animesh Kar (get.mitun@gmail.com)  
+**System:** Multi-agent autonomous news extraction platform  
+
+**CRITICAL SDK COMPLIANCE:**
+- ✅ **REQUIRED:** google-genai SDK (latest unified SDK)
+- ❌ **FORBIDDEN:** google-generativeai (deprecated, shutdown June 2026)
+
+## 🔧 SDK INTEGRATION SPECIFICATIONS
+
+### Primary Dependencies & Versions
+
+```python
+# requirements.txt - PRODUCTION VALIDATED VERSIONS
+google-genai>=0.6.0                 # Latest unified Gemini SDK - MANDATORY
+google-cloud-storage>=2.17.0        # Cloud storage integration
+aiohttp>=3.9.0                      # Async HTTP processing
+beautifulsoup4>=4.12.0              # HTML parsing and cleaning
+langchain>=0.1.0                    # Optional: Agent coordination framework
+pyyaml>=6.0                         # Configuration management
+tqdm>=4.65.0                        # Progress tracking
+asyncio-timeout>=4.0.3              # Async timeout management
+
+# FORBIDDEN - DO NOT USE
+# google-generativeai                # DEPRECATED SDK
+```
+
+### Core SDK Import Pattern
+
+```python
+# CORRECT IMPORT PATTERN - Use google.genai
+import google.genai as genai
+from google.genai.types import Model, GenerateContentResponse
+from google.genai.types import SafetySetting, HarmCategory
+import asyncio
+import aiohttp
+from google.cloud import storage
+from bs4 import BeautifulSoup
+
+# AUTHENTICATION SETUP
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+# ALTERNATIVE: Service Account Authentication
+# genai.configure(credentials=service_account_credentials)
+```
+
+## 🤖 GEMINI AI API INTEGRATION
+
+### Model Specifications for Autonomous Operation
+
+```python
+# MODEL CONFIGURATION FOR NEWS EXTRACTION
+class GeminiConfig:
+    """Production-validated Gemini model configuration"""
+    
+    MODELS = {
+        'analysis': 'gemini-2.5-pro',      # Site analysis, link discovery
+        'extraction': 'gemini-2.5-flash',  # Content extraction, cleaning
+        'coordination': 'gemini-2.5-flash' # Agent coordination tasks
+    }
+    
+    GENERATION_CONFIG = {
+        'temperature': 0.1,        # Low temperature for consistent results
+        'top_p': 0.8,             # Focused response generation
+        'top_k': 40,              # Limited vocabulary diversity
+        'max_output_tokens': 8192, # Sufficient for news article processing
+        'response_mime_type': 'application/json'  # Structured output
+    }
+```
+
+### CONTENT PROCESSING SPECIFICATION
+**Extraction Scope (CRITICAL CLIENT REQUIREMENT):**
+```python
+# PERMITTED OPERATIONS
+def extract_article_content(html: str) -> Dict[str, str]:
+    """Extract raw content only - NO analysis beyond cleaning"""
+    return {
+        'title': extract_title(html),
+        'content': clean_text_content(html),  # Raw text only
+        'date': extract_date(html),
+        'author': extract_author(html)
+    }
+
+# FORBIDDEN OPERATIONS  
+def analyze_content(content: str):  # DO NOT IMPLEMENT
+    """Content analysis FORBIDDEN by client requirements"""
+    raise NotImplementedError("Analysis beyond extraction not permitted")
+
+def summarize_content(content: str):  # DO NOT IMPLEMENT
+    """Content summarization FORBIDDEN by client requirements"""
+    raise NotImplementedError("Summarization beyond extraction not permitted")
+
+def categorize_content(content: str):  # DO NOT IMPLEMENT
+    """Content categorization FORBIDDEN by client requirements"""
+    raise NotImplementedError("Categorization beyond extraction not permitted")
+    
+    SAFETY_SETTINGS = [
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=HarmCategory.BLOCK_MEDIUM_AND_ABOVE
+        ),
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=HarmCategory.BLOCK_MEDIUM_AND_ABOVE
+        )
+    ]
+```
+
+### Async API Client with Retry Mechanism
+
+```python
+class AutonomousGeminiClient:
+    """Autonomous Gemini API client with built-in error handling"""
+    
+    def __init__(self, api_key: str):
+        genai.configure(api_key=api_key)
+        self.model_pro = genai.GenerativeModel('gemini-2.5-pro')
+        self.model_flash = genai.GenerativeModel('gemini-2.5-flash')
+        
+    async def call_with_retry(
+        self,
+        prompt: str,
+        model_type: str = 'flash',
+        max_retries: int = 3,
+        attempt_json_parse: bool = True
+    ) -> dict:
+        """
+        Autonomous API call with exponential backoff retry
+        
+        Args:
+            prompt: Input prompt for the model
+            model_type: 'pro' or 'flash' model selection
+            max_retries: Maximum retry attempts
+            attempt_json_parse: Parse response as JSON
+            
+        Returns:
+            dict: Parsed response or error information
+   
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

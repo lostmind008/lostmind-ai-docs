@@ -1,0 +1,122 @@
+---
+title: "CLAUDE"
+description: "ai-context for LostMindAI-TurboRepo"
+category: "ai-context"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "ai-context,main-platform"
+---
+
+[Context Linkage]
+
+- Root guidance: See repository root CLAUDE.md for security mandates, delegation workflow, PR/CI & lockfile policy, and branch rules.
+- Related guides:
+  - apps/CLAUDE.md — usage patterns of UI components in apps
+  - packages/CLAUDE.md — shared package conventions
+- Keep this file aligned with root CLAUDE.md; root rules override.
+
+# Package: @lostmind/ui
+
+Purpose: Shared shadcn/ui React components for all applications
+Parent Context: packages/CLAUDE.md
+
+## Planning Decisions
+
+- 2025-09-05: Selected shadcn/ui as component library foundation
+- 2025-09-05: Tailwind CSS for styling with design system
+- 2025-09-05: TypeScript with strict mode for all components
+- 2025-09-05: Component composition over complex props
+
+## Current State
+
+**Status**: Skeleton created, ready for Week 1 implementation
+**Priority**: HIGH - All apps depend on this for UI
+**Implementation**: Week 1, Day 3-4 (after config package)
+
+## Component Architecture
+
+Following shadcn/ui patterns:
+
+```
+packages/ui/
+├── package.json             # React, Tailwind, Radix dependencies
+├── tsconfig.json           # TypeScript config extending @lostmind/config
+├── tailwind.config.js      # Tailwind config with design tokens
+├── src/
+│   ├── components/          # shadcn/ui components
+│   │   ├── ui/             # Base UI primitives
+│   │   │   ├── button.tsx  # Button component
+│   │   │   ├── input.tsx   # Input component
+│   │   │   ├── card.tsx    # Card component
+│   │   │   └── ...         # Other UI primitives
+│   │   ├── forms/          # Form-specific components
+│   │   ├── layout/         # Layout components
+│   │   └── feedback/       # Loading, errors, success states
+│   ├── hooks/              # Custom React hooks
+│   ├── utils/              # Component utilities
+│   ├── types/              # TypeScript types
+│   └── index.ts            # Export all components
+├── styles/                 # Global styles and CSS variables
+│   ├── globals.css         # Global styles
+│   └── components.css      # Component-specific styles
+└── lib/                    # Utility functions
+    └── utils.ts            # cn() utility and other helpers
+```
+
+## Design System
+
+Based on shadcn/ui design tokens:
+
+- **Colors**: Neutral grays with accent colours
+- **Typography**: Font scale with responsive sizing
+- **Spacing**: Consistent spacing scale
+- **Animations**: Subtle transitions and micro-interactions
+- **Dark Mode**: Built-in dark mode support
+
+## Core Components (Priority Order)
+
+Week 1 Implementation:
+
+1. **Button**: Primary, secondary, destructive variants
+2. **Input**: Text inputs with validation states
+3. **Card**: Content containers
+4. **Badge**: Status indicators
+5. **Avatar**: User profile images
+6. **Loading**: Spinner and skeleton states
+
+## Dependencies
+
+- React 19 Stable + React DOM
+- Tailwind CSS with @lostmind/config
+- Radix UI primitives for accessibility
+- class-variance-authority for component variants
+- clsx for conditional classes
+
+## Integration Pattern
+
+```typescript
+// Usage in apps
+import { Button, Card, Input } from "@lostmind/ui"
+
+export default function Page() {
+  return (
+    <Card>
+      <Input placeholder="Search..." />
+      <Button>Submit</Button>
+    </Card>
+  )
+}
+```
+
+## Next Steps
+
+- [ ] Set up shadcn/ui foundation with proper Tailwind config
+- [ ] Implement core Button component with variants
+- [ ] Create Input component with validation states
+- [ ] Add Card and layout components
+- [ ] Test component import in marketing app
+- [ ] Document component usage patterns
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

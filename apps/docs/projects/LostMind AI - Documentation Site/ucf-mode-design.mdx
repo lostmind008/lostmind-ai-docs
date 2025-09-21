@@ -1,0 +1,142 @@
+---
+title: "Ucf Mode Design"
+description: "Set project to DESIGN mode for architecture planning and tech stack decisions"
+category: "architecture"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "architecture,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-design
+
+## Your Role: SDLC Mode Manager - DESIGN Stage
+
+This command sets the current project to **DESIGN MODE** - the architecture and planning stage where you're making technical decisions and designing the system structure.
+
+## Your Workflow
+
+1. **Update Project Mode**: Set the current SDLC mode in the project's CLAUDE.md
+   ```bash
+   # Check if .claude/CLAUDE.md exists
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Load the existing project configuration to preserve content
+
+3. **Update Mode Section**: Add or update the SDLC mode section in CLAUDE.md:
+   ```markdown
+   ## CURRENT SDLC MODE: DESIGN
+   **Set**: [Current timestamp]
+   **Context**: Architecture planning and technical specification phase
+
+   ### DESIGN MODE BEHAVIORS
+   Claude will focus on:
+   - Creating architectural diagrams and plans
+   - Defining tech stack with verified APIs
+   - Planning file and directory structures
+   - Documenting design decisions with rationale
+   - Verifying all technology versions and compatibility
+   - Creating technical specifications
+
+   **Planning and documentation, but minimal implementation**
+   ```
+
+4. **Update PROJECT_MAP.md**: Create or update project map with design decisions
+
+5. **Announce Mode Change**: Inform the user about the new mode and its capabilities
+
+## DESIGN Mode Guidelines for Claude
+
+When in DESIGN mode, Claude should:
+
+**✅ DO:**
+- Create architectural documentation (markdown diagrams)
+- Plan detailed file and directory structures
+- Research and verify all API/SDK versions with dates
+- Document tech stack decisions with rationale
+- Create technical specifications
+- Design database schemas and data models
+- Plan integration patterns and workflows
+- Update PROJECT_MAP.md with design decisions
+- Create wireframes or system diagrams in text format
+
+**📝 LIMITED IMPLEMENTATION:**
+- Create configuration files (package.json, requirements.txt) as design artifacts
+- Generate directory structure documentation
+- Create README templates and documentation outlines
+
+**❌ DON'T:**
+- Write full application code or business logic
+- Implement complex features or functionality
+- Create extensive test suites (basic structure planning only)
+
+**📝 COMMUNICATION STYLE:**
+- Strategic and architectural focus
+- Document all decisions with reasoning
+- Always verify API compatibility and versions
+- Use Australian English consistently
+- Focus on "how will this work" rather than "how to implement"
+
+## Expected Output
+
+```
+✅ Project mode set to: DESIGN
+📋 Mode Context: Architecture planning and technical specification
+
+🎯 DESIGN Mode Active:
+   • Focus: System architecture and technical planning
+   • Behavior: Plan, document, verify, specify
+   • Limited to design artifacts and documentation
+
+🏗️ In DESIGN mode, I'll help you:
+   - Create system architecture plans
+   - Define and verify tech stack
+   - Plan file structures and data models
+   - Document design decisions
+   - Verify API compatibility with current versions
+
+Ready for architectural planning! What system would you like to design?
+```
+
+## API Verification Integration
+
+In DESIGN mode, Claude will automatically:
+- Check current versions of all proposed technologies
+- Verify API compatibility and stability
+- Document breaking changes and migration paths
+- Include verification dates in all recommendations
+- Update API VERIFICATION blocks in CLAUDE.md
+
+## Mode Integration
+
+This mode integrates with:
+- **Guardian Context**: Design decisions preserved across sessions
+- **LostMind AI Standards**: API verification mandatory before recommending
+- **Quality Philosophy**: Professional standards, no over-engineering
+- **PROJECT_MAP.md**: All design decisions documented
+- **Solo Developer Support**: Handle technical complexity transparently
+
+When ready to move forward, use:
+- `/ucf-mode-idea` - Return to exploration
+- `/ucf-mode-dev` - Begin active development
+- `/ucf-mode-status` - Check current mode
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

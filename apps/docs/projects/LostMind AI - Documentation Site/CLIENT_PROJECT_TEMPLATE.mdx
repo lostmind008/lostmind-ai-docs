@@ -1,0 +1,129 @@
+---
+title: "CLIENT PROJECT TEMPLATE"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# CLIENT PROJECT TEMPLATE: AI SCRAPER APPLICATION
+
+## 📋 PROJECT OVERVIEW
+
+### Client Information
+**Client Name:** Animesh Kar  
+**Primary Contact:** get.mitun@gmail.com  
+**Email:** get.mitun@gmail.com  
+**Project Sponsor:** TBC  
+**Technical Contact:** TBC  
+
+### Business Objectives
+**Primary Business Goal:** Automated news article extraction from online news agencies with intelligent link discovery and content parsing  
+**Success Metrics:** Extract maximum 50 recent news articles per session with clean, organized content storage and zero irrelevant link pollution  
+**Expected Data Volume:** Up to 50 news articles per extraction session  
+**Critical Success Factors:** Accurate article page identification (not category pages), clean text extraction without advertisements, organized file storage structure  
+
+### Project Scope
+**Target Websites/Platforms:**
+- [x] User-provided website URLs (dynamic input at runtime)
+- [x] Example targets: The Daily Star (https://www.thedailystar.net/news)
+- [x] Example targets: Kaler Kantho (https://www.kalerkantho.com/epaper)
+- [x] Multi-website support: User can provide single or multiple website URLs
+
+**Data Types to Extract:**
+- [x] News article content (clean text only - 2,000-4,000 chars typical)
+- [x] Article metadata (title, date, author if available)
+- [x] Valid article links (with article IDs, not category pages)
+- [ ] Images (not required for this project)
+
+**Delivery Format:**
+- [ ] JSON API
+- [ ] CSV Export
+- [ ] Database Integration
+- [ ] Real-time Dashboard
+- [x] Other: HTML format + Raw text (MD/TXT/JSON) stored in organized folder structure
+
+---
+
+## 🎯 REQUIREMENTS ANALYSIS
+
+### Functional Requirements
+
+#### Data Extraction Requirements
+**Target Data Elements:**
+| Data Field | Required/Optional | Format | Validation Rules |
+|------------|-------------------|---------|------------------|
+| Article Content (Clean Text) | ☑ Required | Plain text (no HTML/ads) | Must be advertisement-free, clean readable text, 2000+ chars |
+| Article Title | ☑ Required | String | Non-empty, meaningful title from actual article |
+| Article URL | ☑ Required | Valid URL | Must contain article ID (e.g., -3961361), not category page |
+| Publication Date | ☑ Required | Date/DateTime | Extracted from article metadata |
+| Author Name | ☑ Required | String | Extracted or "Unknown" if not available |
+
+#### Processing Requirements
+**Frequency:** On-demand execution (user provides website link(s) as input)  
+**Volume:** Maximum 50 recent news articles per extraction session (across all provided websites)  
+**Processing Window:** Single execution per batch of website links provided by user  
+**Data Freshness:** Focus on recent news from actual article pages  
+**Multi-Website Support:** Handle single URL or multiple URLs provided by user in one session  
+
+#### Processing Scope Clarification
+**Content Processing Boundary:** 
+- [x] Navigate to actual article pages (not extract from category/index pages)
+- [x] Extract full article text from individual article pages
+- [x] Remove advertisements and navigation elements  
+- [x] Organize in structured file formats (HTML/MD/TXT/JSON)
+- [ ] Content analysis, summarization, or categorization NOT REQUIRED
+- [ ] Further processing beyond extraction and storage NOT REQUIRED
+
+**Deliverable Scope:** Raw extracted content from actual article pages - no analysis or processing beyond extraction and cleaning.
+
+#### Integration Requirements
+**Target Systems:**
+- [x] File System: Organized folder structure for extracted articles (PRIMARY REQUIREMENT)
+- [ ] Cloud Storage: Google Cloud Storage for backup and persistence (OPTIONAL)
+- [ ] API Endpoint: Not required for this project
+- [ ] Database Integration: Not required for this project
+- [ ] Third-party Service: Not required for this project
+
+**Storage Priority:**
+1. **REQUIRED**: Local `/output/` directory with organized folder structure
+2. **OPTIONAL**: GCS backup for additional persistence (if credentials available)
+
+#### Output File Structure Requirements
+**File Organization:**
+```
+/output/
+├── [session_timestamp]/
+│   ├── articles/
+│   │   ├── json/
+│   │   │   ├── 001_Article_Title.json
+│   │   │   ├── 002_Another_Article.json
+│   │   │   └── ...
+│   │   ├── html/
+│   │   │   ├── 001_Article_Title.html
+│   │   │   ├── 002_Another_Article.html
+│   │   │   └── ...
+│   │   ├── markdown/
+│   │   │   └── [articles in .md format]
+│   │   └── text/
+│   │       └── [articles in .txt format]
+│   └── metadata/
+│       ├── extraction_summary.json
+│       └── README.md
+```
+
+### Non-Functional Requirements
+
+#### Performance Requirements
+**Response Time:** <30 seconds for 5 articles, <30 minutes for 50 articles  
+**Throughput:** 100% success rate with proper article navigation  
+**Availability:** On-demand execution (not continuous service)  
+**Scalability:** Support concurrent processing of multiple articles within single session  
+
+#### Security Requirements
+- [x] Data encryption at rest (if using GCS)
+- [x] Data encrypt
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

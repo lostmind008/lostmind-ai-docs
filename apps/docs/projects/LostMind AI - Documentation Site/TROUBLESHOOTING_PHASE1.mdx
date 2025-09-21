@@ -1,0 +1,45 @@
+---
+title: "TROUBLESHOOTING PHASE1"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Troubleshooting – Phase 1 Stabilization
+
+## Bridge Resolution
+- Check: `/ucf-diagnose-bridge` (prints env/config/candidate paths)
+- Fix: set `LOSTMIND_FRAMEWORK_PATH=/abs/path/to/framework_hub` or create `lostmind_framework_config.json` with `{ "framework_hub_path": "/abs/path" }` in project root.
+
+## Guardian Status
+- Check: `python lostmind_ai_engine/guardian_wrapper.py status`
+- If unconfigured: run `/ucf-onboard-project` in your project.
+- If errors: verify Python venv and `framework_hub/requirements.txt` installed (
+  `cd lostmind_ai_engine && source .venv/bin/activate && pip list`).
+
+## API Key Missing
+- Edit `lostmind_ai_engine/.env` and set `GEMINI_API_KEY=...` (or export in shell).
+- Guardian degrades gracefully without a key (insights limited).
+
+## CLAUDE.md Integration
+- Behavior: updates `./CLAUDE.md` (if present) else `.claude/CLAUDE.md`. Never edits `~/.claude/CLAUDE.md`.
+- Idempotent: uses markers to avoid duplicates. Backup created if editing a file without markers.
+- Opt-out: `export LOSTMIND_UPDATE_CLAUDE_MD=false` before onboarding.
+
+## Hooks Not Firing
+- Ensure project `.claude/hooks` exists; installer copies with `chmod +x`.
+- Optional: run installer with `--enable-hooks` to merge `PreCompact` and `SessionEnd` into `~/.claude/settings.json` (backup created).
+
+## Full UCF Mode
+- Default is safe mode (no complex merges). For full installer: `bash install_lostmind_ai_framework.sh --full-ucf`.
+- If `timeout` is available, installer guards execution (180s). Otherwise, abort manually if it hangs.
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

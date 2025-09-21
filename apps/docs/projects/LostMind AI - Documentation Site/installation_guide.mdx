@@ -1,0 +1,179 @@
+---
+title: "Installation Guide"
+description: "guide for LostMind AI - Memory&Context Protocol"
+category: "guide"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# Claude Code Installation Guide
+
+This guide provides comprehensive instructions for installing Claude Code, Anthropic's agentic coding tool.
+
+## Prerequisites
+
+Before installing Claude Code, ensure your system meets the following requirements:
+
+- **Node.js**: Version 18.0.0 or higher
+- **npm**: Typically comes with Node.js installation
+- **Operating System**:
+  - macOS 10.15+ (Catalina or newer)
+  - Windows 10/11 (via WSL2)
+  - Ubuntu 20.04+/Debian 10+
+- **Anthropic Account**: Active account with billing enabled (through Anthropic Console)
+
+## Installation Steps
+
+### 1. Install Node.js and npm
+
+If you don't have Node.js installed:
+
+#### macOS:
+```bash
+# Using Homebrew
+brew install node@18
+
+# Verify installation
+node --version  # Should be 18.x.x or higher
+npm --version
+```
+
+#### Windows (WSL2):
+```bash
+# Install Node.js via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+source ~/.bashrc
+nvm install 18
+nvm use 18
+
+# Verify installation
+node --version
+npm --version
+```
+
+#### Ubuntu/Debian:
+```bash
+# Update package lists
+sudo apt update
+
+# Install Node.js and npm
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify installation
+node --version
+npm --version
+```
+
+### 2. Install Claude Code
+
+Once Node.js and npm are set up, install Claude Code:
+
+```bash
+# Install Claude Code globally
+npm install -g @anthropic-ai/claude-code
+
+# Verify installation
+claude --version
+```
+
+> **IMPORTANT:** Do NOT use sudo npm install -g as this can lead to permission issues and security risks.
+
+### 3. First-time Setup
+
+After installation:
+
+1. Navigate to your project directory:
+   ```bash
+   cd your-project-directory
+   ```
+
+2. Start Claude Code:
+   ```bash
+   claude
+   ```
+
+3. Complete the one-time OAuth authentication process with your Anthropic account
+   - This will open a browser window for authentication
+   - You'll need an active billing account through Anthropic Console
+
+4. After authentication, you'll be connected to Claude Code in your terminal
+
+## Troubleshooting Common Installation Issues
+
+### npm Permission Errors
+
+If you encounter EACCES permission errors:
+
+```bash
+# Create a directory for global installations
+mkdir ~/.npm-global
+
+# Configure npm to use the new directory path
+npm config set prefix '~/.npm-global'
+
+# Add the following to your ~/.profile or ~/.bashrc
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+
+# Reinstall Claude Code
+npm install -g @anthropic-ai/claude-code
+```
+
+### Node.js Version Errors
+
+If Claude Code requires a specific Node.js version:
+
+```bash
+# Using nvm to install and use the correct version
+nvm install 18
+nvm use 18
+npm install -g @anthropic-ai/claude-code
+```
+
+### WSL2 Issues on Windows
+
+For Windows users experiencing issues with WSL2:
+
+1. Ensure WSL2 is properly installed
+2. Update WSL2: `wsl --update`
+3. Install Node.js within your WSL2 environment, not on Windows directly
+4. Follow the Linux installation steps within your WSL2 terminal
+
+## Updating Claude Code
+
+Claude Code includes an auto-updater that will keep your installation current. To manually update:
+
+```bash
+npm update -g @anthropic-ai/claude-code
+```
+
+## Verifying Installation Success
+
+To verify that Claude Code is installed correctly:
+
+```bash
+# Check version
+claude --version
+
+# Get help
+claude --help
+
+# Basic test command
+claude "Hello, Claude!"
+```
+
+If everything is working correctly, Claude should respond to your test message.
+
+## Next Steps
+
+Now that you have Claude Code installed, proceed to the [MCP Tools Configuration](../2_MCP_Tools_Configuration/) section to set up MCP tools integration.
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,187 @@
+---
+title: "Api Auth"
+description: "api-reference for LostMindAI-TurboRepo"
+category: "api-reference"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "api-reference,main-platform"
+---
+
+import { auth } from "./index"
+import type { NextRequest} from "next/server";
+import { NextResponse } from "next/server"
+
+export interface AuthenticatedUser {
+  id: string
+  email: string
+  name: string
+  tenantId: string
+  subscription_tier: string
+  roles: string[]
+}
+
+export async function requireAuthentication(
+  _request: NextRequest
+): Promise<AuthenticatedUser | NextResponse> {
+  try {
+    const session = await auth()
+
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          error: "Authentication required",
+          code: "UNAUTHORIZED",
+        },
+        { status: 401 }
+      )
+    }
+
+    const user = session.user as {
+      id: string
+      email?: string
+      name?: string
+      tenantId?: string
+      subscription_tier?: string
+      roles?: string[]
+    }
+
+    if (!user.id) {
+      return NextResponse.json(
+        {
+          error: "Invalid session - missing user ID",
+          code: "INVALID_SESSION",
+        },
+        { status: 401 }
+      )
+    }
+
+    // Ensure tenant context exists
+    if (!user.tenantId) {
+      return NextResponse.json(
+        {
+          error: "Tenant context required",
+          code: "MISSING_TENANT",
+        },
+        { status: 400 }
+      )
+    }
+
+    return {
+      id: user.id,
+      email: user.email ?? "",
+      name: user.name ?? user.email?.split("@")[0] ?? "Unknown",
+      tenantId: user.tenantId,
+      subscription_tier: user.subscription_tier ?? "free",
+      roles: user.roles ?? [],
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Authentication error:", error)
+    return NextResponse.json(
+      {
+        error: "Authentication failed",
+        code: "AUTH_ERROR",
+      },
+      { status: 500 }
+    )
+  }
+}
+
+export interface RateLimitResult {
+  allowed: boolean
+  remaining: number
+  resetAt: Date
+  limit: number
+  tier: string
+}
+
+export async function checkRateLimit(
+  userId: string,
+  tier: string,
+  operation: string = "api_call"
+): Promise<RateLimitResult> {
+  // For Next.js routes, we'll call the FastAPI service to check rate limits
+  // The FastAPI service has the Redis-backed rate limiting implemented
+
+  try {
+    const AI_COMPUTE_SERVICE_URL =
+      process.env.AI_COMPUTE_SERVICE_URL ?? "http://localhost:8000"
+
+    const response = await fetch(
+      `${AI_COMPUTE_SERVICE_URL}/api/v1/rate-limit/check`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Internal-Secret": process.env.INTERNAL_SERVICE_SECRET ?? "",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          subscription_tier: tier,
+          operation,
+        }),
+      }
+    )
+
+    if (response.ok) {
+      const result = await response.json()
+      return {
+        allowed: result.allowed,
+        remaining: result.remaining,
+        resetAt: new Date(result.reset_at),
+        limit: result.limit,
+        tier: result.tier,
+      }
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      "Rate limit check failed, falling back to local limits:",
+      error
+    )
+  }
+
+  // Fallback to basic limits if FastAPI service is unavailable
+  const limits: Record<string, number> = {
+    free: 10,
+    starter: 100,
+    professional: 1000,
+    business: 5000,
+    enterprise: 10000,
+  }
+
+  const limit = limits[tier] ?? limits.free
+  const resetAt = new Date(Date.now() + 60 * 1000) // 1 minute window
+
+  return {
+    allowed: true, // Allow on fallback to prevent blocking users
+    remaining: limit - 1,
+    resetAt,
+    limit,
+    tier,
+  }
+}
+
+export async function trackUsage(
+  tenantId: string,
+  operation: string,
+  metadata: Record<string, unknown> = {}
+): Promise<void> {
+  // TODO: Implement proper usage tracking for billing
+  // This is a placeholder that logs usage for now
+  // eslint-disable-next-line no-console
+  console.log(`Usage tracking: ${tenantId} - ${operation}`, metadata)
+
+  // In the future, this will:
+  // 1. Store usage in database
+  // 2. Trigger billing events
+  // 3. Update quota counters
+}
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,67 @@
+---
+title: "Ucf Help"
+description: "Provides intelligent, context-aware suggestions and the exact SOP command to run next."
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+---
+
+# Command: /ucf-help
+
+## Your Task
+
+When the user runs `/ucf-help`, you will analyze the current state of the project and provide a single, clear, actionable next step, including the **exact command to run**.
+
+### Your Analysis Workflow:
+
+1.  **Check for Framework:** Check if `.claude/CLAUDE.md` exists. If not, your response is:
+    > The UCF is not installed in this project. For a new project, run `/ucf-init`. For an existing project, run `/ucf-audit`.
+
+2.  **Read Project State:** Read `.claude/CLAUDE.md`.
+
+3.  **Provide Dynamic Suggestion:** Based on the state, choose **one** of the following responses:
+
+    *   **If `CLAUDE.md` contains placeholder text `[Your Project Name]`:**
+        > The project has been initialized but not defined. To begin, run this command to start the guided brainstorming session:
+        > 
+        > **Project-Local (Preferred):** `claude -p "$(cat .claude/sop_prompts/01_define_project.md)"`
+        > **Global Fallback:** `claude -p "$(cat ~/.claude/sop_prompts/01_define_project.md)"`
+
+    *   **If `CLAUDE.md` is filled out but the project seems new (e.g., few files):**
+        > The project is defined. The next logical step is to scaffold the initial application structure. Run this command:
+        > 
+        > **Project-Local (Preferred):** `claude -p "$(cat .claude/sop_prompts/02_scaffold_project.md)"`
+        > **Global Fallback:** `claude -p "$(cat ~/.claude/sop_prompts/02_scaffold_project.md)"`
+
+    *   **If the project is established:**
+        > The project is in progress. What would you like to do next?
+        > - **To add a new feature:** 
+        >   - Project-Local: `claude -p "$(cat .claude/sop_prompts/03_implement_feature.md)"` (edit the feature description inside)
+        >   - Global: `claude -p "$(cat ~/.claude/sop_prompts/03_implement_feature.md)"`
+        > - **To fix a bug:** 
+        >   - Project-Local: `claude -p "$(cat .claude/sop_prompts/04_fix_bug.md)"` (edit the bug description inside)
+        >   - Global: `claude -p "$(cat ~/.claude/sop_prompts/04_fix_bug.md)"`
+        > - **To refactor code:** 
+        >   - Project-Local: `claude -p "$(cat .claude/sop_prompts/05_refactor_code.md)"` (edit the refactoring goal inside)
+        >   - Global: `claude -p "$(cat ~/.claude/sop_prompts/05_refactor_code.md)"`
+        > - **To write documentation:** 
+        >   - Project-Local: `claude -p "$(cat .claude/sop_prompts/06_write_documentation.md)"` (edit the documentation goal inside)
+        >   - Global: `claude -p "$(cat ~/.claude/sop_prompts/06_write_documentation.md)"`
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

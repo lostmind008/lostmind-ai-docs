@@ -1,0 +1,125 @@
+---
+title: "Validate Script Analysis"
+description: "documentation for Back End Architecture for Turborepo with RAG Embeddings"
+category: "documentation"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# validate this script :
+
+```
+import google.generativeai as genai
+from google.generativeai import types
+from PIL import Image
+import io
+import time
+import json
+import os
+
+# Configure your API key
+# genai.configure(api_key="YOUR_API_KEY")
+
+class StorytellerApp:
+    def __init__(self, api_key="YOUR_API_KEY"):
+        genai.configure(api_key=api_key)
+        self.client = genai.Client()
+        self.gemini_model = "gemini-2.5-flash" # General purpose model
+        self.image_gen_model = "gemini-2.5-flash-image-preview" # For image generation/editing
+        self.video_gen_model = "veo-3.0-generate-preview" # For video generation
+        self.tts_model = "gemini-2.5-flash-preview-tts" # For speech generation
+        self.chat_history = [] # For multi-turn conversations
+
+    def generate_story_outline(self, initial_prompt: str):
+        """
+        1. Text Generation & Structured Output: Generate a story outline in JSON.
+        """
+        print("\n--- Step 1: Generating Story Outline ---")
+        class StoryOutline(types.BaseModel):
+            title: str
+            genre: str
+            main_characters: list[dict]
+            plot_points: list[str]
+            setting: str
+
+        response = self.client.models.generate_content(
+            model=self.gemini_model,
+            contents=[f"Generate a detailed story outline based on this idea: {initial_prompt}"],
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": StoryOutline,
+            },
+        )
+        outline = response.parsed
+        self.chat_history.append({"role": "user", "parts": [initial_prompt]})
+        self.chat_history.append({"role": "model", "parts": [json.dumps(outline.dict(), indent=2)]})
+        print(f"Generated Story Outline:\n{json.dumps(outline.dict(), indent=2)}")
+        return outline
+
+    def generate_scene_description(self, outline: dict, plot_point_index: int):
+        """
+        2. Text Generation (Long Context implicitly if outline is large): Generate a detailed scene description.
+        """
+        print(f"\n--- Step 2: Generating Scene Description for Plot Point {plot_point_index + 1} ---")
+        prompt = (
+            f"From the following story outline, generate a detailed visual description for "
+            f"plot point '{outline['plot_points'][plot_point_index]}'. "
+            f"Focus on setting, character actions, and atmosphere, suitable for image generation. "
+            f"Outline: {json.dumps(outline)}"
+        )
+        response = self.client.models.generate_content(
+            model=self.gemini_model,
+            contents=[prompt],
+            config=types.GenerateContentConfig(temperature=0.7)
+        )
+        scene_description = response.text
+        print(f"Scene Description:\n{scene_description}")
+        return scene_description
+
+    def generate_and_describe_image(self, scene_description: str):
+        """
+        3. Image Generation & 4. Image Understanding (Captioning/Object Detection)
+        """
+        print("\n--- Step 3: Generating Image from Scene Description ---")
+        image_response = self.client.models.generate_content(
+            model=self.image_gen_model,
+            contents=[scene_description],
+        )
+
+        generated_image_bytes = None
+        for part in image_response.candidates[0].content.parts:
+            if part.inline_data is not None:
+                generated_image_bytes = part.inline_data.data
+                break
+
+        if generated_image_bytes:
+            image = Image.open(io.BytesIO(generated_image_bytes))
+            image.save("generated_scene_image.png") # Save for later use
+            print("Image generated and saved as 'generated_scene_image.png'.")
+
+            print("\n--- Step 4: Understanding the Generated Image ---")
+            # Image Understanding (Captioning)
+            caption_response = self.client.models.generate_content(
+                model=self.gemini_model,
+                contents=[image, "Describe this image in detail."],
+            )
+            print(f"Image Caption: {caption_response.text}")
+
+            # Image Understanding (Object Detection - requires specific prompt and model handling)
+            obj_detection_prompt = "Detect prominent objects in this image and list them with their bounding boxes [ymin, xmin, ymax, xmax] normalized to 0-1000, in JSON format."
+            obj_detection_config = types.GenerateContentConfig(response_mime_type="application/json")
+            obj_detection_response = self.client.models.generate_content(
+                model=self.gemini_model,
+                contents=[image, obj_detection_prompt],
+                config=obj_detection_config
+            )
+            try:
+                detected_objects = json.loads(obj_detection_response.text)
+                print(f"Detected Objects: {detected_objects}")
+       
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

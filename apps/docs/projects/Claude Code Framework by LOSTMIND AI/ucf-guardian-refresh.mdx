@@ -1,0 +1,65 @@
+---
+title: "Ucf Guardian Refresh"
+description: "Refresh Guardian context with latest conversations (no arguments required)"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-guardian-refresh
+
+## Your Role: Guardian Context Manager
+
+This command refreshes your project's conversation context using The Guardian system. It automatically detects the engine configuration and updates all context files with the latest conversation data.
+
+## Your Workflow
+
+1.  **Auto-Detection:** The system automatically finds your Guardian engine configuration from the `.claude/context/engine_config.json` file.
+2.  **Execute Refresh:** Run the Guardian wrapper to update context with latest conversations.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    VENV_PYTHON="$ENGINE_PATH/.venv/bin/python"
+
+    # Validate framework installation
+    if [ ! -f "$ENGINE_PATH/guardian_wrapper.py" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+
+    # Validate virtual environment
+    if [ ! -f "$VENV_PYTHON" ]; then
+        echo "❌ Framework virtual environment not found. Please reinstall the framework."
+        exit 1
+    fi
+
+    # Execute using framework's isolated Python environment
+    "$VENV_PYTHON" "$ENGINE_PATH/guardian_wrapper.py" refresh
+    ```
+3.  **Report Results:** Display the refresh results including conversation counts, session statistics, and any errors.
+4.  **Status Update:** Inform the user about the updated context and available files.
+
+## Expected Outcomes
+
+After successful execution, the user will have:
+- **Updated conversation context** in `.claude/context/`
+- **Fresh insights** from Gemini AI analysis
+- **Current conversation statistics** (total conversations, sessions)
+- **Timestamped status** for future reference
+
+## Error Handling
+
+If the refresh fails:
+- Check if Guardian engine is properly configured
+- Verify the `.claude/context/engine_config.json` exists
+- Suggest running `/ucf-onboard-project` if configuration is missing
+- Display clear error messages with troubleshooting steps
+
+## Notes
+
+This command requires no arguments and works automatically after initial project onboarding. It's designed for frequent use during active development to keep context current with ongoing conversations.
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

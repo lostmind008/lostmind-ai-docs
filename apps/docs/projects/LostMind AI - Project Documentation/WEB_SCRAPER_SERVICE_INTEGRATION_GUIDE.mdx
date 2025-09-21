@@ -1,0 +1,124 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "guide"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# 🕷️ LostMind AI Web Scraper Service Integration Guide
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[⚡ CLI Tools](CLI_DEVELOPMENT_TOOLKIT.md)**
+
+**SOURCE PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/New WebScraper/new ai scraper agent`
+
+**TARGET LOCATION**: `services/crawler-engine/` within LostMind AI TurboRepo
+
+## 🎯 Mission Overview
+
+You are tasked with migrating the **AI-Powered Web Scraper Agent** into the TurboRepo monorepo structure as a scalable FastAPI microservice. This will serve as the core crawling engine for the chatcrawler app and provide web data extraction capabilities across the platform.
+
+## 🏆 Integration Objectives
+
+### Primary Goals
+1. **Migrate** web scraper to `services/crawler-engine/` as FastAPI service
+2. **Integrate** with shared AI clients for intelligent content extraction
+3. **Implement** robust queue system for async scraping operations
+4. **Connect** to shared database for storing scraped data and metadata
+5. **Deploy** to Google Cloud Run for scalable, containerized operation
+
+### Success Criteria
+- ✅ FastAPI service runs successfully in TurboRepo ecosystem
+- ✅ Integrates with @lostmind/ai-clients for content processing
+- ✅ Uses @lostmind/db for data persistence and metadata storage
+- ✅ Implements queue system for handling concurrent scraping jobs
+- ✅ Respects rate limiting and website scraping policies
+- ✅ Deployed and scalable on Google Cloud Run
+
+## 🏗️ Target Architecture Integration
+
+### Current TurboRepo Service Context
+```
+services/crawler-engine/      # ← YOUR DESTINATION
+├── src/
+│   ├── main.py              # FastAPI application entry
+│   ├── api/
+│   │   ├── v1/
+│   │   │   ├── scraper.py   # Scraping endpoints
+│   │   │   ├── jobs.py      # Job management endpoints
+│   │   │   └── health.py    # Health check endpoints
+│   ├── core/
+│   │   ├── config.py        # Configuration management
+│   │   ├── scraper.py       # Core scraping logic
+│   │   ├── processor.py     # Content processing
+│   │   └── queue.py         # Queue management
+│   ├── models/
+│   │   ├── scrape_job.py    # Scraping job models
+│   │   ├── scraped_data.py  # Data models
+│   │   └── responses.py     # API response models
+│   └── services/
+│       ├── scraper_service.py # Scraping business logic
+│       ├── ai_service.py      # AI integration service
+│       └── storage_service.py # Data storage service
+├── tests/                   # Test suite
+├── docker/
+│   ├── Dockerfile          # Production container
+│   └── docker-compose.yml  # Local development
+├── requirements.txt        # Python dependencies
+├── pyproject.toml         # Python project configuration
+└── README.md
+```
+
+### Web Scraper Tech Stack
+- **Framework**: FastAPI with async support
+- **Scraping**: BeautifulSoup4, Scrapy, Playwright for JavaScript sites
+- **AI Integration**: Google Generative AI via shared client abstraction
+- **Queue System**: Redis with Celery or RQ for job processing
+- **Database**: PostgreSQL via @lostmind/db for data persistence
+- **Containerization**: Docker for Cloud Run deployment
+- **Monitoring**: Structured logging with correlation IDs
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Project Analysis & Architecture Planning
+
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/New\ WebScraper/new\ ai\ scraper\ agent
+   git checkout -b integration/turbo-repo-crawler-service
+   ```
+
+2. **Analyze Current Scraper Implementation**
+   - **Scraping Strategy**: Document current scraping approach (requests, selenium, etc.)
+   - **Data Extraction**: Identify how content is currently parsed and processed
+   - **AI Integration**: Analyze existing AI/ML usage for content processing
+   - **Storage Patterns**: Document current data storage and retrieval methods
+   - **Error Handling**: Review current retry logic and failure management
+   - **Rate Limiting**: Assess current politeness policies and rate limiting
+
+3. **Define Integration Requirements**
+   ```python
+   # Document current scraper capabilities
+   class ScraperCapabilities:
+       supported_sites: List[str]           # Domains that can be scraped
+       javascript_rendering: bool           # Can handle JS-heavy sites
+       rate_limiting: Dict[str, int]       # Rate limits per domain
+       data_extraction: List[str]          # Types of data extracted
+       ai_processing: bool                 # Uses AI for content processing
+       async_support: bool                 # Supports concurrent operations
+       authentication_handling: bool       # Can handle login-required sites
+       respect_robots_txt: bool            # Follows robots.txt policies
+   ```
+
+### Phase 2: FastAPI Service Architecture
+
+1. **Core FastAPI Setup**
+   ```python
+   # services/crawler-engine/src/main.py
+   from fastapi import FastAPI, BackgroundTasks, Depends
+   from fastapi.middleware.cors import CORSMiddleware
+   from context
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

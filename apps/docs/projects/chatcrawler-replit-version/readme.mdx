@@ -1,276 +1,197 @@
 ---
-title: "README - ChatCrawler-Replit-version"
-description: "Complete project README and setup instructions"
+title: "README"
+description: "readme for ChatCrawler-Replit-version"
+category: "readme"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "readme,data-processing"
 ---
 
-<Info>
-This content was automatically extracted from ChatCrawler-Replit-version.
-For the most up-to-date information, refer to the source project.
-</Info>
+# Shared - Database Schema & Types
 
-# ChatCrawler
+This directory contains the centralized database schema definitions, TypeScript types, and validation schemas shared between frontend and backend.
 
-> AI-powered web scraping and chat platform — Development Prototype
+## Architecture
 
-## 🚧 Status: **DEVELOPMENT PROTOTYPE**
+### Schema-First Design
+- **Single Source of Truth**: All data models defined in one place
+- **Type Safety**: Automatic TypeScript type generation
+- **Validation**: Zod schemas for runtime validation
+- **Database Sync**: Drizzle ORM for schema migrations
 
-ChatCrawler is a comprehensive platform prototype that combines intelligent web scraping with advanced AI chat capabilities. The foundation is built, but **significant work remains** before production deployment.
+## Tech Stack
 
-**Current Version**: ~40% complete — core infrastructure with in-memory data
-**Not Ready For**: Production use, persistent data, real user load
+- **ORM**: Drizzle ORM with PostgreSQL adapter
+- **Schema Definition**: Drizzle's declarative schema syntax
+- **Type Generation**: Automatic TypeScript type inference
+- **Validation**: Zod schemas with drizzle-zod integration
+- **Migration**: Drizzle Kit for database schema management
 
-## 🚀 Features
-
-### Core Functionality
-- **Intelligent Web Scraping**: Extract clean, structured content from any website with robots.txt compliance
-- **AI-Powered Chat**: Ask questions about scraped content and uploaded documents using GPT models
-- **Document Processing**: Upload and process PDFs, Word documents, and text files
-- **Usage Analytics**: Track scraping activity, AI interactions, and credit consumption
-- **Billing System**: Subscription management with Stripe integration
-
-### ✅ **Working Prototype Features**
-- ✅ **Basic Authentication** using Replit OAuth (session-only storage)
-- ✅ **AI Chat System** with dual provider support (OpenAI + Gemini Pro)
-- ⚠️ **Stripe Integration** (partial - missing webhooks, price placeholders)
-- ⚠️ **Database Schema** (defined but app uses in-memory storage)
-- ✅ **Modern React Frontend** with shadcn/ui components
-- ⚠️ **Express.js API** (basic error handling, missing input validation)
-- ⚠️ **User Dashboard** (mock data from in-memory storage)
-- ❌ **Credit System** (interface exists, not persistent)
-- ❌ **Conversation History** (in-memory only, lost on restart)
-- ❌ **Job Queue** (mock implementation)
-
-### 🚧 **Critical Missing Components**
-- ❌ **Persistent Data Storage** (app data stored in-memory, lost on restart)
-- ❌ **Stripe Webhooks** (subscriptions not synchronized)
-- ❌ **Input Validation** (no Zod validation on API endpoints)
-- ❌ **Error Handling** (process crashes on handled errors)
-- ❌ **Worker Service** for web scraping (Python team needed)
-- ❌ **Vector Search/RAG** (Qdrant not integrated)
-- ❌ **Rate Limiting** and security hardening
-
-### 🎯 **What Works Right Now (Development Only)**
-- **User Sessions**: OAuth login (sessions in PostgreSQL)
-- **AI Chat**: Basic responses via Gemini Pro/OpenAI
-- **Frontend**: Complete UI with React/shadcn
-- **Mock Data**: Dashboard shows placeholder statistics
-- **API Structure**: Routes defined but data not persisted
-
-## 🏗️ Architecture
-
-### Frontend Architecture
-- **Framework**: React 18 with Vite for development
-- **Routing**: wouter for client-side routing
-- **State Management**: TanStack React Query for server state
-- **UI Components**: shadcn/ui with Radix UI primitives
-- **Styling**: Tailwind CSS with custom design system
-- **Authentication**: Session-based with protected routes
-
-### Backend Architecture
-- **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL schema defined (Drizzle ORM) - **NOT USED BY APP**
-- **Authentication**: Replit OAuth with express-session (sessions in PostgreSQL)
-- **AI Integration**: Dual provider support (OpenAI + Gemini Pro)
-- **Payment Processing**: Stripe integration (missing webhooks)
-- **API Design**: RESTful endpoints (missing input validation)
-- **Storage**: **In-memory only** - all app data lost on restart
-
-### Database Schema
-- **Users**: Authentication and profile data with Stripe integration
-- **Jobs**: Scraping and processing job queue with status tracking
-- **Documents**: Knowledge base with vector embeddings for RAG
-- **Conversations**: Chat history with message threading
-- **Billing**: Credits system and subscription management
-
-## 🛠️ Tech Stack
-
-### Core Technologies
-- **Frontend**: React 18, TypeScript, Vite, wouter
-- **Backend**: Express.js, Node.js, TypeScript
-- **Database**: PostgreSQL with pgvector extension
-- **ORM**: Drizzle ORM with Drizzle Kit for migrations
-- **Authentication**: Replit Auth (OpenID Connect)
-
-### UI & Styling
-- **Components**: shadcn/ui, Radix UI primitives
-- **Icons**: Lucide React, React Icons
-- **Styling**: Tailwind CSS with custom variables
-- **Charts**: Recharts for data visualization
-- **Forms**: React Hook Form with Zod validation
-
-### External Services
-- **AI Models**: Gemini Pro or OpenAI GPT (configure one or both)
-- **Payments**: Stripe (partial — webhooks and lifecycle pending)
-- **Authentication**: Replit OAuth (configured; production domain setup required)
-- **Database**: Neon PostgreSQL (used for sessions; app data currently in-memory)
-- **Vector DB**: Qdrant (planned; not integrated)
-
-### Development Tools
-- **Build**: Vite with HMR and TypeScript support
-- **Package Manager**: npm with workspace support
-- **Database**: Drizzle Kit for schema management
-- **Type Safety**: Full TypeScript coverage across stack
-
-## 🚧 **Development Setup**
-
-### ⚠️ **Prerequisites**
-This is a **development prototype**. You'll need to configure several things:
-
-```bash
-# Step 1: Install dependencies
-npm install
-
-# Step 2: Set up environment variables (REQUIRED)
-cp .env.example .env
-# Edit .env with your actual values
-
-# Step 3: Set up PostgreSQL database for sessions
-# Update DATABASE_URL in .env
-
-# Step 4: Start the application
-npm run dev
-
-# Access at: http://localhost:5000
-```
-
-### 📋 **Required Environment Variables**
-**Critical for basic functionality**:
-- `DATABASE_URL`: PostgreSQL for session storage
-- `SESSION_SECRET`: Secure session encryption key
-- `REPLIT_DOMAINS`: Your app domain (localhost:5000 for dev)
-- `OPENAI_API_KEY` OR `GEMINI_API_KEY`: AI chat responses
-
-**Required for payments (if testing Stripe)**:
-- `STRIPE_SECRET_KEY`: Stripe test key
-- `STRIPE_PRICE_ID_PRO_MONTHLY`: Must be created in Stripe dashboard
-
-**See .env.example for complete list with explanations**
-
-### 🎯 **Development Workflow**
-1. **Configure Environment**: Set up all required variables in `.env`
-2. **Database Setup**: Ensure PostgreSQL is running and `DATABASE_URL` is correct
-3. **Start Application**: `npm run dev`
-4. **Database Changes**: `npm run db:push` (applies schema changes)
-5. **Type Checking**: `npm run check`
-
-## 📁 Project Structure
+## File Structure
 
 ```
-chatcrawler/
-├── README.md                 # This file
-├── client/                   # React frontend application
-├── server/                   # Express.js backend API
-├── shared/                   # Shared schemas and types
-├── services/                 # Background services
-├── packages/                 # Shared packages and utilities
-├── apps/                     # Next.js applications
-└── docs/                     # Additional documentation
+shared/
+├── README.md          # This documentation
+├── schema.ts          # Main database schema definitions
+└── prisma/           # Legacy Prisma files (deprecated)
+    ├── schema.prisma  # Old schema (for reference)
+    └── migrations/    # Historical migrations
 ```
 
-## 🔐 Authentication Flow
+## Database Schema
 
-1. User clicks "Sign In" or "Get Started"
-2. Redirected to `/api/login` (Express route)
-3. Replit OAuth flow handles authentication
-4. User redirected back to `/api/callback`
-5. Session created and user redirected to dashboard
-6. Frontend uses `useAuth` hook to check authentication status
+### Core Tables
 
-## 💾 Data Flow
+#### Users (`users`)
+**Purpose**: User authentication and profile management
+```typescript
+{
+  id: string (UUID, primary key)
+  email: string (unique, from OAuth)
+  firstName: string (optional)
+  lastName: string (optional) 
+  profileImageUrl: string (from Replit profile)
+  role: 'free' | 'pro' | 'enterprise' (subscription tier)
+  stripeCustomerId: string (Stripe integration)
+  stripeSubscriptionId: string (active subscription)
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+```
 
-### Scraping Workflow
-1. User submits URL via scraping form
-2. Job created in database with "queued" status
-3. Request sent to FastAPI worker service
-4. Worker processes website and extracts content
-5. Results stored as documents in knowledge base
-6. Job status updated to "done" or "fail"
+#### Sessions (`sessions`) 
+**Purpose**: Secure session storage for authentication
+```typescript
+{
+  sid: string (session ID, primary key)
+  sess: jsonb (session data)
+  expire: timestamp (session expiration)
+}
+```
 
-### Chat Workflow
-1. User selects documents for context
-2. Chat message sent to backend API
-3. Message stored in conversation history
-4. AI model generates response using document context
-5. Response stored and sent back to frontend
-6. Credits deducted from user account
+#### Jobs (`jobs`)
+**Purpose**: Scraping and processing job queue
+```typescript
+{
+  id: string (UUID, primary key)
+  userId: string (foreign key to users)
+  kind: 'scrape' | 'upload' | 'index' | 'chat' | 'visualise'
+  status: 'queued' | 'running' | 'done' | 'fail'
+  inputJson: jsonb (job configuration)
+  outputJson: jsonb (job results)
+  costCredits: number (credits consumed)
+  progress: number (0-100 completion percentage)
+  errorMessage: string (failure details)
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+```
 
-## 🎯 **Current Status & Roadmap**
+#### Knowledge Base Documents (`kb_docs`)
+**Purpose**: Scraped content and uploaded documents for RAG
+```typescript
+{
+  id: string (UUID, primary key)
+  userId: string (foreign key to users)
+  title: string (document title)
+  content: text (full document content)
+  docHash: string (unique content hash for deduplication)
+  metaJson: jsonb (source URL, file info, etc.)
+  embedding: vector(1536) (OpenAI embeddings for similarity search)
+  createdAt: timestamp
+}
+```
 
-### 🚧 **Development Status (40% Complete)**
-**This is a functional prototype, NOT production-ready**
+#### Conversations (`conversations`)
+**Purpose**: Chat conversation threading
+```typescript
+{
+  id: string (UUID, primary key)  
+  userId: string (foreign key to users)
+  title: string (conversation title)
+  docIds: string[] (array of document IDs for context)
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+```
 
-**What's Working in Development:**
-- ✅ Basic user sessions (PostgreSQL storage)
-- ✅ AI chat responses (requires API keys)
-- ✅ Frontend UI and routing
-- ⚠️ Mock dashboard data (in-memory, lost on restart)
-- ⚠️ Partial Stripe integration (missing webhooks)
+#### Messages (`messages`)
+**Purpose**: Individual chat messages within conversations
+```typescript
+{
+  id: string (UUID, primary key)
+  conversationId: string (foreign key to conversations)
+  role: 'user' | 'assistant'
+  content: text (message content)
+  metadata: jsonb (sources, tokens used, etc.)
+  createdAt: timestamp
+}
+```
 
-### ❌ **Critical Missing for Production**
-1. **Persistent Data Storage**: All app data is in-memory
-2. **Stripe Webhooks**: No subscription synchronization
-3. **Input Validation**: No request validation on endpoints
-4. **Security Hardening**: Rate limiting, CSRF protection
-5. **Error Recovery**: Process crashes on errors
-6. **Worker Service**: No actual web scraping capability
+### Billing & Analytics Tables
 
-### 📅 **Development Roadmap**
-**Phase 1 (4-6 weeks)**: Make production-ready
-1. Implement PostgreSQL data persistence for all entities
-2. Add comprehensive input validation with Zod
-3. Implement Stripe webhooks and subscription sync
-4. Add rate limiting and security middleware
-5. Fix error handling and logging
+#### Plans (`plans`)
+**Purpose**: Subscription plan definitions
+```typescript
+{
+  id: string (UUID, primary key)
+  code: string (unique plan identifier)
+  name: string (display name)
+  pricesJson: jsonb ({ weekly: 14, monthly: 39, yearly: 390 })
+  createdAt: timestamp
+}
+```
 
-**Phase 2 (2-4 weeks)**: Worker service
-1. Complete FastAPI worker service (external team)
-2. Integrate web scraping functionality
-3. Add document processing pipeline
+#### Subscriptions (`subscriptions`)
+**Purpose**: User subscription tracking
+```typescript
+{
+  id: string (UUID, primary key)
+  userId: string (foreign key to users)
+  stripeCustomerId: string (Stripe customer ID)
+  stripeSubscriptionId: string (Stripe subscription ID)
+  planCode: string (foreign key to plans.code)
+  status: string (active, canceled, past_due, etc.)
+  renewedAt: timestamp
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+```
 
-**Phase 3 (2-3 weeks)**: Advanced features
-1. Vector search with Qdrant
-2. Real-time updates via WebSockets
-3. Advanced analytics and reporting
+#### Credits Ledger (`credits_ledger`)
+**Purpose**: Usage tracking and credit accounting
+```typescript
+{
+  id: string (UUID, primary key)
+  userId: string (foreign key to users)
+  delta: number (positive for additions, negative for usage)
+  reason: string (subscription_credit, scrape_usage, chat_usage, etc.)
+  jobId: string (reference to related job)
+  createdAt: timestamp
+}
+```
 
-## 📖 **Documentation**
+#### Audit Logs (`audit_logs`)
+**Purpose**: Security and compliance tracking
+```typescript
+{
+  id: string (UUID, primary key)
+  actorId: string (foreign key to users)
+  action: string (action performed)
+  target: string (target resource)
+  metaJson: jsonb (additional context)
+  createdAt: timestamp
+}
+```
 
-### 🎯 **Setup & Deployment**
-- [`docs/ARCHITECTURE_AND_MONOREPO_PLAN.md`](docs/ARCHITECTURE_AND_MONOREPO_PLAN.md) - Current architecture + Next.js 15 Turborepo blueprint
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Current architecture summary
-- [`PRODUCTION_SETUP_GUIDE.md`](PRODUCTION_SETUP_GUIDE.md) - Deployment considerations (review and update before use)
-- [`WORKER_SERVICE_REQUIREMENTS.md`](WORKER_SERVICE_REQUIREMENTS.md) - Python team requirements
+### Supporting Tables
 
-### 📁 **Technical Documentation**
-- [`client/README.md`](client/README.md) - Frontend architecture and components
-- [`server/README.md`](server/README.md) - Backend API and authentication
-- [`shared/README.md`](shared/README.md) - Database schema and types
-- [`services/README.md`](services/README.md) - Background services and workers
-- [`packages/README.md`](packages/README.md) - Shared libraries and utilities
-
-## 💰 **Pricing & Subscriptions (Preview)**
-
-Stripe subscription creation works in development. Webhook lifecycle, credit synchronization, and production pricing are pending. Treat all pricing as illustrative until production setup is complete.
-
-## 🚀 **Launch Status**
-
-Not production-ready. Complete Phase 1 items (persistence, input validation/security, Stripe webhooks, and error handling) before any beta planning.
-
-## 🤝 **Contributing & Support**
-
-### **Current Development Status**
-- **Frontend/Backend**: Prototype; persistence and validation pending
-- **Python/FastAPI**: Worker prototype; DB integration pending
-- **DevOps**: CI/CD alignment and secrets management pending
-
-### **Getting Help**
-- Check [`SETUP_COMPLETE.md`](SETUP_COMPLETE.md) for current status
-- Review [`WORKER_SERVICE_REQUIREMENTS.md`](WORKER_SERVICE_REQUIREMENTS.md) for Python team
-- Open issues for bugs or feature requests
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the package.json for details.
+#### Assets (`assets`)
+**Purpose**: File storage metadata
+```typescript
+{
+  id: string (UUID, primary key)
+ 
 
 ---
-
-**⚠️ Status: DEVELOPMENT PROTOTYPE**
+*This content was automatically extracted from ChatCrawler-Replit-version. For the most up-to-date information, refer to the source project.*

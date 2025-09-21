@@ -1,0 +1,86 @@
+---
+title: "Docker Compose"
+description: "misc for LostMindAI-TurboRepo"
+category: "misc"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "misc,main-platform"
+---
+
+# AI Compute Service - Local Development Setup
+version: '3.8'
+
+services:
+  ai-compute:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=true
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/lostmind_ai
+      - REDIS_URL=redis://redis:6379/0
+      - GOOGLE_CLOUD_PROJECT=coral-muse-469919-m0
+      - BILLING_ENABLED=false
+      - LOG_LEVEL=DEBUG
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+    command: ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - ai-compute-network
+
+  db:
+    image: pgvector/pgvector:pg15
+    environment:
+      - POSTGRES_DB=lostmind_ai
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - ai-compute-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-compute-network
+
+  # Optional: Redis Commander for debugging
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - ai-compute-network
+    profiles:
+      - debug
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  ai-compute-network:
+    driver: bridge
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

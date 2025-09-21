@@ -1,0 +1,117 @@
+---
+title: "Ucf Auto Export"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Auto-Export Chat Management
+
+**Command**: `/ucf-auto-export [action] [interval]`
+**Purpose**: Manage automatic chat export for continuous unlimited context memory preservation
+
+## Description
+
+This command manages the auto-export scheduler that continuously captures Claude Code conversations to preserve the WHY behind every decision. This is critical for unlimited context memory that prevents AI drift and maintains goal alignment.
+
+## Arguments
+
+- `action`: `start`, `stop`, or `status`
+- `interval` (optional): Hours between exports (default: 1 hour)
+
+## Actions
+
+### Start Auto-Export
+```bash
+# Start with default 1-hour interval
+/ucf-auto-export start
+
+# Start with custom interval (2 hours)
+/ucf-auto-export start 2
+```
+
+**What happens:**
+1. **Background Process**: Starts a daemon that monitors Claude Code activity
+2. **Smart Detection**: Only triggers exports when Claude is actively being used
+3. **Continuous Memory**: Automatically captures reasoning chains to prevent context decay
+4. **Guardian Integration**: Each export triggers Guardian analysis for PURPOSE preservation
+
+### Stop Auto-Export
+```bash
+/ucf-auto-export stop
+```
+
+**What happens:**
+- Gracefully stops the background auto-export process
+- Preserves all existing context data
+- Clean shutdown with proper resource cleanup
+
+### Check Status
+```bash
+/ucf-auto-export status
+```
+
+**What happens:**
+- Shows current auto-export scheduler status (running/stopped)
+- Displays configuration details (interval, project path)
+- Shows recent log entries from auto-export activities
+- Reports last export timestamp and success status
+
+## Core Mission Alignment
+
+This command directly serves the **unlimited context memory** mission by:
+
+- **Continuous WHY Preservation**: Automatically captures the reasoning behind decisions
+- **Drift Prevention**: Ensures no context decay between sessions
+- **Goal Alignment**: Maintains mission focus across all AI interactions
+- **Zero Manual Overhead**: Works transparently without user intervention
+
+## Technical Implementation
+
+The auto-export system:
+1. **Activity Detection**: Monitors Claude Code processes and file changes
+2. **Smart Triggering**: Only exports during active development periods
+3. **Custom Export Format**: Uses our enhanced exporter with PURPOSE analysis
+4. **Guardian Integration**: Automatically triggers context synthesis
+5. **Persistent Logging**: Maintains detailed logs of all export activities
+
+## Usage Examples
+
+```bash
+# Start continuous context preservation
+/ucf-auto-export start
+
+# Check if auto-export is working
+/ucf-auto-export status
+
+# Change to 30-minute intervals for intensive projects
+/ucf-auto-export stop
+/ucf-auto-export start 0.5
+
+# Stop when project work is complete
+/ucf-auto-export stop
+```
+
+## Files Created
+
+- `.lostmind_ai_context/auto_export_config.json` - Scheduler configuration
+- `.lostmind_ai_context/auto_export.pid` - Process tracking
+- `.lostmind_ai_context/auto_export.log` - Activity logs
+- `.lostmind_ai_context/current_session_export_*.txt` - Exported sessions
+
+## Integration Benefits
+
+When combined with Guardian:
+- **Real-time Context Synthesis**: Every export triggers Guardian analysis
+- **PURPOSE Enhancement**: Automatic reasoning chain preservation
+- **Goal Tracking**: Continuous alignment verification
+- **Historical Continuity**: Seamless context flow across all sessions
+
+---
+
+*This command implements the core vision of unlimited context memory that never decays, preserving the WHY behind every decision to prevent AI drift.*
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

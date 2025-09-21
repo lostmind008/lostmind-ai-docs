@@ -123,6 +123,7 @@
       "./packages/",
       "./docs/",
       "./scripts/",
+      "./scripts/docs-automation-v2/",
       "./.github/",
       "./turbo/",
       "./.vscode/"

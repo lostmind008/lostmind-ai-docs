@@ -1,0 +1,163 @@
+---
+title: "Ui Aceternity Cookboook"
+description: "documentation for New Website Template - Claude Code Engineering"
+category: "documentation"
+project: "New Website Template - Claude Code Engineering"
+lastUpdated: "2025-09-21"
+tags: "documentation,websites"
+---
+
+# The Complete Aceternity UI Cookbook
+
+## Building stunning animated websites with copy-paste simplicity
+
+Aceternity UI transforms web development by combining the power of **Tailwind CSS**, **Framer Motion**, and **React** into 70+ production-ready animated components. Created as "shadcn/ui for magic effects," this modern component library lets you build visually spectacular websites through a unique copy-paste philosophy—giving you complete control over every animation, transition, and effect while maintaining exceptional performance.
+
+This comprehensive cookbook covers everything from initial setup to building full-scale animated websites, providing complete code examples that you can implement immediately in your projects.
+
+## Architecture and Installation
+
+### Setting up your project foundation
+
+Aceternity UI operates differently from traditional component libraries. Rather than installing a package, you copy components directly into your project, ensuring complete control and customization. The library requires **Next.js 13+**, **React 18+**, **TypeScript**, **Tailwind CSS 3+**, and **Framer Motion 11+** (or motion@12.0.0-alpha.1 for React 19).
+
+**Quick Start with CLI:**
+```bash
+# Initialize Aceternity UI
+npx aceternity-ui init
+
+# Add specific components
+npx aceternity-ui add aurora-background
+npx aceternity-ui add background-beams
+npx aceternity-ui add 3d-card
+
+# Add all components
+npx aceternity-ui add --all
+```
+
+**Complete Project Setup:**
+```bash
+# Create Next.js project with TypeScript and Tailwind
+npx create-next-app@latest my-aceternity-app --typescript --tailwind --app
+
+# Install core dependencies
+npm install framer-motion clsx tailwind-merge
+
+# Optional: 3D components
+npm install three three-globe @react-three/fiber @react-three/drei
+
+# React 19 compatibility
+npm install motion@^12.0.0-alpha.1
+```
+
+**Essential Utility Function** (required for all components):
+```typescript
+// lib/utils.ts
+import { ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+**Tailwind Configuration for Aceternity:**
+```javascript
+// tailwind.config.js
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+
+module.exports = {
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  darkMode: "class",
+  theme: { extend: {} },
+  plugins: [addVariablesForColors],
+};
+
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+  addBase({ ":root": newVars });
+}
+```
+
+## Animation and Effect Components
+
+### Background effects that bring pages to life
+
+**Aurora Background** creates mesmerizing northern lights effects with animated gradients. This component provides a subtle yet captivating backdrop perfect for hero sections:
+
+```tsx
+"use client";
+import { cn } from "@/lib/utils";
+import React, { ReactNode } from "react";
+
+export const AuroraBackground = ({
+  className,
+  children,
+  showRadialGradient = true,
+}: {
+  className?: string;
+  children: ReactNode;
+  showRadialGradient?: boolean;
+}) => {
+  return (
+    <main>
+      <div
+        className={cn(
+          "relative flex h-[100vh] flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900",
+          className
+        )}
+      >
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className={cn(
+              `after:animate-aurora absolute -inset-[10px] opacity-50 will-change-transform`,
+              `[background-image:var(--white-gradient),var(--aurora)]`,
+              `[background-size:300%,_200%] [background-position:50%_50%,50%_50%]`,
+              showRadialGradient && `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,transparent_70%)]`
+            )}
+          />
+        </div>
+        {children}
+      </div>
+    </main>
+  );
+};
+```
+
+**Background Beams** animate SVG paths with gradient trails, creating dynamic energy flows across your page:
+
+```tsx
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+
+export const BackgroundBeams = React.memo(({ className }: { className?: string }) => {
+  const paths = [
+    "M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875",
+    // Add 50+ predefined paths for variety
+  ];
+
+  return (
+    <div className={`absolute inset-0 flex h-full w-full items-center justify-center ${className}`}>
+      <svg className="pointer-events-none absolute h-full w-full" viewBox="0 0 696 316">
+        {paths.map((path, index) => (
+          <motion.path
+            key={index}
+            d={path}
+            stroke={`url(#gradient-${index})`}
+            strokeOpacity="0.4"
+            strokeWidth="0.5"
+          />
+        ))}
+        <defs>
+          {paths.map((_, index) => (
+            <motion.linearGradient
+              key={index}
+              id={`gradient-${index}`}
+           
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

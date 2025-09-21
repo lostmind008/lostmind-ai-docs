@@ -1,0 +1,120 @@
+---
+title: "Ucf Guardian Auto"
+description: "Configure Guardian automatic refresh settings"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "[enable|disable] [frequency]"
+---
+
+# Command: /ucf-guardian-auto
+
+## Your Role: Guardian Automation Manager
+
+This command configures automatic refresh settings for The Guardian context system, allowing users to set up periodic context updates without manual intervention.
+
+## Your Workflow
+
+1.  **Parse Arguments:** Handle user preferences for auto-refresh:
+    - **No arguments**: Show current auto-refresh status
+    - **"enable"**: Enable auto-refresh with default settings
+    - **"disable"**: Disable auto-refresh
+    - **Frequency options**: "manual", "hourly", "daily", "weekly"
+
+2.  **Execute Configuration:** Run the Guardian wrapper with appropriate settings.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/guardian_wrapper.py" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+
+    # Show current status
+    python3 "$ENGINE_PATH/guardian_wrapper.py" auto
+
+    # Enable auto-refresh
+    python3 "$ENGINE_PATH/guardian_wrapper.py" auto --enable --frequency daily
+
+    # Disable auto-refresh
+    python3 "$ENGINE_PATH/guardian_wrapper.py" auto --disable
+    ```
+
+3.  **Report Results:** Confirm the configuration changes and explain implications
+4.  **Provide Guidance:** Suggest optimal settings based on project activity
+
+## Usage Examples
+
+### Enable Auto-Refresh
+```bash
+/ucf-guardian-auto enable daily
+```
+- Enables automatic context refresh once per day
+- Perfect for active development projects
+
+### Disable Auto-Refresh  
+```bash
+/ucf-guardian-auto disable
+```
+- Disables automatic refresh
+- Returns to manual-only refresh mode
+
+### Check Current Settings
+```bash
+/ucf-guardian-auto
+```
+- Shows current auto-refresh configuration
+- Displays last auto-refresh activity
+
+## Frequency Options
+
+- **manual** (default): No automatic refresh, user-triggered only
+- **hourly**: Refresh context every hour (high activity projects)
+- **daily**: Refresh context once per day (normal development)
+- **weekly**: Refresh context weekly (maintenance mode)
+
+## Expected Output
+
+```
+✅ Auto-refresh enabled with daily frequency
+
+Configuration:
+- Auto-refresh: Enabled
+- Frequency: Daily
+- Next scheduled: Tomorrow at current time
+- Engine path: ~/.claude/lostmind_ai_engine
+
+💡 The Guardian will automatically update your context daily.
+   You can still run /ucf-guardian-refresh anytime for immediate updates.
+```
+
+## Implementation Notes
+
+**Phase 1** (Current): Configuration storage only
+- Saves auto-refresh preferences to engine configuration
+- Provides status and settings management
+- Foundation for future automation
+
+**Phase 2** (Future Enhancement): Active automation
+- Actual scheduled refresh execution
+- Background process or cron integration
+- Notification system for refresh status
+
+## Error Handling
+
+- **Not Configured**: Direct user to run `/ucf-onboard-project`
+- **Invalid Frequency**: Show available options and examples
+- **Configuration Save Error**: Provide troubleshooting steps
+- **Permission Issues**: Clear error messages with solutions
+
+## Recommendations
+
+Guide users based on project type:
+- **Active Development**: Daily or hourly refresh
+- **Maintenance Projects**: Weekly refresh
+- **Archived Projects**: Manual refresh only
+- **High-Collaboration**: Hourly refresh for team projects
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

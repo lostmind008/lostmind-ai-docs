@@ -1,0 +1,66 @@
+---
+title: "TRANSITION PLAN"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Transition Plan: From UCF Installer to the LostMind AI Protocol-Driven Framework
+
+**Document Version:** 1.0
+**Date:** 2025-09-02
+
+## 1. Overarching Goal
+
+To refactor the entire framework from a static, installer-based system to a dynamic, protocol-driven one that actively enforces the principles outlined in the "Project Governance & AI Collaboration Protocol." The objective is to create a disciplined, reliable, and powerful agentic development environment that aligns with the user's unique, hard-won workflow.
+
+---
+
+## 2. Transition Roadmap
+
+This document outlines the phased approach to refactoring the framework. Each phase includes the specific actions to be taken, the justification for those actions, and the expected outcome.
+
+### Phase 1: Deprecation & Cleanup (Removing the Old "Guardian")
+
+**Justification:** The previous "Guardian" toolkit was a reactive, after-the-fact context gathering system. The new protocol is proactive and file-based, making the old scripts and commands obsolete. They must be removed to prevent confusion and context pollution.
+
+| Action | File(s) to be **DELETED** | Why? (What it's being replaced by) |
+| :--- | :--- | :--- |
+| **1.1 Delete Old Python Scripts** | `/.claude/lostmindai-context-framework/code_guardian.py`<br>`/.../context_guardian.py`<br>`/.../gemini_context_synthesizer.py` | Replaced by the new `project_mapper.py` and the "Skeleton-First" scaffolding workflow, which provide a more robust, real-time context. |
+| **1.2 Delete Old Claude Commands** | `/.claude/commands/ucf-analyze-repo.md`<br>`/.../ucf-context-refresh.md`<br>`/.../ucf-synthesize-context.md` | These commands trigger the old, now-deleted scripts. They will be replaced by new, protocol-aligned commands. |
+
+### Phase 2: Implementing the New Protocol's Core Tools
+
+**Justification:** This phase builds the foundational tools that automate the protocol's core principles: "Context Preservation" and "Skeleton-First Development."
+
+| Action | File(s) to be **CREATED / MODIFIED** | Why? (Which part of the protocol it implements) |
+| :--- | :--- | :--- |
+| **2.1 Create the Project Mapper** | **Create:** `/.../lostmindai-context-framework/project_mapper.py`<br>**Create:** `/.claude/commands/ucf-map-project.md` | Implements **Section 1: PROJECT CONTEXT MAPPING**. This becomes the new, mandatory entry point for all agent work, creating the `PROJECT_MAP.md` as the single source of truth. |
+| **2.2 Create the Universal Scaffolder** | **Create:** `/.claude/the_forge/scaffolder.py`<br>**Create:** `/.claude/commands/ucf-scaffold.md`<br>**Create:** New templates in `/.claude/the_forge/scaffold_templates/` | Implements **Section 2: SKELETON-FIRST DEVELOPMENT**. This is the engine for the "Plan Once, Scaffold Immediately" principle, creating the context-rich skeleton files. |
+
+### Phase 3: Upgrading "The Forge" and Agent Personas
+
+**Justification:** This phase injects the user's personal philosophy, communication style, and strict verification protocols directly into the DNA of every agent we create, based on the high-quality, Claude-generated examples.
+
+| Action | File(s) to be **MODIFIED** | Why? (Which part of the protocol it implements) |
+| :--- | :--- | :--- |
+| **3.1 Refactor All Agent Templates** | All files in `/.claude/the_forge/agent_templates/` | Implements the user's protocol by rewriting all templates to perfectly match the structure and quality of the Claude-generated examples (e.g., `qa-code-reviewer.md`). This ensures professional personas and few-shot descriptions. |
+| **3.2 Update the Forge Engine** | `/.claude/the_forge/forge_agent.py` | The script's logic will be upgraded to correctly populate the new, sophisticated agent templates, with a major focus on auto-generating the rich, few-shot `<example>` and `<commentary>` tags. |
+| **3.3 Update the Forge `README.md`** | `/.claude/the_forge/README.md` | To accurately document the new, protocol-driven agent creation process. |
+
+---
+## 4. Final State Verification
+
+Upon completion of this plan, the framework will be considered successfully transitioned when the following conditions are met:
+
+- All old "Guardian" scripts and commands have been removed.
+- The new `ucf-map-project` and `ucf-scaffold` commands are fully functional.
+- "The Forge" generates agents that are structurally identical to the high-quality examples provided.
+- The agents' personas and operational protocols reflect the principles of the "Project Governance & AI Collaboration Protocol."
+- All documentation (`README.md` files) is up-to-date and accurately reflects the new, protocol-driven system.
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

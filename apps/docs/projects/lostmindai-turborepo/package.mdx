@@ -1,0 +1,83 @@
+---
+title: "Package"
+description: "config for LostMindAI-TurboRepo"
+category: "config"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "config,main-platform"
+---
+
+{
+  "name": "@lostmind/ui",
+  "version": "0.1.0",
+  "description": "Shared shadcn/ui React components for LostMind AI monorepo",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles": "./styles/globals.css"
+  },
+  "files": [
+    "src",
+    "styles",
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit",
+    "dev": "tsc --noEmit --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.436.0",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@lostmind/config": "workspace:*",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.15.0",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "shadcn",
+    "tailwind",
+    "design-system",
+    "monorepo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lostmindai/turborepo.git",
+    "directory": "packages/ui"
+  },
+  "license": "MIT"
+}
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

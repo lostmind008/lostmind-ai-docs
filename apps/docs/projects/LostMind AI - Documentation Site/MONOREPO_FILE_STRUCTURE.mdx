@@ -1,0 +1,146 @@
+---
+title: "MONOREPO FILE STRUCTURE"
+description: "documentation for Back End Architecture for Turborepo with RAG Embeddings"
+category: "documentation"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Monorepo File Structure Analysis
+
+This document categorizes all files in the current directory for proper monorepo organization.
+
+## 📁 APPS (Main Applications)
+
+### `apps/api-gateway/`
+**Description**: Main FastAPI application serving as unified API interface
+
+**Files**:
+- `main.py` (725 lines) - Primary API gateway with all service endpoints
+- `requirements.txt` - Dependencies for API gateway
+
+## 📦 PACKAGES (Reusable Services & Modules)
+
+### `packages/core-services/`
+**Description**: Fundamental backend services
+
+**Files**:
+- `embedding_service.py` (424 lines) - Gemma embedding generation and management
+- `vector_db_service.py` (1,032 lines) - Multi-provider vector database operations  
+- `document_processing_service.py` (765 lines) - Document parsing and text extraction
+- `config.py` (177 lines) - Centralized configuration management
+
+### `packages/rag-pipeline/`
+**Description**: RAG (Retrieval-Augmented Generation) implementation
+
+**Files**:
+- `rag_service.py` (712 lines) - Complete RAG pipeline with conversation management
+
+### `packages/analysis-modules/`
+**Description**: Specialized intelligence services
+
+**Files**:
+- `excel_intelligence_service.py` (1,000 lines) - Excel analysis with formula intelligence
+- `web_scraping_intelligence_service.py` (1,176 lines) - AI-powered web scraping
+- `job_discovery_intelligence_service.py` (1,248 lines) - Job matching and career insights
+- `news_extraction_system_v2.py` (738 lines) - News article extraction and analysis
+
+### `packages/analysis-components/`
+**Description**: Specialized analysis utilities
+
+**Files**:
+- `formula_analyzer.py` (382 lines) - Excel formula complexity analysis
+- `vba_analyzer.py` (352 lines) - VBA code analysis and security assessment
+- `worksheet_mapper.py` (422 lines) - Excel worksheet structure analysis
+- `dashboard_analyzer.py` (324 lines) - Business intelligence dashboard analysis
+- `excel_analyzer.py` (482 lines) - Core Excel analysis functionality
+- `vba_relationship_analyzer.py` (603 lines) - VBA relationship and dependency analysis
+- `formula_intelligence.py` (149 lines) - Formula intelligence utilities
+
+### `packages/orchestration/`
+**Description**: Service management and orchestration
+
+**Files**:
+- `service_orchestrator.py` (650 lines) - Health monitoring and service lifecycle
+
+### `packages/shared-utils/`
+**Description**: Shared utilities and helpers
+
+**Files**:
+- `advanced_scraper_2_5v2.py` (203 lines) - Advanced web scraping utilities
+- `generate_documentation.py` (383 lines) - Documentation generation utilities
+
+## 🔧 TOOLS & SCRIPTS (Development Utilities)
+
+### `tools/analysis-runners/`
+**Description**: Standalone analysis execution scripts
+
+**Files**:
+- `run_simple_analysis.py` (113 lines) - Simple Excel analysis runner
+- `run_advanced_analysis.py` (175 lines) - Advanced Excel analysis runner  
+- `run_formula_intelligence.py` (78 lines) - Formula intelligence runner
+- `run_relationship_analysis.py` (149 lines) - VBA relationship analysis runner
+- `standalone_excel_analyzer.py` (619 lines) - Comprehensive Excel analysis tool
+
+### `tools/legacy/`
+**Description**: Legacy or experimental scripts
+
+**Files**:
+- `embeddinggemma-powerhouse-app.py` (99 lines) - Legacy embedding application
+- `job_discovery_orchestrator_FIXED_engels.py` (99 lines) - Fixed job orchestrator
+
+## 📚 DOCUMENTATION
+
+### Core Documentation
+- `CLAUDE.md` - Claude Code guidance (newly created)
+- `API Documentation.md` - Complete API reference
+- `Backend Architecture for LostMind AI.md` - Overall architecture documentation
+- `Backend Intelligence Architecture.md` - Detailed technical architecture
+- `architecture-decision-records.md` - ADR documentation
+- `Deployment Guide.md` - Deployment instructions
+- `Turborepo Integration Guide.md` - Monorepo integration guide
+
+### Project Management
+- `todo.md` - Current project tasks and roadmap
+- `Next.jsVersionRecommendationforLostMindAIProject(1).md` - Next.js integration recommendations
+
+### Reference Files
+- `backend-architecture-structure.txt` - File structure reference
+- `requirements.txt` - Global project dependencies
+
+## 🗃️ ARCHIVES
+
+### Archives to Extract or Remove
+- `backend-architecture-complete.tar.gz` - Compressed archive (extract contents)
+- `perplexitylabs-rag.zip` - RAG implementation archive (extract if needed)
+
+## 🚀 RECOMMENDED MONOREPO STRUCTURE
+
+```
+backend-intelligence-monorepo/
+├── apps/
+│   └── api-gateway/
+│       ├── main.py
+│       ├── package.json
+│       └── requirements.txt
+├── packages/
+│   ├── core-services/
+│   │   ├── embedding-service/
+│   │   │   └── embedding_service.py
+│   │   ├── vector-db-service/
+│   │   │   └── vector_db_service.py
+│   │   ├── document-processing/
+│   │   │   └── document_processing_service.py
+│   │   └── config/
+│   │       └── config.py
+│   ├── rag-pipeline/
+│   │   └── rag_service.py
+│   ├── analysis-modules/
+│   │   ├── excel-intelligence/
+│   │   │   └── excel_intelligence_service.py
+│   │   ├── web-scraping/
+│   │   │   └── web_scraping_intelligence
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

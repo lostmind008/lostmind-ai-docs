@@ -1,0 +1,39 @@
+---
+title: "Package"
+description: "config for ChatCrawler-Replit-version"
+category: "config"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "config,data-processing"
+---
+
+{
+  "name": "@chatcrawler/webhook",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch index.ts",
+    "build": "tsx build index.ts",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "stripe": "^17.2.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}
+
+
+---
+*This content was automatically extracted from ChatCrawler-Replit-version. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,220 @@
+---
+title: "CONTRIBUTING"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Contributing to LostMind AI
+
+Welcome to LostMind AI! This guide will help you get up and running with our development environment in under 10 minutes.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js 20+** and **pnpm 9+**
+- **Docker Desktop** (for local development)
+- **Git** (obviously!)
+- **Google Cloud CLI** (optional, for deployment)
+
+### 1. Clone and Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/lostmind008/LostMindAI-TurboRepo-ApprovedPlan.git
+cd LostMindAI-TurboRepo-ApprovedPlan
+
+# Install dependencies
+pnpm install
+
+# Copy environment file
+cp .env.development .env.local
+
+# Start the development stack
+docker-compose up -d
+
+# Run database migrations
+pnpm run db:push
+
+# Start development
+pnpm run dev
+```
+
+### 2. Add Your Secrets
+
+Edit `.env.local` and add your API keys:
+
+```bash
+# Generate a secret
+echo "NEXTAUTH_SECRET=$(openssl rand -base64 32)" >> .env.local
+
+# Add your API keys
+echo "GOOGLE_CLIENT_ID=your-google-client-id" >> .env.local
+echo "GOOGLE_CLIENT_SECRET=your-google-client-secret" >> .env.local
+echo "GOOGLE_GENERATIVE_AI_API_KEY=your-gemini-key" >> .env.local
+echo "STRIPE_SECRET_KEY=sk_test_your-stripe-key" >> .env.local
+echo "STRIPE_PUBLISHABLE_KEY=pk_test_your-stripe-key" >> .env.local
+```
+
+### 3. Verify Everything Works
+
+```bash
+# Check all services are running
+docker-compose ps
+
+# Test the applications
+open http://localhost:3000    # Marketing app
+open http://localhost:3001    # Ask app
+open http://localhost:8000    # AI Compute API
+```
+
+## 🏗️ Project Architecture
+
+### TurboRepo Structure
+
+```
+LostMindAI-TurboRepo/
+├── apps/                    # Applications
+│   ├── marketing/          # Landing page (localhost:3000)
+│   └── ask/               # AI chat app (localhost:3001)
+├── packages/              # Shared packages
+│   ├── ui/               # React components
+│   ├── auth/             # Authentication
+│   ├── db/               # Database schema
+│   └── config/           # Shared configs
+├── services/             # FastAPI microservices
+│   └── ai-compute/       # AI processing (localhost:8000)
+└── infrastructure/       # Docker and deployment
+```
+
+### Development Stack
+
+- **Frontend**: Next.js 15 + React 19 + TypeScript
+- **Backend**: FastAPI + Python
+- **Database**: PostgreSQL + Prisma ORM
+- **Cache**: Redis
+- **AI**: Google Generative AI (Gemini)
+- **Auth**: Auth.js v5
+- **Payments**: Stripe
+- **Styling**: Tailwind CSS + shadcn/ui
+
+### Development Tools & Standards
+
+#### **Task Management System**
+
+We use an automated task lifecycle system to prevent accumulation and maintain clarity:
+
+```bash
+# Check all task files and their status
+pnpm run tasks:audit
+
+# Clean up completed task files (MANDATORY)
+pnpm run tasks:cleanup
+
+# Get task statistics and aging reports
+pnpm run tasks:status
+```
+
+**Task Status System:**
+
+- 🟢 **ACTIVE**: Currently being worked on
+- ✅ **COMPLETED**: Finished - delete immediately
+- 🔄 **BLOCKED**: Waiting for dependencies - include ETA
+
+#### **TypeScript Configuration Standards**
+
+- **Never duplicate `lib` entries** in package configs (inherit from base)
+- **Follow inheritance patterns** documented in CLAUDE.md
+- **Use consistent target versions** across the monorepo
+- **Reference CLAUDE.md** for configuration examples
+
+#### **File Organization Rules**
+
+- **Task files**: Place in relevant subdirectories (e.g., `apps/ask/tasks01.md`)
+- **Test files**: Use `__tests__/` folders or `.test.tsx` suffix
+- **Components**: Follow established patterns in `packages/ui`
+- **Documentation**: Place in appropriate `docs/` subdirectories
+
+## 🛠️ Development Workflow
+
+### Daily Development
+
+```bash
+# Start development environment
+docker-compose up -d
+pnpm run dev
+
+# Work on specific app
+pnpm run dev --filter=@lostmind/marketing
+pnpm run dev --filter=@lostmind/ask
+
+# Work on specific package
+cd packages/ui
+pnpm run dev
+```
+
+### Making Changes
+
+1. **Create a feature branch**
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Follow the existing patterns**
+   - Look at existing components/pages for conventions
+   - Use the established file structure
+   - Follow TypeScript strict mode
+
+3. **Test your changes**
+
+   ```bash
+   pnpm run lint        # Check code style
+   pnpm run type-check  # Check TypeScript
+   pnpm run build       # Verify builds work
+   ```
+
+4. **Commit and push**
+   ```bash
+   git add .
+   git commit -m "feat: add your feature description"
+   git push -u origin feature/your-feature-name
+   ```
+
+### Code Style
+
+We use automated tools for consistency:
+
+- **ESLint** for code quality
+- **Prettier** for formatting
+- **TypeScript** in strict mode
+- **Conventional Commits** for commit messages
+
+```bash
+# Fix linting issues
+pnpm run lint:fix
+
+# Format code
+pnpm run format
+
+# Check everything
+pnpm run validate
+```
+
+## 📦 Working with Packages
+
+### Creating Components (packages/ui)
+
+```bash
+cd packages/ui
+
+# Create a new component
+mkdir src/components/button
+touch src/components/button/index.tsx
+touch src/components/button/butto
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

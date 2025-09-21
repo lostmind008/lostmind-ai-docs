@@ -1,0 +1,47 @@
+---
+title: "Ucf Diagnose Bridge"
+description: "Diagnose LostMind framework bridge path resolution"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-diagnose-bridge
+
+## Purpose
+Print how the framework hub is being resolved (env/config/fallback) and verify core importability.
+
+## Steps
+1. Run the diagnosis script:
+```bash
+ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+if [ ! -f "$ENGINE_PATH/diagnose_bridge.py" ]; then
+    echo "❌ LostMind AI engine not found. Please run the framework installer."
+    exit 1
+fi
+python3 "$ENGINE_PATH/diagnose_bridge.py"
+```
+2. Review output to confirm the chosen path and that `context_guardian` is importable.
+
+## Expected Output
+```
+Bridge Resolution Diagnosis:
+- env              -> /abs/path/to/framework_hub [OK]
+- project_config   -> /path/to/project/framework_hub [MISS]
+- cwd_framework_hub-> /current/project/framework_hub [MISS]
+- repo_neighbor    -> /repo/framework_hub [MISS]
+
+✅ Using: /abs/path/to/framework_hub (source: env)
+✅ context_guardian importable
+```
+
+## Troubleshooting
+- Set env var: `export LOSTMIND_FRAMEWORK_PATH=/abs/path/to/framework_hub`
+- Or create `lostmind_framework_config.json` with `{ "framework_hub_path": "/abs/path" }` in project root.
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

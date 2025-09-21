@@ -1,0 +1,197 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "guide"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# 🔐 LostMind AI - Complete Environment Variables Setup Guide
+
+This comprehensive guide provides direct dashboard links and step-by-step instructions for generating all environment variables needed for the LostMind AI platform.
+
+## 📋 Quick Reference
+
+**Total Setup Time**: ~60-75 minutes (includes microservices)
+**Required Accounts**: 7 services
+**Environment Files**: 4 files
+**Architecture Support**: Monolithic + Microservices
+
+## 🚀 Setup Order (Recommended)
+
+Follow this order to minimize dependencies and setup time:
+
+1. [Database Setup](#1-database-setup) (5 mins)
+2. [Authentication Setup](#2-authentication-setup) (10 mins)
+3. [AI Services Setup](#3-ai-services-setup) (5 mins)
+4. [Payment Processing Setup](#4-payment-processing-setup) (15 mins)
+5. [Infrastructure Services](#5-infrastructure-services) (10 mins)
+6. [**Microservices Configuration**](#55-microservices-configuration) (15 mins) ⭐ **New**
+7. [Monitoring & Analytics](#6-monitoring--analytics) (10 mins)
+8. [Email Service Setup](#7-email-service-setup) (5 mins)
+
+---
+
+## 1. Database Setup
+
+### PostgreSQL with Row Level Security (RLS)
+
+#### Option A: Supabase (Recommended for MVP)
+
+**Dashboard**: https://supabase.com/dashboard
+
+**Steps**:
+
+1. Sign up/login at [Supabase Dashboard](https://supabase.com/dashboard)
+2. Click **"New Project"**
+3. Choose organization → Enter project name: `lostmind-ai-dev`
+4. Select region: **US East** (closest to Vercel)
+5. Set database password (save this!)
+6. Click **"Create new project"** (wait 2-3 minutes)
+
+**Get Connection Strings**:
+
+1. Go to **Settings** → **Database**
+2. Scroll to **Connection string**
+3. Copy **"Postgres"** connection string
+4. Replace `[YOUR-PASSWORD]` with your actual password
+
+```bash
+# Add to .env.local
+DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+DIRECT_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+```
+
+#### Option B: Neon (Alternative)
+
+**Dashboard**: https://console.neon.tech/app/projects
+
+**Steps**:
+
+1. Sign up at [Neon Console](https://console.neon.tech)
+2. Click **"Create a project"**
+3. Enter name: `lostmind-ai`
+4. Select region: **US East (Virginia)**
+5. Click **"Create project"**
+
+**Get Connection String**:
+
+1. In project dashboard, click **"Connection string"**
+2. Copy the **"Pooled connection"** string
+
+```bash
+# Add to .env.local
+DATABASE_URL="postgresql://[user]:[password]@[endpoint]/[dbname]?sslmode=require"
+DIRECT_URL="postgresql://[user]:[password]@[endpoint]/[dbname]?sslmode=require&pgbouncer=true&connect_timeout=10"
+```
+
+**Verification**:
+
+```bash
+# Test connection
+pnpm run db:push
+# Should see "Your database is now in sync with your schema"
+```
+
+---
+
+## 2. Authentication Setup
+
+### Auth.js v5 + Google OAuth
+
+#### NextAuth Secret Generation
+
+```bash
+# Generate a secure secret
+openssl rand -base64 32
+
+# Add to .env.local
+NEXTAUTH_SECRET="[generated-32-char-string]"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+#### Google OAuth Setup
+
+**Dashboard**: https://console.cloud.google.com/apis/credentials
+
+**Steps**:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Select your project: **coral-muse-469919-m0**
+3. Navigate to **APIs & Services** → **Credentials**
+4. Click **"+ CREATE CREDENTIALS"** → **"OAuth 2.0 Client IDs"**
+
+**Configure OAuth Client**:
+
+1. **Application type**: Web application
+2. **Name**: `LostMind AI - Web Client`
+3. **Authorized JavaScript origins**:
+   ```
+   http://localhost:3000
+   http://localhost:3001
+   http://localhost:3002
+   https://lostmindai.com
+   https://ask.lostmindai.com
+   ```
+4. **Authorized redirect URIs**:
+   ```
+   http://localhost:3000/api/auth/callback/google
+   http://localhost:3001/api/auth/callback/google
+   https://lostmindai.com/api/auth/callback/google
+   https://ask.lostmindai.com/api/auth/callback/google
+   ```
+5. Click **"CREATE"**
+
+**Get Credentials**:
+
+1. Copy **Client ID** and **Client Secret** from the popup
+2. Add to `.env.local`:
+
+```bash
+GOOGLE_CLIENT_ID="[client-id].apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="[client-secret]"
+```
+
+**Verification**:
+
+1. Start dev server: `pnpm run dev`
+2. Go to `http://localhost:3000/api/auth/signin`
+3. Should see Google sign-in option
+
+---
+
+## 3. AI Services Setup
+
+### Google Gemini API
+
+**Dashboard**: https://makersuite.google.com/app/apikey
+
+**Steps**:
+
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click **"Create API Key"**
+4. Select **"Create API key in existing project"**
+5. Choose project: **coral-muse-469919-m0**
+6. Click **"Create"**
+7. Copy the generated API key
+
+```bash
+# Add to .env.local
+GOOGLE_GENERATIVE_AI_API_KEY="[your-api-key]"
+GEMINI_API_KEY="[same-api-key]"  # Duplicate for compatibility
+GCP_PROJECT_ID="coral-muse-469919-m0"
+PROJECT_ID="coral-muse-469919-m0"
+```
+
+### Service Account for Local Development
+
+**Dashboard**: https://console.cloud.google.com/iam-admin/serviceaccounts
+
+**Steps**:
+
+1. Go
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

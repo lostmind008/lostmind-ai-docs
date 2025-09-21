@@ -1,0 +1,58 @@
+---
+title: "ISOLATION README"
+description: "readme for LostMind AI - Memory&Context Protocol"
+category: "readme"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "readme,ai-services"
+---
+
+# MCP Environment Isolation Guide
+
+## Issue Identified
+The LostMind AI Engine's `run_engine.sh` script was inadvertently affecting Claude Code's MCP (Model Context Protocol) configuration by exporting environment variables that could interfere with active MCP servers.
+
+## Root Cause
+The original script used:
+```bash
+export $(grep -v '^#' "$ENV_FILE" | xargs)
+```
+This exported ALL environment variables from the `.env` file, potentially overriding Claude Code's MCP settings.
+
+## Solution Implemented
+1. **Selective Environment Loading**: Only export necessary variables (GEMINI_API_KEY)
+2. **Environment Cleanup**: Unset exported variables after script completion
+3. **Isolated Execution**: The script now runs with minimal environmental impact
+
+## Fixed Code
+```bash
+# Before (problematic)
+export $(grep -v '^#' "$ENV_FILE" | xargs)
+
+# After (safe)
+GEMINI_API_KEY=$(grep -E "^GEMINI_API_KEY=" "$ENV_FILE" | cut -d '=' -f2 | sed 's/^"//' | sed 's/"$//')
+export GEMINI_API_KEY
+# ... at end of script ...
+unset GEMINI_API_KEY
+```
+
+## Best Practices for MCP Compatibility
+1. **Never export bulk environment variables** from scripts that run within Claude Code
+2. **Always clean up** exported variables after script execution
+3. **Use specific variable extraction** instead of wildcard exports
+4. **Test MCP configuration** after running external scripts
+
+## Verification
+After applying these changes:
+1. MCP servers should remain properly configured
+2. Claude Code's context should show normal MCP tool availability
+3. The Guardian functionality should work without affecting MCP integration
+
+## Impact Assessment
+- ✅ Fixed: MCP configuration preservation
+- ✅ Maintained: All Guardian functionality  
+- ✅ Improved: Script environmental isolation
+- ✅ Added: Cleanup mechanisms
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

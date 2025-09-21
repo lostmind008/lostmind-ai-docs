@@ -1,0 +1,99 @@
+---
+title: "Replit"
+description: "documentation for ChatCrawler-Replit-version"
+category: "documentation"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "documentation,data-processing"
+---
+
+# ChatCrawler
+
+## Overview
+
+ChatCrawler is a modern, AI-powered web scraping and chat platform built with a server-first, type-safe architecture. It combines intelligent web scraping capabilities with advanced AI chat functionality, allowing users to extract content from websites, upload documents, and interact with their data through natural language conversations. The platform is designed for production use with enterprise-grade security, scalable infrastructure, and a comprehensive billing system.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## Documentation Status
+
+Complete project documentation has been created including:
+- **Main README.md**: Comprehensive project overview, features, tech stack, and setup instructions
+- **Directory Documentation**: Detailed README files for all major directories (client/, server/, shared/, services/, packages/, apps/, docs/)
+- **Technical Architecture**: Each directory documents its tech stack, implementation logic, built features, and planned development
+- **Cross-linking**: All README files are linked and reference each other for comprehensive navigation
+
+## System Architecture
+
+### Frontend Architecture
+- **Next.js 15 App Router**: Server-first architecture using App Router with Server Components and Server Actions
+- **React 19**: Latest React version with modern patterns and optimizations
+- **Styling**: Tailwind CSS with shadcn/ui component library for consistent design
+- **State Management**: TanStack React Query for server state management and caching
+- **Authentication**: Session-based authentication with middleware protection
+- **Monorepo Structure**: Separate apps for marketing site and authenticated dashboard
+
+### Backend Architecture
+- **Express.js Server**: Main application server handling authentication and API routes
+- **FastAPI Worker Service**: Python-based service for compute-intensive tasks like scraping and AI processing
+- **Database Layer**: PostgreSQL with Drizzle ORM for type-safe database operations
+- **Authentication**: Replit-based authentication with session management using connect-pg-simple
+- **API Design**: RESTful APIs with proper error handling and middleware
+
+### Data Storage Solutions
+- **Primary Database**: PostgreSQL with pgvector extension for embeddings
+- **Session Storage**: Database-backed sessions with automatic cleanup
+- **Vector Storage**: Support for both Qdrant and pgvector for RAG implementations
+- **File Storage**: Document upload and processing capabilities
+
+### Authentication and Authorization
+- **Replit Auth Integration**: OAuth-based authentication with Replit identity provider
+- **Session Management**: Secure session storage with HttpOnly cookies
+- **Role-Based Access Control**: Three-tier system (free, pro, enterprise)
+- **Middleware Protection**: Route-level authentication guards
+
+### AI and RAG Integration
+- **Dual Provider Support**: Configurable between LangChain and Vertex AI providers
+- **Google Generative AI SDK**: Unified interface for both Gemini Developer API and Vertex AI
+- **Chat Modes**: Automatic switching between CAG (Contextual AI Generation) and RAG (Retrieval Augmented Generation)
+- **Embedding Support**: Text embeddings for semantic search and document similarity
+
+### Monorepo Package Structure
+- **UI Package**: Shared component library based on Radix UI primitives
+- **Auth Package**: Authentication utilities and middleware
+- **Billing Package**: Stripe integration for subscriptions and billing
+- **RAG Package**: Provider-agnostic interface for different RAG implementations
+- **Providers Package**: AI model adapters and web scraping engines
+- **SDK Package**: Type-safe API client with Zod schemas
+- **Config Package**: Shared configuration for ESLint, Prettier, TypeScript, and Tailwind
+
+## External Dependencies
+
+### Third-Party Services
+- **Stripe**: Payment processing, subscription management, and billing webhooks
+- **Replit Authentication**: OAuth identity provider for user authentication
+- **Google Generative AI**: AI model access through unified SDK
+- **Neon Database**: Managed PostgreSQL hosting with serverless scaling
+
+### Development and Build Tools
+- **Vite**: Frontend build tool with HMR and optimization
+- **Turbo**: Monorepo build system for efficient development and deployment
+- **TypeScript**: Full type safety across the entire stack
+- **Drizzle Kit**: Database migrations and schema management
+
+### AI and ML Dependencies
+- **LangChain**: Document processing and RAG implementation
+- **OpenAI SDK**: Alternative AI provider integration
+- **Qdrant Client**: Vector database for embeddings storage
+- **Playwright**: Browser automation for web scraping
+
+### Infrastructure Dependencies
+- **Vercel**: Deployment platform for Next.js applications
+- **Cloud Run**: Container hosting for FastAPI worker services
+- **Google Cloud**: Infrastructure services and Vertex AI integration
+- **pnpm**: Package manager for monorepo dependency management
+
+---
+*This content was automatically extracted from ChatCrawler-Replit-version. For the most up-to-date information, refer to the source project.*

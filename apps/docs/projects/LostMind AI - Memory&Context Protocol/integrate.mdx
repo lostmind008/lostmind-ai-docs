@@ -1,0 +1,200 @@
+---
+title: "Integrate"
+description: "Coordinate integration of parallel development tracks with automated quality validation"
+category: "parallel-development"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+argument-hint: "[--check|--start|--status|--rollback] [--force]"
+model: "opus"
+allowed-tools: "Read, Write, Bash, Task, Search"
+---
+
+# Integration Orchestrator
+
+Coordinate systematic integration of parallel development tracks, ensuring quality, compatibility, and seamless deployment of distributed development efforts.
+
+## Integration Commands
+
+### Check Integration Readiness
+```bash
+/integrate --check
+```
+- Validates all parallel tracks meet integration requirements
+- Checks quality gates across all development sessions
+- Verifies API contract compatibility and dependencies
+- Identifies any blocking issues before integration starts
+- Provides detailed readiness report with recommendations
+
+### Start Integration Process
+```bash
+/integrate --start
+```
+- Initiates systematic integration of all ready tracks
+- Creates integration branch with proper versioning
+- Merges tracks in dependency order with conflict resolution
+- Runs comprehensive integration test suite
+- Generates integration report and deployment artifacts
+
+### Monitor Integration Status
+```bash
+/integrate --status
+```
+- Shows real-time integration progress across all tracks
+- Displays test results and quality gate status
+- Provides performance metrics and error reports
+- Tracks deployment readiness and rollback capabilities
+
+### Emergency Rollback
+```bash
+/integrate --rollback
+```
+- Safely rolls back integration to last stable state
+- Preserves individual track progress and development work
+- Maintains git history and enables re-integration attempts
+- Notifies all parallel sessions of rollback status
+
+## Integration Strategy
+
+### Pre-Integration Validation
+```typescript
+interface IntegrationChecklist {
+  quality_gates: {
+    test_coverage: boolean;
+    security_scan: boolean;
+    performance_benchmark: boolean;
+    code_quality: boolean;
+  };
+  compatibility: {
+    api_contracts: boolean;
+    database_schema: boolean;
+    dependency_versions: boolean;
+    configuration: boolean;
+  };
+  readiness: {
+    feature_complete: boolean;
+    documentation_updated: boolean;
+    deployment_ready: boolean;
+    monitoring_configured: boolean;
+  };
+}
+
+class IntegrationValidator {
+  async validate_integration_readiness(): Promise<ValidationResult> {
+    const tracks = await this.get_parallel_tracks();
+    const results = [];
+    
+    for (const track of tracks) {
+      const validation = await this.validate_track(track);
+      results.push({
+        track: track.name,
+        status: validation.passed ? 'ready' : 'blocked',
+        issues: validation.issues,
+        quality_score: validation.quality_score
+      });
+    }
+    
+    return {
+      overall_ready: results.every(r => r.status === 'ready'),
+      track_results: results,
+      integration_plan: await this.create_integration_plan(results)
+    };
+  }
+}
+```
+
+### Dependency-Ordered Integration
+```bash
+# Automatically determine integration order based on dependencies
+create_integration_order() {
+  # Analyze cross-track dependencies
+  dependencies=$(analyze_track_dependencies)
+  
+  # Create dependency graph
+  graph=$(build_dependency_graph "$dependencies")
+  
+  # Calculate topological sort for integration order
+  integration_order=$(topological_sort "$graph")
+  
+  echo "Integration order: $integration_order"
+  return $integration_order
+}
+
+# Execute integration in calculated order
+execute_ordered_integration() {
+  local integration_order=$1
+  
+  for track in $integration_order; do
+    echo "🔄 Integrating track: $track"
+    
+    # Pre-integration checks
+    if ! validate_track_ready "$track"; then
+      echo "❌ Track $track not ready for integration"
+      return 1
+    fi
+    
+    # Merge track
+    if ! merge_track "$track"; then
+      echo "❌ Failed to merge track $track"
+      initiate_rollback
+      return 1
+    fi
+    
+    # Post-merge validation
+    if ! validate_post_merge "$track"; then
+      echo "❌ Post-merge validation failed for $track"
+      initiate_rollback
+      return 1
+    fi
+    
+    echo "✅ Track $track integrated successfully"
+  done
+}
+```
+
+## Automated Integration Pipeline
+
+### Continuous Integration Workflow
+```yaml
+# GitHub Actions workflow for parallel track integration
+name: Parallel Development Integration
+on:
+  workflow_dispatch:
+    inputs:
+      integration_mode:
+        description: 'Integration mode'
+        required: true
+        default: 'automatic'
+        type: choice
+        options:
+          - automatic
+          - manual-review
+          - staged
+
+jobs:
+  validate-tracks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        track: [auth, api, ui, infrastructure]
+    steps:
+      - name: Validate track readiness
+        run: |
+          /integrate --check --track=${{ matrix.track }}
+          
+  integration:
+    needs: validate-tracks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create integration environment
+        run: |
+          # Set up clean integration environment
+          setup_integration_environment
+          
+      - name: Execute systematic integration
+        run: |
+          # Run integration with full validation
+          /integrate --start --mode=${{ inputs.integration_mo
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

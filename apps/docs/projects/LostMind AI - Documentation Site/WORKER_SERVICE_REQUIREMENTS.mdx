@@ -1,0 +1,200 @@
+---
+title: "WORKER SERVICE REQUIREMENTS"
+description: "documentation for ChatCrawler-Replit-version"
+category: "documentation"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "documentation,data-processing"
+---
+
+# ChatCrawler Worker Service Requirements
+
+## 🎯 Overview
+The ChatCrawler Worker Service is a **FastAPI-based microservice** responsible for handling compute-intensive tasks like web scraping, document processing, and AI operations. This service runs independently from the main Express.js application and communicates via HTTP APIs.
+
+## 📋 Current Status
+- ✅ **Service Architecture**: FastAPI framework with proper CORS and health checks
+- ✅ **API Structure**: Organized routers for scrape, upload, chat, and visualisation
+- ✅ **Dependencies**: All required Python packages defined in requirements.txt
+- 🚧 **Implementation**: Core functionality needs completion
+
+## 🔧 Technical Requirements
+
+### 1. **Environment Setup**
+```bash
+# Python Environment
+Python 3.11+ required
+pip install -r services/worker/requirements.txt
+
+# Environment Variables Required:
+OPENAI_API_KEY=your-openai-api-key
+QDRANT_URL=http://localhost:6333
+QDRANT_API_KEY=optional-if-secured
+DATABASE_URL=postgresql://user:pass@host:port/dbname
+PORT=8000
+DEBUG=true
+RAG_PROVIDER=langchain
+```
+
+### 2. **Core Services to Implement**
+
+#### A. **Web Scraping Service** (`app/api/scrape.py`)
+**Status**: 🚧 Partial implementation exists
+
+**Requirements**:
+- [ ] Complete `WebScraper` class in `app/core/scraper.py`
+- [ ] Implement robots.txt compliance checking
+- [ ] Add JavaScript rendering support (Playwright)
+- [ ] Create content extraction and cleaning
+- [ ] Add rate limiting and retry logic
+- [ ] Implement job status updates back to main app
+
+**API Contract**:
+```python
+POST /scrape
+{
+  "jobId": "uuid-string",
+  "url": "https://example.com",
+  "maxPages": 10,
+  "depth": 2,
+  "respectRobots": true,
+  "extractImages": false
+}
+```
+
+**Expected Response Flow**:
+1. Validate URL and parameters
+2. Check robots.txt (if enabled)
+3. Scrape pages using Playwright/requests
+4. Extract clean text content
+5. Store documents in database with embeddings
+6. Update job status via callback to main app
+
+#### B. **Document Processing Service** (`app/api/upload.py`)
+**Status**: 🚧 Needs implementation
+
+**Requirements**:
+- [ ] PDF processing using PyPDF
+- [ ] Word document processing using python-docx
+- [ ] Text extraction and chunking
+- [ ] Generate embeddings using OpenAI
+- [ ] Store in Qdrant vector database
+
+**API Contract**:
+```python
+POST /upload
+{
+  "jobId": "uuid-string",
+  "files": [multipart files],
+  "userId": "user-id",
+  "chunkSize": 1000
+}
+```
+
+#### C. **RAG/Chat Service** (`app/api/chat.py`)
+**Status**: 🚧 Needs implementation
+
+**Requirements**:
+- [ ] Vector search using Qdrant
+- [ ] Context retrieval and ranking
+- [ ] OpenAI integration for response generation
+- [ ] Response streaming support
+
+#### D. **Visualisation Service** (`app/api/visualise.py`)
+**Status**: 🚧 Needs implementation
+
+**Requirements**:
+- [ ] Generate charts from scraped data
+- [ ] Export to various formats
+- [ ] Data analysis capabilities
+
+### 3. **Database Integration**
+**Requirements**:
+- [ ] PostgreSQL connection with pgvector extension
+- [ ] Qdrant vector database integration
+- [ ] Document storage and retrieval
+- [ ] Embedding generation and storage
+
+### 4. **Communication with Main App**
+**API Callbacks Required**:
+```typescript
+// Job status updates
+PUT /api/jobs/{jobId}/status
+{
+  "status": "running" | "done" | "fail",
+  "progress": 0-100,
+  "errorMessage"?: string,
+  "results"?: any
+}
+
+// Document creation
+POST /api/documents
+{
+  "userId": string,
+  "title": string,
+  "content": string,
+  "url"?: string,
+  "metadata": object
+}
+```
+
+## 🚀 Deployment Requirements
+
+### 1. **Development Setup**
+```bash
+cd services/worker
+python -m venv venv
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+pip install -r requirements.txt
+
+# Install Playwright browsers
+playwright install
+
+# Run the service
+python main.py
+```
+
+### 2. **Production Setup**
+- [ ] Docker containerization
+- [ ] Environment variable management
+- [ ] Logging and monitoring
+- [ ] Error tracking (Sentry integration)
+- [ ] Health checks and auto-scaling
+
+### 3. **Security Requirements**
+- [ ] API authentication (shared secret or JWT)
+- [ ] Rate limiting
+- [ ] Input validation and sanitization
+- [ ] CORS configuration for production
+
+## 📊 Performance Requirements
+
+### 1. **Scaling Considerations**
+- **Concurrent Jobs**: Handle 10+ simultaneous scraping jobs
+- **Response Time**: < 30s for most scraping jobs
+- **Memory Usage**: Efficient handling of large documents
+- **Rate Limiting**: Respect website rate limits
+
+### 2. **Monitoring Metrics**
+- Job completion rates
+- Average processing time
+- Error rates by service
+- Resource utilization
+
+## 🔄 Integration Points
+
+### 1. **Main Express App Communication**
+```typescript
+// From server/routes.ts - already implemented
+const workerUrl = process.env.WORKER_SERVICE_URL || 'http://localhost:8000';
+await fetch(`${workerUrl}/scrape`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ jobId: job.id, ...req.body }),
+});
+```
+
+### 2. **Datab
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

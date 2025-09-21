@@ -1,0 +1,108 @@
+---
+title: "Requirements Dev"
+description: "development for BD-News-Task"
+category: "development"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "development,miscellaneous"
+---
+
+# Development Dependencies for Autonomous News Extraction System
+# These dependencies are used for development, testing, and code quality
+
+# ===== TESTING FRAMEWORK =====
+pytest>=8.0.0                         # Main testing framework
+pytest-asyncio>=0.23.5                # Async test support
+pytest-mock>=3.12.0                   # Mocking utilities for tests
+pytest-cov>=4.1.0                     # Code coverage measurement
+pytest-xdist>=3.5.0                   # Parallel test execution
+pytest-timeout>=2.2.0                 # Test timeout management
+pytest-html>=4.1.1                    # HTML test reports
+pytest-json-report>=1.5.0             # JSON test reports
+
+# ===== CODE QUALITY AND FORMATTING =====
+ruff>=0.6.1                           # Fast Python linter and formatter (replaces black, isort, flake8)
+black>=24.2.0                         # Code formatting (optional, ruff can handle this)
+isort>=5.13.0                         # Import sorting (optional, ruff can handle this)
+pylint>=3.0.3                         # Code linting and quality checks
+flake8>=7.0.0                         # Additional style checking (optional, ruff covers most)
+mypy>=1.8.0                           # Type checking
+bandit>=1.7.7                         # Security vulnerability scanning
+
+# ===== CODE COVERAGE =====
+coverage>=7.4.1                       # Coverage measurement
+coverage-badge>=1.1.1                 # Generate coverage badges
+
+# ===== PRE-COMMIT HOOKS =====
+pre-commit>=3.6.0                     # Git pre-commit hooks
+pre-commit-hooks>=4.5.0               # Standard pre-commit hook collection
+
+# ===== DOCUMENTATION GENERATION =====
+sphinx>=7.2.0                         # Documentation generation
+sphinx-rtd-theme>=2.0.0              # Read the Docs theme
+sphinx-autodoc-typehints>=2.0.0       # Type hint documentation
+myst-parser>=2.0.0                    # Markdown support for Sphinx
+
+# ===== DEVELOPMENT UTILITIES =====
+ipython>=8.21.0                       # Enhanced interactive Python shell
+jupyter>=1.0.0                        # Jupyter notebook support (for prototyping)
+notebook>=7.1.0                       # Jupyter notebook interface
+jupyterlab>=4.1.0                     # JupyterLab interface
+
+# ===== DEBUGGING AND PROFILING =====
+pdb++>=0.10.3                        # Enhanced debugger
+line-profiler>=4.1.2                 # Line-by-line profiling
+memory-profiler>=0.61.0              # Memory usage profiling
+py-spy>=0.3.14                       # Sampling profiler
+
+# ===== DEVELOPMENT ENVIRONMENT =====
+python-dotenv>=1.0.1                 # Environment variable management
+watchdog>=4.0.0                      # File system event monitoring
+rich>=13.7.0                         # Rich terminal output
+click>=8.1.7                         # Command-line interface framework
+
+# ===== MOCK AND TEST DATA =====
+factory-boy>=3.3.0                   # Test data generation
+faker>=24.0.0                        # Fake data generation
+responses>=0.25.0                    # Mock HTTP responses
+aioresponses>=0.7.6                  # Mock async HTTP responses
+
+# ===== PERFORMANCE TESTING =====
+locust>=2.23.0                       # Load testing framework
+pytest-benchmark>=4.0.0              # Performance benchmarking for tests
+
+# ===== TYPE CHECKING EXTENSIONS =====
+types-requests>=2.31.0               # Type stubs for requests
+types-PyYAML>=6.0.12                 # Type stubs for PyYAML
+types-python-dateutil>=2.9.0         # Type stubs for dateutil
+types-beautifulsoup4>=4.12.0         # Type stubs for BeautifulSoup
+
+# ===== OPTIONAL: ADVANCED DEVELOPMENT TOOLS =====
+# Uncomment these for advanced development features
+
+# pycache-cleaner>=0.2.0             # Clean Python cache files
+# autoflake>=2.2.0                   # Remove unused imports and variables
+# pyupgrade>=3.15.0                  # Upgrade Python syntax for newer versions
+# dead>=1.5.2                        # Find dead code
+# vulture>=2.11                      # Find unused code
+# radon>=6.0.1                       # Code complexity analysis
+
+# ===== INSTALLATION NOTES =====
+# Install development dependencies with:
+#   pip install -r requirements-dev.txt
+#
+# Or install all dependencies including development:
+#   pip install -e ".[dev]"
+#
+# Run quality checks:
+#   black .                          # Format code
+#   isort .                          # Sort imports
+#   pylint enhanced_orchestrator/    # Lint code
+#   mypy enhanced_orchestrator/      # Type check
+#   pytest                           # Run tests
+#   coverage run -m pytest && coverage report  # Coverage report
+
+
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

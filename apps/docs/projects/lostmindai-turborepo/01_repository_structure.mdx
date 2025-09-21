@@ -1,0 +1,154 @@
+---
+title: "01 Repository Structure"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Repository Structure Analysis
+
+**Analysis Date:** $(date)
+**Method:** Source code file analysis only
+**No Documentation Consulted:** Only source code and configuration files examined
+
+## File Counts by Type
+
+```
+TypeScript files:       53
+JavaScript files:       10
+Python files:           19
+SQL files:              3
+Docker files:           3
+Config files:           29
+```
+
+## Directory Structure (Code Only)
+
+Based on actual source code files found (excluding docs, README files, and build artifacts):
+
+```
+.
+├── apps/
+│   ├── ask/                    # 3D Interactive Orb AI Interface
+│   │   ├── app/
+│   │   │   ├── api/chat/
+│   │   │   ├── api/stripe/webhook/
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── components/
+│   │   ├── tests/
+│   │   ├── package.json
+│   │   └── vitest.config.ts
+│   └── marketing/              # Marketing Website
+│       ├── app/
+│       └── package.json
+├── packages/
+│   ├── ai-clients/             # AI Provider Abstraction
+│   ├── auth/                   # Authentication Package
+│   ├── billing/                # Stripe Integration
+│   ├── config/                 # Shared Configurations
+│   ├── db/                     # Database Package
+│   │   ├── prisma/
+│   │   │   └── schema.prisma
+│   │   └── package.json
+│   └── ui/                     # Shared UI Components
+├── services/
+│   └── ai-compute/             # FastAPI AI Service
+│       ├── requirements.txt
+│       ├── Dockerfile
+│       └── [Python source files]
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── package.json                # Root monorepo config
+├── turbo.json                  # Turborepo configuration
+└── pnpm-workspace.yaml
+```
+
+## Source Code Distribution by Directory
+
+### Applications (apps/)
+
+- **ask/**: 4 TypeScript source files found in app/ directory
+- **marketing/**: Basic Next.js 15 structure
+
+### Services (services/)
+
+- **ai-compute/**: 19 Python files comprising FastAPI service
+
+### Packages (packages/)
+
+- **db/**: Contains Prisma schema with comprehensive multi-tenant models
+- **ui/**: Shared component library structure
+- **config/**: Build and linting configurations
+- **auth/**: Authentication utilities
+- **billing/**: Stripe integration utilities
+- **ai-clients/**: AI provider abstraction layer
+
+## Monorepo Configuration
+
+### Package Manager
+
+- **pnpm** with workspace configuration
+- **Turborepo** for build orchestration
+- Node.js 20+ requirement across all packages
+
+### Build System
+
+- Turborepo pipeline with task dependencies
+- Consistent TypeScript configurations
+- Shared ESLint and Prettier setup
+
+## Key Findings
+
+### What's Actually Implemented
+
+1. **Monorepo Foundation**: Complete Turborepo + pnpm setup
+2. **Basic App Structure**: Two Next.js 15 applications with minimal implementation
+3. **Database Schema**: Comprehensive multi-tenant Prisma schema
+4. **Python Service**: FastAPI service with AI integration dependencies
+5. **CI/CD Pipeline**: Basic GitHub Actions workflow
+
+### Directory Structure Reality vs Plans
+
+- Most directories exist but contain minimal implementation
+- Package structure follows planned architecture
+- Services directory has only one implemented service (ai-compute)
+- Test coverage is minimal (only 2 test files found)
+
+### File Type Analysis
+
+- **TypeScript dominance**: 53 TS files vs 10 JS files (modern approach)
+- **Python backend**: 19 Python files for AI compute service
+- **Minimal SQL**: Only 3 SQL files (likely migrations)
+- **Docker ready**: 3 Dockerfile configurations present
+
+## Repository Health Indicators
+
+### Positive Signs
+
+- Consistent TypeScript usage across frontend
+- Modern Next.js 15 with App Router
+- Comprehensive database schema design
+- Proper monorepo structure with Turborepo
+
+### Areas of Concern
+
+- Very limited actual implementation (mostly scaffolding)
+- Minimal test coverage
+- Missing implementation in many planned packages
+- Gap between architectural plans and actual code
+
+## Next Phase Recommendations
+
+Phase 2 should focus on analyzing the package.json dependencies to understand:
+
+- Which planned features have supporting dependencies installed
+- Whether dependencies align with actual implementation
+- Potential security vulnerabilities in current packages
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

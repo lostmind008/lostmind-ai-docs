@@ -1,0 +1,214 @@
+---
+title: "Best Practices"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Claude Code Best Practices
+
+This guide outlines best practices for effectively using Claude Code and MCP tools based on community feedback, official recommendations, and practical experience.
+
+## Project Organization
+
+### Documentation with CLAUDE.md
+
+Create a `CLAUDE.md` file in your project root to help Claude understand your codebase:
+
+```markdown
+# Project Overview for Claude
+
+## Project Structure
+- `src/` - Contains source code
+  - `components/` - React components
+  - `utils/` - Utility functions
+- `tests/` - Unit and integration tests
+- `docs/` - Documentation files
+
+## Coding Standards
+- We use ESLint with Airbnb config
+- Follow semantic commit messages
+- Branch naming: feature/descriptive-name or fix/issue-reference
+
+## Key Dependencies
+- React 18
+- TypeScript 5.0
+- Express 4.18
+
+## Common Commands
+- `npm run dev` - Start development server
+- `npm run test` - Run tests
+- `npm run build` - Build for production
+```
+
+Claude automatically pulls this file into context when starting a conversation, making it an ideal place for:
+- Project structure
+- Coding conventions
+- Repository etiquette
+- Common commands and workflows
+- Key architectural decisions
+
+### Project-Specific Configuration
+
+For complex projects, maintain a `.claude-code` directory with additional context:
+
+```bash
+mkdir -p .claude-code
+touch .claude-code/architecture.md
+touch .claude-code/workflows.md
+```
+
+Reference these files when needed:
+```bash
+claude "Explain our authentication flow based on .claude-code/architecture.md"
+```
+
+## Effective Prompting
+
+### Be Specific and Contextual
+
+Good:
+```bash
+claude "Refactor the user authentication logic in src/auth/userAuth.js to use async/await instead of promises"
+```
+
+Better:
+```bash
+claude "Refactor the user authentication logic in src/auth/userAuth.js to use async/await instead of promises. Maintain the existing error handling patterns and ensure all tests in tests/auth still pass."
+```
+
+### Use Multi-Turn Interactions
+
+Break complex tasks into steps:
+
+1. Start with context:
+   ```bash
+   claude "I want to add a new API endpoint for user profile updates"
+   ```
+
+2. Ask follow-up questions:
+   ```bash
+   # After Claude responds
+   What validation should I add for email fields?
+   ```
+
+3. Refine the implementation:
+   ```bash
+   # After getting the code
+   Update this to include rate limiting
+   ```
+
+### Leverage Claude's Capabilities
+
+For code exploration:
+```bash
+claude "Analyze our codebase and list potential security vulnerabilities in our API endpoints"
+```
+
+For explaining complex code:
+```bash
+claude "Explain how our React context system works, focusing on the ThemeProvider in src/context/ThemeContext.js"
+```
+
+## MCP Tool Usage
+
+### Security Best Practices
+
+1. **Tool Allowlisting**
+   ```bash
+   # Start with restrictive permissions
+   /allowed-tools clear
+   
+   # Add only what you need
+   /allowed-tools add Read
+   /allowed-tools add Bash(ls:*)
+   ```
+
+2. **Filesystem Access**
+   - Limit access to specific directories
+   - Never expose sensitive credentials or key files
+
+3. **Git Operations**
+   - Use allowlisting for specific git operations:
+     ```bash
+     /allowed-tools add Bash(git status:*)
+     /allowed-tools add Bash(git diff:*)
+     ```
+   - Be cautious with commit and push operations
+   - Consider using a separate branch for Claude-assisted work
+
+### Structured Workflows
+
+#### Code Review Workflow
+
+```bash
+# Navigate to your project
+cd your-project
+
+# Start Claude Code
+claude "Review the changes in the feature/user-auth branch compared to main. Focus on security issues and test coverage."
+```
+
+#### Bug Investigation Workflow
+
+```bash
+# Start with error details
+claude "Help debug the error: 'TypeError: Cannot read properties of undefined (reading 'user')' that occurs when logging in."
+
+# Allow Claude to explore the codebase
+/allowed-tools add Read
+/allowed-tools add Bash(grep:*)
+
+# Let Claude run specific tests
+/allowed-tools add Bash(npm test:*)
+```
+
+#### Feature Development Workflow
+
+```bash
+# Start with a feature specification
+claude "Let's implement a password reset feature with email verification."
+
+# Collaborative implementation
+/allowed-tools add Edit
+
+# Test and refine
+/allowed-tools add Bash(npm test:*)
+```
+
+## Performance Optimization
+
+### Optimize Context Usage
+
+1. **Be selective with file sharing**
+   - Share only relevant files rather than entire directories
+   - For large codebases, focus on specific modules
+
+2. **Clear context when switching tasks**
+   ```bash
+   # Start a fresh conversation
+   claude --clear
+   ```
+
+3. **Use code snippets for large files**
+   ```bash
+   # Instead of sharing entire large files
+   claude "Help me optimize this function:"
+   ```
+   Then paste just the relevant code section.
+
+### Efficient Tool Configuration
+
+1. **Only enable necessary MCP tools**
+   - Disable browser automation when not needed
+   - Use targeted file access instead of broad directory permissions
+
+2. **Set appropriate timeouts for operations**
+   ```json
+   {
+     "n
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

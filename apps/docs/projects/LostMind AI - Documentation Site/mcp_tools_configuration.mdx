@@ -1,0 +1,220 @@
+---
+title: "Mcp Tools Configuration"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# MCP Tools Configuration for Claude Code
+
+This guide explains how to configure and integrate Model Context Protocol (MCP) tools with Claude Code.
+
+## Understanding MCP
+
+The Model Context Protocol (MCP) is an open protocol that enables seamless integration between AI models like Claude and external tools, services, and data sources. It provides a standardized way for Claude to interact with your development environment, files, databases, and other resources.
+
+## Methods for Configuring MCP Tools
+
+There are two main approaches to configuring MCP tools with Claude Code:
+
+### 1. CLI Wizard Approach (Official Method)
+
+Claude Code offers a built-in CLI wizard for adding MCP tools:
+
+```bash
+# Add an MCP tool using the wizard
+claude mcp add <name>
+```
+
+The wizard will guide you through setting up each tool step by step. While this is the officially documented approach, many users find it cumbersome for complex configurations.
+
+### 2. Configuration File Approach (Community Preferred)
+
+A more efficient approach for managing multiple MCP tools is to edit the configuration file directly:
+
+1. Find your Claude Code configuration directory:
+   - macOS: `~/.config/claude-code/`
+   - Linux: `~/.config/claude-code/`
+   - Windows (WSL): `~/.config/claude-code/`
+
+2. Edit the MCP configuration file:
+   ```bash
+   # Create the directory if it doesn't exist
+   mkdir -p ~/.config/claude-code
+   
+   # Create or edit the config.json file
+   nano ~/.config/claude-code/config.json
+   ```
+
+3. Add your MCP tool configurations in JSON format:
+   ```json
+   {
+     "mcp": {
+       "servers": [
+         {
+           "name": "filesystem",
+           "command": "npx @modelcontextprotocol/servers filesystem",
+           "env": {},
+           "args": ["--tools", "read_file,write_file,edit_file,list_directory,create_directory,search_files"]
+         },
+         {
+           "name": "terminal",
+           "command": "npx @modelcontextprotocol/servers terminal",
+           "env": {},
+           "args": []
+         }
+       ]
+     }
+   }
+   ```
+
+## Common MCP Tool Configurations
+
+### File System Access
+
+```json
+{
+  "name": "filesystem",
+  "command": "npx @modelcontextprotocol/servers filesystem",
+  "env": {},
+  "args": [
+    "--tools", 
+    "read_file,write_file,edit_file,list_directory,create_directory,search_files,get_file_info"
+  ]
+}
+```
+
+### Terminal Access
+
+```json
+{
+  "name": "terminal",
+  "command": "npx @modelcontextprotocol/servers terminal",
+  "env": {},
+  "args": []
+}
+```
+
+### Git Integration
+
+```json
+{
+  "name": "git",
+  "command": "npx @modelcontextprotocol/servers git",
+  "env": {},
+  "args": []
+}
+```
+
+### Database Access (SQLite Example)
+
+```json
+{
+  "name": "sqlite",
+  "command": "npx @modelcontextprotocol/servers sqlite",
+  "env": {},
+  "args": ["--database", "/path/to/your/database.sqlite"]
+}
+```
+
+### Web Browser Control (Puppeteer)
+
+```json
+{
+  "name": "puppeteer",
+  "command": "npx @modelcontextprotocol/servers puppeteer",
+  "env": {},
+  "args": []
+}
+```
+
+## Verifying MCP Tool Configuration
+
+After configuring your MCP tools, restart Claude Code and verify that the tools are loaded:
+
+```bash
+# Start Claude Code
+claude
+
+# Once launched, you should see an MCP tools icon indicating that your tools are available
+# You can also check available tools with:
+/available-tools
+```
+
+## Managing MCP Tool Permissions
+
+Claude Code has a built-in allowlist system for controlling which tools Claude can use without explicit permission:
+
+```bash
+# View and modify the allowlist
+/allowed-tools
+
+# Examples:
+# Allow file edits
+/allowed-tools add Edit
+
+# Allow git commits
+/allowed-tools add Bash(git commit:*)
+
+# Allow web navigation
+/allowed-tools add mcp__puppeteer__puppeteer_navigate
+```
+
+## Troubleshooting MCP Tool Integration
+
+### Tool Not Appearing
+
+If an MCP tool doesn't appear in the available tools list:
+
+1. Verify the configuration syntax in your config.json file
+2. Ensure that the required npm packages are installed
+3. Check for error messages when Claude Code starts
+4. Try running the MCP server command manually to check for errors
+
+### Permission Issues
+
+If Claude doesn't have permission to use a tool:
+
+1. Use `/allowed-tools add <tool>` to add it to the allowlist
+2. For filesystem operations, ensure Claude has access to the directories it needs
+3. For git operations, ensure your git configuration is correct
+
+### Connection Issues
+
+If Claude cannot connect to an MCP server:
+
+1. Check that the server is running
+2. Verify port configurations
+3. Check for network issues or firewall settings
+4. Restart the MCP server and Claude Code
+
+## Advanced MCP Tool Configuration
+
+### Custom Environment Variables
+
+You can pass environment variables to MCP servers:
+
+```json
+{
+  "name": "custom-server",
+  "command": "npx my-custom-mcp-server",
+  "env": {
+    "API_KEY": "your-api-key",
+    "DEBUG": "true"
+  },
+  "args": []
+}
+```
+
+### Custom MCP Servers
+
+To use a custom MCP server:
+
+1. Install the server package:
+   ```bash
+   npm install -g my-custom-mcp-ser
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,33 @@
+---
+title: "README"
+description: "readme for Claude Code Framework by LOSTMIND AI"
+category: "readme"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "readme,ai-services"
+---
+
+# LostMind AI Engine - Core Components
+
+This directory is the portable, self-contained engine for the LostMind AI Protocol-Driven Framework. It contains all the core logic, scripts, and templates necessary to run the system.
+
+## 1. Purpose
+
+The purpose of this engine is to provide a robust, reliable, and portable set of tools that can be used in any project to enhance the Claude Code environment with a disciplined, context-aware, agentic workflow.
+
+## 2. Key Components
+
+-   **`run_engine.sh`:** The master entry point for all engine operations. This script is designed to be called by the custom `/ucf-...` commands.
+-   **`setup_environment.sh`:** The one-time setup script that creates the engine's private Python virtual environment.
+-   **`onboarder.py`:** The script that powers the `/ucf-onboard-project` command, responsible for creating the `.lostmind_ai_context` directory.
+-   **`scaffolder.py`:** The script that powers the `/ucf-scaffold` command, responsible for "Skeleton-First Development."
+-   **`forge_agent.py`:** The script that powers the `/ucf-agent-create` command, responsible for dynamically creating specialist agents.
+-   **`task_brief_generator.py`:** The script that powers the `/ucf-create-task-brief` command.
+-   **`agent_templates/` & `scaffold_templates/`:** The blueprint directories used by The Forge and the Scaffolder.
+
+## 3. Portability
+
+The entire `lostmind_ai_engine` directory is designed to be portable. You can copy it to any location on your file system and use it across multiple projects. The `run_engine.sh` script dynamically detects its own location, ensuring that all paths are resolved correctly, no matter where it is run from.
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

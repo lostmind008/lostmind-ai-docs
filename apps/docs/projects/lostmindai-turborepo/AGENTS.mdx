@@ -1,0 +1,48 @@
+---
+title: "AGENTS"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Repository Guidelines
+
+> Canonical implementation status lives in `docs/project/CURRENT_PROJECT_STATE.md`. Update that file first, then mirror the relevant highlights here so instructions never drift.
+
+## Project Structure & Module Organization
+
+This monorepo runs on Turbo with pnpm workspaces. Next.js apps live in `apps/ask` and `apps/marketing`; shared TypeScript packages sit in `packages/` (ui, db, auth, config, ai-clients, billing). The Python compute microservice resides in `services/ai-compute`. Scripts, IaC, and docs stay under `infrastructure/`, `infra/`, `docs/`, and root `scripts/`. Co-locate feature tests as `*.test.ts(x)` or use `apps/<app>/tests`; prefer module-owned fixtures over globals. Keep unshipped modules (e.g. `packages/security`, `apps/private-docs`) in the planned column of the source-of-truth doc until they exist in the repo.
+
+
+## Build, Test, and Development Commands
+
+- `pnpm install`: install Node deps with Node 20+ and pnpm 9+.
+- `pnpm dev` / `pnpm dev --filter=@lostmind/ask`: start Turbo dev servers for all or a scoped app.
+- `pnpm build`: run production builds across packages.
+- `pnpm lint`, `pnpm lint:fix`, `pnpm format`: enforce ESLint and Prettier rules; fix where possible.
+- `pnpm type-check`: execute TypeScript project references.
+- `pnpm test`, `pnpm test --filter=@lostmind/ask`: run Vitest suites; filter per app when iterating.
+- `pnpm db:push`, `pnpm db:migrate`, `pnpm db:studio`: apply and inspect Prisma schema changes.
+- `docker-compose up -d` or `uvicorn services/ai-compute/main:app --reload`: bring up the Python service.
+
+## Coding Style & Naming Conventions
+
+Use 2-space indentation and Prettier defaults (no semicolons, 80 char width, trailing comma es5). ESLint rules come from `@lostmind/config`; run lints before committing. Favor camelCase for variables, PascalCase for React components, kebab-case for files except component directories. Share Tailwind and TS configs via `packages/config` to avoid drift.
+
+## Testing Guidelines
+
+Vitest drives frontend tests; load shared setup from `apps/ask/tests/setup.ts`. Name specs `*.test.ts` or `*.test.tsx` and colocate mocks next to the units they cover. Python service tests run with `pytest` and `pytest --cov`; keep fixtures in `services/ai-compute/tests`. Aim for meaningful coverage whenever core flows or database behavior change; add snapshots sparingly.
+
+## Commit & Pull Request Guidelines
+
+Follow Conventional Commits (`feat:`, `fix:`, `chore:`, etc.) and keep scopes focused. Pre-commit hooks run safety checks and lint-staged; resolve issues locally before pushing. Open PRs with a crisp summary, linked issue, screenshots or recordings for UI, test results, and note Prisma migrations under `packages/db/prisma`. Update docs whenever commands, environment variables, or folder semantics shift.
+
+## Security & Configuration Tips
+
+Never commit secrets; rely on `.env.example` and verify with `pnpm run env:check` or `pnpm run env:validate`. Generate new keys via `pnpm run env:generate-secret`. Local DB and Redis live in `docker-compose.yml`; tear them down when not needed. Use the approved `google-genai` client and review `docs/GOOGLE_GENAI_DEVELOPER_GUIDE.md` before touching AI integrations.
+
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

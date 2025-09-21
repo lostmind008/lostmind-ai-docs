@@ -1,0 +1,160 @@
+---
+title: "VERIFICATION PROTOCOL"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# VERIFICATION PROTOCOL
+
+**Date Created**: 2025-09-20
+**Purpose**: Prevent future misinformation and assessment errors through systematic verification methodology
+**Authority**: Mandatory for all implementation status claims and architectural assessments
+
+---
+
+## 🎯 PROTOCOL OVERVIEW
+
+This protocol establishes **mandatory verification requirements** for all claims about implementation status, compatibility, and architecture. It was created in response to multiple rounds of conflicting assessments that created significant confusion.
+
+**Core Principle**: **ALL CLAIMS MUST BE EVIDENCE-BASED WITH SPECIFIC FILE REFERENCES**
+
+---
+
+## 📋 MANDATORY VERIFICATION STEPS
+
+### **STEP 1: CODE EXAMINATION (REQUIRED)**
+
+Before making **ANY** implementation claim, you MUST:
+
+1. **Read Actual Source Files**
+   - ✅ Open and examine actual `.ts`, `.tsx`, `.py`, `.js` files
+   - ✅ Count lines of implementation (not just file existence)
+   - ✅ Distinguish between working code and scaffolding/templates
+   - ❌ NEVER claim implementation status based on file names alone
+
+2. **Verify Implementation vs Scaffolding**
+   ```typescript
+   // ✅ WORKING IMPLEMENTATION
+   async generateText(prompt: string): Promise<string> {
+     const response = await this.client.generateContent({...});
+     return response.text;
+   }
+
+   // ❌ SCAFFOLDING (NOT IMPLEMENTED)
+   async generateImage(prompt: string): Promise<Uint8Array> {
+     throw new Error('Not yet implemented');
+   }
+   ```
+
+3. **Document Evidence Requirements**
+   - **File Path**: Exact location (e.g., `packages/ai-clients/src/providers/google.ts`)
+   - **Line Numbers**: Specific line references (e.g., `lines 45-67`)
+   - **Code Snippets**: Actual code demonstrating functionality
+   - **Line Count**: Total implementation size (e.g., "317 lines")
+
+### **STEP 2: VERSION COMPATIBILITY VERIFICATION (REQUIRED)**
+
+Before claiming compatibility issues:
+
+1. **Check Actual package.json Versions**
+   ```json
+   {
+     "react": "^19.0.0",
+     "@react-three/fiber": "^8.15.0"
+   }
+   ```
+
+2. **Cross-Reference Official Compatibility Matrix**
+   - ✅ Check library's official documentation
+   - ✅ Verify version compatibility claims
+   - ✅ Include source URLs in evidence
+   - ❌ NEVER assume compatibility issues without verification
+
+3. **Test Claims When Possible**
+   - Run `npm install` to verify dependency resolution
+   - Check for actual TypeScript/build errors
+   - Document any real compatibility issues with specific error messages
+
+### **STEP 3: CROSS-REFERENCE DOCUMENTATION (REQUIRED)**
+
+Before making status claims:
+
+1. **Check Multiple Documentation Sources**
+   - Main README.md files
+   - Individual app/package README files
+   - CLAUDE.md files
+   - Any planning documents
+
+2. **Identify Inconsistencies**
+   - Document conflicting claims between sources
+   - Note when implementation exists but documentation says "PLANNED"
+   - Flag when documentation claims implementation but code is missing
+
+3. **Resolve with Code Evidence**
+   - Code examination is the authoritative source
+   - Documentation should be updated to match reality
+   - Mark inconsistencies for correction
+
+### **STEP 4: ARCHITECTURE ASSESSMENT (REQUIRED)**
+
+Before criticizing architectural decisions:
+
+1. **Understand Design Intent**
+   - Different apps may intentionally have different patterns
+   - Security requirements vary by application
+   - Not all inconsistency is architectural problems
+
+2. **Provide Specific Examples**
+   - File paths showing the pattern
+   - Explanation of why it's problematic
+   - Proposed solution with justification
+
+3. **Distinguish Architecture vs Configuration**
+   - Missing docker services = configuration issue
+   - Different auth patterns = architectural choice
+   - Missing features = implementation gap, not architecture flaw
+
+---
+
+## 🚨 EVIDENCE REQUIREMENTS
+
+### **ALL CLAIMS MUST INCLUDE:**
+
+1. **File References**
+   ```markdown
+   ❌ BAD: "AI-clients package not implemented"
+   ✅ GOOD: "AI-clients package partially implemented:
+   - File: packages/ai-clients/src/providers/google.ts (350 lines)
+   - Working: generateText() method (lines 46-102)
+   - Not Working: generateImage() throws 'not implemented' error (line 183)"
+   ```
+
+2. **Version Evidence**
+   ```markdown
+   ❌ BAD: "React 19 compatibility issues"
+   ✅ GOOD: "React 19.0.0 + @react-three/fiber ^8.15.0 are compatible:
+   - Evidence: package.json shows these versions
+   - Verification: React Three Fiber docs confirm React 19 support
+   - Source: https://github.com/pmndrs/react-three-fiber/releases"
+   ```
+
+3. **Implementation Proof**
+   ```markdown
+   ❌ BAD: "Document processor service missing"
+   ✅ GOOD: "Document processor service exists but missing from docker:
+   - Implementation: services/document-processor/main.py (317 lines)
+   - Features: JWT auth, tenant isolation, background tasks
+   - Gap: Missing from docker-compose.yml configuration"
+   ```
+
+---
+
+## ⚠️ RED FLAGS (IMMEDIATE VERIFICATION REQUIRED)
+
+### **Claims That Often Indicate Misin
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

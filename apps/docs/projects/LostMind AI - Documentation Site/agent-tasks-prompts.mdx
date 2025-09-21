@@ -1,0 +1,112 @@
+---
+title: "Agent Tasks Prompts"
+description: "documentation for LostMind AI - Documentation Site"
+category: "documentation"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# LostMind AI — Internal Agent Tasks & Prompts (Do Not Publish)
+
+Status: Internal-only playbook for Claude Code, Codex, and Cursor agents.
+Owner: Sumit
+
+## Quick Response To Agent’s Proposal
+
+Thanks for the analysis. Corrections to align with the current repository state:
+
+- Core shared packages are not implemented yet. Only `packages/config/package.json` exists; `packages/ui`, `packages/db`, `packages/auth`, `packages/billing`, `packages/ai-clients`, `packages/rag`, `packages/utils` are placeholders with CLAUDE notes and no source code.
+- Ask app is implemented with R3F orb + mock AI and runs locally: `apps/ask/*`.
+- Marketing app is not scaffolded beyond planning docs: `apps/marketing/CLAUDE.md`.
+- Docs app exists as a Next.js app: `apps/docs/*`.
+- CI workflow file exists: `.github/workflows/ci.yml`.
+- Real secrets are committed in `.env` and `.env.local`. This is a security risk and must be remediated immediately.
+- Terraform plan exists as `terraform-gcp-config.txt` in root and should be moved to `infra/terraform/gcp/` with `project_id` unified to `coral-muse-469919-m0`.
+
+We’ll finish foundations first, keep Ask on mock AI for now, add soft‑launch auth allowlist, and rehome Terraform with Secret Manager usage.
+
+## Immediate Security & Hygiene (Blocking)
+
+- Rotate and remove secrets:
+  - Remove committed `.env` and `.env.local` from git tracking; keep only `.env.example`. Rotate all exposed Stripe, GCP, Gemini, DB credentials before any deploy or PR.
+  - Remove all references to old domains (e.g., studio.lostmindai.com) from any local env files. `.env.example` is neutral; keep it as the only committed env file.
+- Store secrets properly:
+  - Vercel Environment Variables for Next.js apps (dev/preview/prod).
+  - GCP Secret Manager for backend services, referenced by Cloud Run env vars via secret_key_ref.
+- Unify GCP project: `coral-muse-469919-m0` consistently in Terraform and docs.
+
+Git steps (run locally):
+- Branch: `feat/security-env-rotation`
+- Commands: `git rm --cached .env .env.local`
+- Commit: `chore(security): remove committed env files and rotate secrets`
+- Regenerate keys and set them only in Vercel/GCP Secret Manager. Update `.env.example` placeholders if needed.
+
+Pitfalls:
+- Do not leave valid keys anywhere in repo history or PR text.
+- Do not rely on serverless functions to run DB migrations.
+
+## Execution Plan (Chronological + Parallel Lanes)
+
+Phase 0 (Blocking)
+- Secrets rotation and env policy; unify project ID; remove stale domains.
+
+Phase 1 Foundations (Parallel where indicated)
+- A: `@lostmind/config` (blocking for apps) — TypeScript, ESLint, Tailwind presets.
+- B: `@lostmind/ui` (parallel after A) — Button, Input, Card, Badge, Avatar, Spinner using class-variance-authority.
+- C: `@lostmind/db` (parallel) — Prisma schema and client; no runtime migrations; prep RLS.
+- D: `@lostmind/auth` (after C) — Auth.js v5, Google provider, middleware gating.
+
+Phase 2 App Wiring (Parallel)
+- E: Ask gating — middleware + tester allowlist; keep mock AI.
+- F: Marketing MVP — Home, Pricing, Sign in; use `@lostmind/ui`.
+- G: Billing — `@lostmind/billing` + Stripe webhook route; entitlement updates in DB; tester onboarding path.
+
+Phase 3 Infra
+- H: Terraform reorg — move to `infra/terraform/gcp`; remote state; secret injections; LB/DNS.
+- I: CI plumbing — build/push images for services (stubs acceptable until Week 5–6).
+
+Phase 4 AI Abstraction
+- J: `@lostmind/ai-clients` — Google Generative AI abstraction; later flip from mock.
+
+Acceptance criteria per task group are listed in each prompt below.
+
+## Prompts For Agents (Copy/Paste Sections)
+
+General guardrails for all agents:
+- Never commit real secrets. Only edit `.env.example`.
+- Keep changes small and focused. Follow conventional commits and branch naming.
+- Reference files by exact paths. Do not invent new structure unless specified.
+- Do not add default exports in shared packages (use named exports).
+- Do not run DB migrations from serverless handlers.
+
+---
+
+### Task Group A — @lostmind/config (Foundational)
+
+Objective:
+Create shared TS/ESLint/Tailwind presets and export them for consumers.
+
+Scope and files:
+- `packages/config/tsconfig.json` — base strict TS config for monorepo
+- `packages/config/eslint/base.js` — TS + Prettier rules
+- `packages/config/eslint/next.js` — Next.js 15 + React 19 RC rules
+- `packages/config/tailwind/base.js` — tokens + shadcn defaults
+- `packages/config/src/index.ts` — export “paths” (re-exported presets)
+- Update `packages/config/package.json` “files” and “exports” to include:
+  - `"."` → `"./src/index.ts"`
+  - `"./eslint/*"` → `"./eslint/*.js"`
+  - `"./tailwind/*"` → `"./tailwind/*.js"`
+  - `"./tsconfig.json"` → `"./tsconfig.json"`
+
+Consume in Ask app:
+- `apps/ask/tsconfig.json` → `"extends": "@lostmind/config/tsconfig.json"`
+- `apps/ask/.eslintrc.js` → `module.exports = { ex
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

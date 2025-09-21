@@ -1,0 +1,163 @@
+---
+title: "04 Services Analysis"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Services Analysis
+
+**Analysis Date:** $(date)
+**Method:** Source code analysis of services/ directory
+
+## Services Found
+
+One comprehensive FastAPI service identified:
+
+- `services/ai-compute/` - AI Compute Service with comprehensive AI, authentication, and billing features
+
+## AI Compute Service Analysis
+
+### File Counts
+
+- **Python files:** 18 total source files
+- **Core modules:** 7 main service files
+- **Middleware:** 5 security and infrastructure middleware files
+- **Database:** 2 database service files
+- **Dependencies:** 1 dependency injection file
+
+### Service Architecture
+
+```
+services/ai-compute/
+├── main.py                          # FastAPI application entry point
+├── config.py                        # Configuration management
+├── models.py                        # Pydantic models
+├── dependencies.py                  # Dependency injection
+├── database.py                      # Database operations
+├── redis_service.py                 # Redis service integration
+├── services/
+│   ├── ai_service.py               # Core AI operations
+│   ├── rag_service.py              # RAG search functionality
+│   └── __init__.py
+├── middleware/
+│   ├── auth.py                     # Authentication middleware
+│   ├── billing.py                  # Usage tracking and billing
+│   ├── redis_rate_limiter.py       # Distributed rate limiting
+│   ├── tenant_isolation.py         # Multi-tenant security
+│   ├── google_iam_auth.py          # Service-to-service auth
+│   └── __init__.py
+├── database/
+│   ├── api_key_service.py          # API key management
+│   └── __init__.py
+├── requirements.txt                 # Dependencies
+└── Dockerfile                      # Production deployment
+```
+
+## Core Implementation Analysis
+
+### Main Application (main.py)
+
+**Status:** ✅ COMPREHENSIVE IMPLEMENTATION
+
+#### Key Features Implemented:
+
+- **FastAPI Application:** Modern async web framework
+- **Lifecycle Management:** Proper startup/shutdown with `asynccontextmanager`
+- **Structured Logging:** JSON logging with structlog
+- **Google GenAI Integration:** Using latest google-genai SDK (not legacy)
+- **Security Middleware:** Complete authentication and authorization stack
+- **CORS Configuration:** Production-ready CORS settings
+
+#### Service Initialization:
+
+```python
+# Dependencies and services initialization
+await initialize_services()
+await db_api_key_service.initialize()
+await redis_rate_limiter.initialize()
+```
+
+### AI Service Implementation (services/ai_service.py)
+
+**Status:** ✅ PRODUCTION-READY IMPLEMENTATION
+
+#### Google GenAI Integration:
+
+- **Latest SDK:** Uses `google-genai` (2025 SDK, not deprecated version)
+- **Modern Client Pattern:** `genai.Client()` initialization
+- **Complete Model Support:** Text, image, video, TTS, embeddings
+- **Advanced Features:** Code execution, grounding, multimodal support
+
+#### Supported Operations:
+
+```python
+MODELS = {
+    "TEXT": "gemini-2.5-flash",
+    "IMAGE": "gemini-2.5-flash-image-preview",
+    "VIDEO": "veo-3.0-generate-preview",
+    "TTS": "gemini-2.5-flash-preview-tts",
+    "EMBEDDING": "text-embedding-004",
+    "MULTIMODAL": "gemini-2.5-flash"
+}
+```
+
+### Authentication Middleware (middleware/auth.py)
+
+**Status:** ✅ ENTERPRISE-GRADE SECURITY
+
+#### Authentication Methods Supported:
+
+- **JWT Tokens:** Integration with Auth.js v5 from frontend
+- **API Keys:** Database-backed API key authentication
+- **Google IAM:** Service-to-service authentication
+- **Multi-tenant:** Tenant isolation and scoping
+
+#### User Model with Subscription Tiers:
+
+```python
+class User:
+    # Supports: free, starter, professional, business, enterprise
+    subscription_tier: str = "free"
+
+    def can_use_feature(self, feature: str) -> bool:
+        feature_tiers = {
+            "text_generation": ["free", "starter", "professional", "business", "enterprise"],
+            "image_generation": ["starter", "professional", "business", "enterprise"],
+            "video_generation": ["professional", "business", "enterprise"],
+            "code_execution": ["professional", "business", "enterprise"],
+            "rag_search": ["starter", "professional", "business", "enterprise"],
+            "bulk_operations": ["business", "enterprise"],
+        }
+```
+
+### Rate Limiting & Billing (middleware/)
+
+**Status:** ✅ PRODUCTION-READY MONETIZATION
+
+#### Redis-based Rate Limiting:
+
+- **Distributed:** Uses Redis for cross-instance rate limiting
+- **Subscription-aware:** Different limits per subscription tier
+- **Real-time tracking:** Usage monitoring and enforcement
+
+#### Billing Integration:
+
+- **Usage Tracking:** Comprehensive tracking for all AI operations
+- **Subscription Tiers:** Feature gating based on subscription level
+- **Billing Events:** Integration with Stripe for usage-based billing
+
+### Database Integration
+
+**Status:** ✅ MULTI-TENANT DATABASE SUPPORT
+
+#### Features:
+
+- **API Key Service:** Database-backed API key management
+- **Tenant Isolation:** Row-level security implementation
+- **PostgreSQL:** Production database w
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

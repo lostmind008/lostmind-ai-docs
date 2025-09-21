@@ -1,0 +1,155 @@
+---
+title: "Quick Start Guide"
+description: "guide for LostMind AI - Memory&Context Protocol"
+category: "guide"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# Claude Code & MCP Tools Quick Start Guide
+
+This guide provides the essential steps to get Claude Code up and running with MCP tools integration.
+
+## 1. Prerequisites
+
+- Node.js v18+ (v18.18.0 recommended for maximum compatibility)
+- npm v8+
+- Active Anthropic account with billing enabled
+- Terminal access (Bash/PowerShell)
+
+## 2. Installation
+
+```bash
+# Install Claude Code globally
+npm install -g @anthropic-ai/claude-code
+
+# Verify installation
+claude --version
+```
+
+## 3. First-Time Setup
+
+```bash
+# Navigate to your project directory
+cd your-project
+
+# Start Claude Code
+claude
+
+# Follow the OAuth process in your browser to authenticate
+```
+
+## 4. Basic MCP Tools Setup
+
+```bash
+# Install MCP servers package
+npm install -g @modelcontextprotocol/servers
+
+# Create Claude Code config directory
+mkdir -p ~/.config/claude-code
+
+# Create config.json file with basic MCP tools
+cat > ~/.config/claude-code/config.json << 'EOL'
+{
+  "mcp": {
+    "servers": [
+      {
+        "name": "filesystem",
+        "command": "npx @modelcontextprotocol/servers filesystem",
+        "env": {},
+        "args": ["--tools", "read_file,write_file,edit_file,list_directory,create_directory,search_files,get_file_info"]
+      },
+      {
+        "name": "terminal",
+        "command": "npx @modelcontextprotocol/servers terminal",
+        "env": {},
+        "args": []
+      },
+      {
+        "name": "git",
+        "command": "npx @modelcontextprotocol/servers git",
+        "env": {},
+        "args": []
+      }
+    ]
+  }
+}
+EOL
+```
+
+## 5. Verify Setup
+
+```bash
+# Start Claude Code (it will automatically use your config.json)
+claude
+
+# You should see an MCP tools icon indicating that your tools are available
+# Check available tools
+/available-tools
+```
+
+## 6. Set Tool Permissions
+
+```bash
+# While in Claude Code, add permissions for common operations
+/allowed-tools add Read
+/allowed-tools add Edit
+/allowed-tools add Bash(ls:*)
+/allowed-tools add Bash(git status:*)
+```
+
+## 7. Basic Usage Examples
+
+### Code Explanation
+```bash
+claude "Explain the purpose of this function:"
+# Paste your code here
+```
+
+### Code Generation
+```bash
+claude "Write a function that takes an array of numbers and returns the sum of all even numbers"
+```
+
+### Code Refactoring
+```bash
+claude "Refactor this code to use async/await instead of promises:"
+# Paste your code here
+```
+
+### Using File System Tools
+```bash
+claude "List all JavaScript files in the src directory and identify the largest one"
+```
+
+### Using Git Tools
+```bash
+claude "Show me the changes in the last 3 commits and explain what they do"
+```
+
+## 8. Troubleshooting
+
+### Tool Not Available
+- Check your config.json syntax
+- Restart Claude Code
+- Verify MCP servers are installed
+- Run MCP servers manually to check for errors
+
+### Authentication Issues
+- Use `claude logout` then start again
+- Check your Anthropic account status
+
+### Permission Issues
+- Use `/allowed-tools add <Tool>` to grant permissions
+- Check file system permissions
+
+## 9. Next Steps
+
+- Explore the [full documentation](../1_Installation_Setup/installation_guide.md)
+- Learn about [MCP tool configuration](../2_MCP_Tools_Configuration/mcp_tools_configuration.md)
+- Read [best practices](../4_Best_Practices/best_practices.md) for effective usage
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

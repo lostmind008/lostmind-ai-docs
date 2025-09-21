@@ -1,0 +1,92 @@
+---
+title: "Commit"
+description: "Create intelligent commits with conventional messages and automatic change analysis"
+category: "version-control"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+argument-hint: "[--no-verify] [--amend] [message]"
+model: "sonnet"
+allowed-tools: "Read, Search, Bash, Edit"
+---
+
+# Smart Commit Command
+
+Analyze staged changes and create intelligent commits with conventional commit messages, proper scoping, and comprehensive descriptions.
+
+## Process
+
+1. **Analyze Staged Changes**:
+   - Scan all staged files for changes
+   - Identify change patterns (features, fixes, refactoring, docs)
+   - Detect scope based on file locations and change types
+   - Assess impact level and breaking changes
+
+2. **Generate Conventional Commit**:
+   - Apply conventional commit format: `type(scope): description`
+   - Use appropriate types: feat, fix, docs, style, refactor, test, chore
+   - Include scope based on affected modules/areas
+   - Add breaking change indicators when needed
+
+3. **Create Comprehensive Message**:
+   - Write clear, actionable commit subject (≤50 chars)
+   - Add detailed body explaining what and why (≤72 chars per line)
+   - Include co-authors if pair programming detected
+   - Add issue references if branch name contains ticket numbers
+
+## Commit Types
+
+- **feat**: New features or functionality
+- **fix**: Bug fixes and issue resolution  
+- **docs**: Documentation changes only
+- **style**: Code style, formatting, missing semi-colons
+- **refactor**: Code changes that neither fix bugs nor add features
+- **test**: Adding or updating tests
+- **chore**: Maintenance tasks, dependency updates, build changes
+- **perf**: Performance improvements
+- **ci**: CI/CD configuration changes
+- **revert**: Reverting previous commits
+
+## Scope Detection
+
+Automatically detect scope based on:
+- Directory structure (frontend, backend, api, ui, auth, etc.)
+- File types and patterns
+- Package.json scripts and dependencies
+- Git repository structure
+- Previous commit patterns
+
+## Example Output
+
+```bash
+feat(auth): implement OAuth2 authentication flow
+
+- Add OAuth2 provider integration with Google and GitHub
+- Implement JWT token handling and refresh logic
+- Add user session management with secure cookies
+- Include comprehensive error handling for auth failures
+
+Breaking change: Updates user model schema
+Resolves: #123, #124
+Co-authored-by: teammate@example.com
+```
+
+## Arguments
+
+- `--no-verify`: Skip pre-commit hooks
+- `--amend`: Amend the last commit instead of creating new one
+- `message`: Override auto-generated message with custom text
+
+## Integration
+
+Works seamlessly with:
+- Pre-commit hooks (Husky, lint-staged)
+- Conventional changelog generation
+- Semantic versioning automation
+- Pull request templates
+- Issue tracking systems
+
+Execute commit analysis and generate intelligent conventional commit messages that maintain project history quality and enable automated changelog generation.
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

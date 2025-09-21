@@ -1,0 +1,86 @@
+---
+title: "Pasted  Enhanced Production Ready Prompt Updated You Are A Senior Engineering Swarm Generate A Produ 1756476536737 1756476536737"
+description: "misc for ChatCrawler-Replit-version"
+category: "misc"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "misc,data-processing"
+---
+
+### Enhanced Production-Ready Prompt (Updated)
+
+You are a senior engineering swarm. Generate a production-grade Turborepo for “ChatCrawler” by LostMindAI. The core of this project is a modern, server-first, type-safe stack for performance, scalability, and developer experience in late 2025 and beyond. Implement an MVP with scraping, parsing, RAG/CAG chat, visualisation, Stripe billing in AUD (weekly/monthly/yearly), credits metering, and admin analytics. Use Australian English and `dd MMM yyyy` dates. Do not ask questions; make reasonable choices and document them.
+
+#### Guiding Principles & Technology Philosophy
+- **Frontend excellence:** **Next.js 15 App Router** with Server Components, Server Actions, and Route Handlers only (no legacy `/pages`). Embrace server-first patterns.
+- **Backend services:** **FastAPI (Python 3.10+)** with Pydantic v2 for validation; fully async where possible.
+- **Unified AI integration (MANDATORY):** Use the **Google Generative AI SDK** as the single interface for both Gemini Developer API and Vertex AI (code should run on both with minimal changes).
+- **Type-safe data layer:** **Prisma** as ORM for PostgreSQL. Enable **pgvector** for embeddings to support the LangChain RAG option.
+- **Auth:** **Auth.js v5** with JWT sessions; practical RBAC for `free | pro | enterprise`.
+- **Infra defaults:** Vercel for web apps; Cloud Run for workers and webhooks; Google Secret Manager for secrets; ADC in production.
+
+---
+
+#### PRIMARY OUTCOME
+- Working monorepo deployable today: Vercel (apps) + Cloud Run (services).
+- Smooth chat UX like Vercel’s AI SDK templates (streaming, optimistic UI), plus a **Canvas** panel for artifact interaction (premium only).
+- Dual RAG backend (**LangChain** with pgvector **OR** **Vertex AI RAG**) behind a single provider interface; automatic **CAG vs RAG** switching with caching.
+- Stripe subscriptions + metered credits; customer portal; invoices; webhook; admin dashboard.
+
+#### ARCHITECTURE & LAYOUT
+/
+  apps/
+    marketing/              # SEO landing: Home, Features, Pricing, Docs/FAQ, Sign-in
+    chatcrawler/            # Authenticated app: dashboard, chat, scrape/upload, visualise, account
+  services/
+    worker/                 # FastAPI: scrape, parse, index, embeddings, diagram generation, chat orchestration
+    webhook/                # Stripe webhook receiver (Node or FastAPI)
+  packages/
+    ui/                     # shadcn + ReactBits + Framer Motion; light/dark theme
+    auth/                   # Auth.js v5 config; RBAC helpers; middleware guards
+    billing/                # Stripe client; pricing tables; usage-metering helpers
+    rag/                    # Provider-agnostic RAG interface:
+                            #   - LangChainProvider (pgvector/Qdrant)
+                            #   - VertexAIProvider (Vertex AI RAG via Google GenAI SDK)
+    providers/              # Model adapters (Gemini via Google GenAI SDK), scraper adapters (Playwright/Requests)
+    ai-sdk/                 # Vercel AI SDK glue (hooks, server actions, stream utilities)
+    sdk/                    # Typed API client with zod schemas (shared types)
+    config/                 # eslint, prettier, tsconfig, tailwind
+  infra/
+    terraform/              # Cloud Run, GCS, Pub/Sub/Tasks, Secret Manager, Cloud SQL
+  docs/
+    ARCHITECTURE.md
+    RUNBOOK.md
+    SECURITY.md
+  turbo.json
+  pnpm-workspace.yaml
+  .github/workflows/ci.yml
+
+#### FRONTEND (Next.js 15, App Router, TS)
+- **marketing**
+  - Full SEO: `metadata.ts`, `sitemap.xml`, `robots.txt`, OG images, canonical tags.
+  - Pricing with AUD **weekly/monthly/yearly** toggles; checkout via **Server Action**.
+  - “Ask LostMindAI” widget slot to embed `ask.lostmindai.com` or local assistant route.
+- **chatcrawler**
+  - **Auth.js v5** (email + Google) with JWT sessions; middleware-based RBAC.
+  - Dashboard: credits balance, usage graph, recent jobs, quick actions.
+  - Scrape: URL input → queue → status → cleaned HTML/Markdown preview; robots.txt respect.
+  - Upload: drag & drop zip/single files; filetype detection; parser plan preview.
+  - Chat (Vercel AI SDK):
+    - Left: document set selector (scraped + uploaded).
+    - Middle: streaming chat (slash commands: `/summarise`, `/diagram`, `/export`).
+    - Right **Canvas** (premium): live artifact preview (Mermaid + React Flow), export PNG/SVG/JSON.
+  - Account: invoices, portal link, cancel/upgrade, credit top-ups.
+
+#### BACKEND/APIs
+- Next.js **Route Handlers** for light endpoints (auth state, job list, signed URLs).
+- **Worker (FastAPI on Cloud Run):**
+  - `POST /scrape { url }`  → respects robots.txt; rate-limited; snapshot to cleaned Markdown.
+  - `POST /upload { files }` → unpack→detect→parse; normalise to IR; persist.
+  - `POST /index { doc_ids[] }` → embeddings & store (pgvector) **or** Vertex index.
+  - `POST /chat { message, doc_scope?, mode?(auto|cag|rag) }` → CAG/RAG engine.
+  - `POST /visualise { ir }` → { mermaid, reactflow } JSON.
+  - `GET  /jobs/:id` → status & res
+
+---
+*This content was automatically extracted from ChatCrawler-Replit-version. For the most up-to-date information, refer to the source project.*

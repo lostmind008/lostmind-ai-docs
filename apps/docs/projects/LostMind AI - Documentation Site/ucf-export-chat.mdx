@@ -1,0 +1,77 @@
+---
+title: "Ucf Export Chat"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Export Current Chat Session
+
+**Command**: `/ucf-export-chat [format]`
+**Purpose**: Export current chat session for Guardian analysis and unlimited context memory preservation
+
+## Description
+
+This command exports the current Claude Code conversation to text format and automatically triggers Guardian context synthesis. This addresses the core mission of building unlimited context memory that preserves the WHY behind decisions to prevent AI drift.
+
+## Arguments
+
+- `format` (optional): Export format - `txt`, `json`, or `both` (default: `both`)
+
+## What this command does
+
+1. **Current Session Export**: Uses Claude Code's internal conversation data to export the current session
+2. **Immediate Guardian Analysis**: Automatically triggers Guardian to analyze the exported conversation
+3. **Purpose Preservation**: Ensures the reasoning chain and WHY behind decisions is captured
+4. **Context Integration**: Merges new conversation data with existing context for unlimited memory
+
+## Core Mission Alignment
+
+This command directly serves the ultimate goal: **unlimited context memory that will not decay**. By capturing active conversations immediately, we preserve:
+- The reasoning chain behind every decision
+- The PURPOSE of current work
+- Goal alignment to prevent future AI drift
+- Complete context for ongoing projects
+
+## Usage Examples
+
+```bash
+# Export current session and run Guardian analysis
+/ucf-export-chat
+
+# Export only to text format
+/ucf-export-chat txt
+
+# Export to JSON for programmatic access
+/ucf-export-chat json
+```
+
+## Implementation
+
+The command will:
+1. Access Claude Code's current session data
+2. Export to `.lostmind_ai_context/current_session_export.txt` and/or `.json`
+3. Automatically trigger Guardian refresh to incorporate new data
+4. Update context insights with PURPOSE analysis of the current session
+5. Preserve the WHY behind every decision made in the current conversation
+
+## Integration with Guardian
+
+This command enhances Guardian's capabilities by providing:
+- **Live conversation capture** beyond historical JSONL parsing
+- **Current session context** that includes active decision-making
+- **Real-time WHY preservation** for unlimited context memory
+- **Automatic context refresh** ensuring no context decay
+
+---
+
+*This command is part of the Universal Claude Framework's unlimited context memory system.*
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

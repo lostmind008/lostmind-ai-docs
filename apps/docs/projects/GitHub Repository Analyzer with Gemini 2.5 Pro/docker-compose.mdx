@@ -1,0 +1,120 @@
+---
+title: "Docker Compose"
+description: "misc for GitHub Repository Analyzer with Gemini 2.5 Pro"
+category: "misc"
+project: "GitHub Repository Analyzer with Gemini 2.5 Pro"
+lastUpdated: "2025-09-21"
+tags: "misc,miscellaneous"
+---
+
+version: '3.8'
+
+services:
+  # Main analyzer service
+  analyzer:
+    build:
+      context: ../..
+      dockerfile: examples/docker_deployment/Dockerfile.production
+    container_name: github-analyzer
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - MAX_CONCURRENT_ANALYSIS=${MAX_CONCURRENT_ANALYSIS:-15}
+      - MEMORY_LIMIT_MB=${MEMORY_LIMIT_MB:-2000}
+      - OUTPUT_DIR=/app/analysis_output
+    volumes:
+      - ./analysis_output:/app/analysis_output
+      - ./logs:/app/logs
+      - ./config:/app/config
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - analyzer-network
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+    command: ["github-analyzer", "--concurrent", "--max-concurrent", "15"]
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: analyzer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - analyzer-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # Prometheus for monitoring (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: analyzer-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - analyzer-network
+
+  # Grafana for visualization (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: analyzer-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    restart: unless-stopped
+    networks:
+      - analyzer-network
+    depends_on:
+      - prometheus
+
+  # Log aggregation with Loki (optional)
+  loki:
+    image: grafana/loki:latest
+    container_name: analyzer-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki.yml:/etc/loki/local-config.yaml
+      - loki_data:/tmp/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - analyzer-network
+
+networks:
+  analyzer-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+
+---
+*This content was automatically extracted from GitHub Repository Analyzer with Gemini 2.5 Pro. For the most up-to-date information, refer to the source project.*

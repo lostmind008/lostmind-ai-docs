@@ -1,0 +1,193 @@
+---
+title: "Sync"
+description: "Cross-session context synchronization for parallel Claude Code development"
+category: "parallel-development"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+argument-hint: "[--shared|--feature|--conflicts|--status]"
+model: "sonnet"
+allowed-tools: "Read, Write, Search, Task"
+---
+
+# Context Synchronization Manager
+
+Synchronize context, memory, and development state across multiple parallel Claude Code sessions while maintaining isolation and preventing conflicts.
+
+## Core Synchronization Functions
+
+### Shared Context Sync
+```bash
+/sync --shared
+```
+- Synchronizes shared project architecture and standards across all sessions
+- Updates API contracts and interface definitions
+- Distributes quality gate requirements and coding standards
+- Ensures consistent technology stack and configuration
+
+### Feature-Specific Sync
+```bash
+/sync --feature=<feature-name>
+```
+- Synchronizes feature-specific context and requirements
+- Updates cross-feature dependencies and interfaces
+- Coordinates agent team assignments and progress
+- Manages feature-specific quality gates and testing
+
+### Conflict Resolution Sync
+```bash
+/sync --conflicts
+```
+- Detects and resolves context conflicts between parallel sessions
+- Identifies conflicting changes before they impact development
+- Suggests resolution strategies for detected conflicts
+- Coordinates conflict resolution across affected sessions
+
+### Status Synchronization
+```bash
+/sync --status
+```
+- Provides real-time status across all parallel development tracks
+- Shows progress indicators and completion percentages
+- Displays quality gate status and readiness for integration
+- Coordinates development velocity and resource allocation
+
+## Context Architecture
+
+### Shared Context Layer
+```json
+{
+  "project_metadata": {
+    "name": "project-name",
+    "architecture": "microservices|monolith|serverless",
+    "tech_stack": {
+      "backend": ["fastapi", "postgresql", "redis"],
+      "frontend": ["nextjs", "typescript", "tailwind"],
+      "infrastructure": ["docker", "kubernetes", "terraform"]
+    }
+  },
+  "api_contracts": {
+    "version": "1.0.0",
+    "endpoints": {},
+    "schemas": {},
+    "authentication": {}
+  },
+  "quality_standards": {
+    "test_coverage": 85,
+    "performance_targets": {},
+    "security_requirements": {},
+    "coding_standards": {}
+  }
+}
+```
+
+### Session-Specific Context
+```json
+{
+  "feature_name": "user-authentication",
+  "session_id": "session-uuid",
+  "agent_team": ["backend-architect", "security-auditor", "test-automator"],
+  "development_state": {
+    "current_task": "implementing-jwt-auth",
+    "progress": 65,
+    "last_update": "2025-08-22T13:45:00Z"
+  },
+  "local_memory": {
+    "implementation_decisions": {},
+    "code_patterns": {},
+    "testing_strategies": {}
+  }
+}
+```
+
+## Synchronization Protocols
+
+### Real-Time Context Updates
+```typescript
+interface ContextSyncProtocol {
+  // Broadcast shared updates to all sessions
+  broadcast_shared_update(update: SharedContextUpdate): void;
+  
+  // Send feature-specific updates to relevant sessions  
+  notify_feature_sessions(feature: string, update: FeatureUpdate): void;
+  
+  // Request context sync from specific session
+  request_sync(session_id: string, context_type: ContextType): Promise<Context>;
+  
+  // Resolve conflicts between sessions
+  resolve_conflicts(conflicts: ConflictSet): Promise<Resolution>;
+}
+
+class ContextSynchronizer {
+  async sync_shared_context() {
+    // Get latest shared context
+    const shared = await this.get_shared_context();
+    
+    // Broadcast to all active sessions
+    await this.broadcast_to_sessions(shared);
+    
+    // Verify synchronization success
+    await this.verify_sync_completion();
+  }
+  
+  async detect_conflicts() {
+    const sessions = await this.get_active_sessions();
+    const conflicts = [];
+    
+    // Compare context across sessions
+    for (const session of sessions) {
+      const potential_conflicts = await this.compare_contexts(session);
+      conflicts.push(...potential_conflicts);
+    }
+    
+    return conflicts;
+  }
+}
+```
+
+### Cross-Session Communication
+```bash
+# Message format for cross-session communication
+sync_message_format() {
+  cat << EOF
+{
+  "type": "context_update|conflict_detected|quality_gate|integration_ready",
+  "source_session": "session-uuid",
+  "target_sessions": ["session-uuid-1", "session-uuid-2"],
+  "timestamp": "2025-08-22T13:45:00Z",
+  "payload": {
+    "context_changes": {},
+    "affected_files": [],
+    "quality_status": {},
+    "integration_status": {}
+  },
+  "requires_response": boolean,
+  "priority": "low|normal|high|critical"
+}
+EOF
+}
+```
+
+## Advanced Synchronization Features
+
+### Intelligent Context Filtering
+```typescript
+class ContextFilter {
+  filter_relevant_context(session: Session, full_context: Context): Context {
+    // Filter based on feature relevance
+    const relevant = this.filter_by_feature(session.feature, full_context);
+    
+    // Filter based on agent team needs
+    const agent_relevant = this.filter_by_agents(session.agents, relevant);
+    
+    // Filter based on development phase
+    const phase_relevant = this.filter_by_phase(session.phase, agent_relevant);
+    
+    return phase_relevant;
+  }
+  
+  // Prevent context bloat by filtering irrelevant information
+  optimize_context_size(context: C
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

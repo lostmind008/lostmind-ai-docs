@@ -1,0 +1,129 @@
+---
+title: "PROJECT DIRECTORY STRUCTURE"
+description: "documentation for LostMind AI - Memory&Context Protocol"
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# LostMind AI Framework - Project Directory Structure & Cleanup Report
+
+## 📂 Current Project Structure (Post-Centralization)
+
+### ✅ **ACTIVE - Core Framework (Centralized)**
+```
+framework_hub/                    # 🎯 NEW: Centralized framework architecture
+├── core/                        # All sophisticated framework components
+│   ├── context_guardian.py      # The Guardian - Context synthesis engine
+│   ├── forge_agent.py          # The Forge - Dynamic agent generation
+│   ├── universal_context_resolver.py # Universal JSONL parsing
+│   ├── project_detector.py     # Smart project type detection
+│   ├── dynamic_integration_system.py # Universal integration (1,172 lines)
+│   ├── auto_export_scheduler.py # Session export automation
+│   ├── chat_exporter.py        # Conversation capture system
+│   └── agent_templates/        # Agent generation templates
+├── bridges/                    # Lightweight client access
+│   └── lostmind_framework_bridge.py # 50-line bridge (replaces duplication)
+├── installation/               # One-command deployment
+│   └── install_bridge.sh      # Bridge installer script
+├── requirements.txt           # Framework dependencies
+└── README.md                 # Centralized architecture documentation
+```
+
+### ✅ **ACTIVE - Project Configuration**
+```
+.claude/                         # Claude Code integration
+├── commands/                   # UCF command system
+│   ├── ucf-guardian-*.md      # Guardian integration commands
+│   ├── ucf-export-*.md        # Export system commands
+│   ├── ucf-agent-create.md    # Agent generation commands
+│   └── ucf-delegate-task.md   # Task delegation system
+├── agents/                    # Generated specialist agents
+├── task_briefs/              # Task management system
+└── CLAUDE.md                 # Project configuration
+
+.lostmind_ai_context/          # Context preservation system
+└── activity_log.jsonl       # Session activity tracking
+```
+
+### ✅ **ACTIVE - Testing & Validation**
+```
+test_bridge_installation/       # 🎯 NEW: Bridge testing directory
+├── lostmind_framework_bridge.py # Installed bridge (50 lines)
+└── test_framework_bridge.py    # Validation script
+
+test_*.sh files:               # Comprehensive testing suite
+├── test_cross_system_portability.sh
+├── test_end_to_end.sh
+├── test_end_to_end_integration.sh
+├── test_fresh_installation.sh
+├── test_user_experience_validation.sh
+├── verify_installation.sh
+└── verification_results*.txt   # Test outputs
+```
+
+### ⚠️ **LEGACY - Remaining Components (Needs Cleanup)**
+```
+lostmind_ai_engine/            # 🚨 MOSTLY EMPTIED - Legacy directory
+├── guardian_toolkit.sh        # Shell wrapper (consider moving)
+├── guardian_wrapper.py        # Python wrapper (consider moving)  
+├── onboarder.py              # Project onboarding (consider moving)
+├── project_mapper.py         # Project mapping (consider moving)
+├── scaffolder.py             # Project scaffolding (consider moving)
+├── task_brief_generator.py   # Task management (consider moving)
+├── run_engine.sh             # Engine runner (consider moving)
+├── setup_environment.sh      # Environment setup (consider moving)
+├── scaffold_templates/       # Scaffolding templates (consider moving)
+├── .venv/                    # Virtual environment (keep for compatibility)
+└── README.md                 # Legacy documentation
+```
+
+### 📚 **DOCUMENTATION & ANALYSIS**
+```
+# Core Documentation
+├── README.md                  # Main project documentation
+├── USER_MANUAL.md            # User guidance
+├── QUICK_START.md            # Getting started guide
+├── TROUBLESHOOTING_GUIDE.md  # Problem resolution
+├── ADVANCED_FEATURES.md      # Advanced usage
+├── GEMINI.md                 # Gemini integration details
+├── GUARDIAN_UCF_INTEGRATION.md # Guardian-UCF integration
+├── DEVELOPMENT_LOG.md        # Development history
+└── DEPLOYMENT_IMPROVEMENTS.md # Deployment enhancements
+
+# Analysis & Investigation
+├── DATA_AUTHENTICITY_VERIFICATION_REPORT.md
+├── data_authenticity_investigation/
+└── For AI Studio Analysis/    # Analysis workspace
+```
+
+### 🗑️ **CLEANUP CANDIDATES**
+```
+# Temporary/Development Files (Safe to Remove)
+├── .DS_Store                 # macOS metadata
+├── __pycache__/             # Python cache
+├── chatlog2.txt             # Development chat logs
+├── convo_with_gemini.txt    # Development conversations
+├── claude_conversation_extractor.py # Development tool
+├── claude_framework_backup.zip # Backup file
+├── claude_session_upgrade_backup.txt # Backup file
+├── hello_world.py           # Test file
+├── example_usage.py         # Example file
+├── =0.3.0                   # Stray version file
+└── TESTING/                 # Old testing directory
+
+# Configuration Files (Keep but Review)
+├── install_lostmind_ai_framework.sh # Main installer (review vs bridge)
+└── Branch of Claude Code Specialist.json # Configuration file
+```
+
+## 🧹 Cleanup Recommendations
+
+### 🔴 **IMMEDIATE CLEANUP (Safe to Remove)**
+```bash
+# Remove development artifacts
+rm -f .DS_Store __pycache
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*

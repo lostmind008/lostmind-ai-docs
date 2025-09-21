@@ -1,0 +1,168 @@
+---
+title: "Web Scraping Intelligence Service"
+description: "api-reference for Back End Architecture for Turborepo with RAG Embeddings"
+category: "api-reference"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "api-reference,main-platform"
+---
+
+"""
+Web Scraping Intelligence Service
+=================================
+
+Advanced web scraping service with AI-powered content analysis,
+intelligent extraction, and semantic understanding using the latest
+google-genai SDK.
+
+Features:
+- Intelligent content extraction and analysis
+- AI-powered page classification and understanding
+- Semantic content processing
+- Multi-format content handling
+- Rate limiting and ethical scraping
+- Content quality assessment
+- Integration with RAG pipeline
+- Real-time analysis and insights
+
+Author: Manus AI
+"""
+
+import asyncio
+import hashlib
+import json
+import logging
+import re
+import time
+from typing import List, Dict, Any, Optional, Set, Tuple
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from urllib.parse import urljoin, urlparse, quote_plus
+from collections import deque
+
+import aiohttp
+import nest_asyncio
+from bs4 import BeautifulSoup, Comment
+from google import genai
+from google.genai import types as genai_types
+from google.cloud import storage
+
+from ..core_services.embedding_service import get_embedding_service
+from ..rag_pipeline.rag_service import get_rag_service
+from ..shared_utils.config import get_config
+
+# Apply nest_asyncio for compatibility
+nest_asyncio.apply()
+
+logger = logging.getLogger(__name__)
+config = get_config()
+
+
+@dataclass
+class ScrapingTarget:
+    """Target for web scraping"""
+    url: str
+    max_depth: int = 2
+    max_pages: int = 10
+    allowed_domains: Optional[List[str]] = None
+    content_types: List[str] = field(default_factory=lambda: ["text/html"])
+    custom_headers: Optional[Dict[str, str]] = None
+    rate_limit: float = 1.0  # seconds between requests
+    page_type_hint: Optional[str] = None
+
+
+@dataclass
+class ExtractedContent:
+    """Extracted and analyzed content from a webpage"""
+    url: str
+    title: str
+    content: str
+    metadata: Dict[str, Any]
+    page_type: str
+    quality_score: float
+    key_concepts: List[str]
+    summary: str
+    extracted_data: Dict[str, Any]
+    links: List[str]
+    images: List[str]
+    analysis_timestamp: datetime
+
+
+@dataclass
+class ScrapingResult:
+    """Complete scraping operation result"""
+    target: ScrapingTarget
+    pages_scraped: List[ExtractedContent]
+    failed_urls: List[Dict[str, str]]
+    statistics: Dict[str, Any]
+    analysis_summary: str
+    recommendations: List[str]
+    created_at: datetime
+
+
+class ContentAnalyzer:
+    """AI-powered content analysis and understanding"""
+    
+    def __init__(self):
+        self.genai_client = None
+        self._initialize_client()
+        
+        # Content quality indicators
+        self.quality_indicators = {
+            'length': {'min': 100, 'optimal': 1000, 'max': 10000},
+            'structure': ['headings', 'paragraphs', 'lists'],
+            'readability': ['sentence_length', 'word_complexity'],
+            'metadata': ['title', 'description', 'keywords']
+        }
+    
+    def _initialize_client(self):
+        """Initialize Google GenAI client"""
+        try:
+            if config.ai.google_api_key:
+                genai.configure(api_key=config.ai.google_api_key)
+                self.genai_client = genai.Client(api_key=config.ai.google_api_key)
+                logger.info("GenAI client initialized for web scraping intelligence")
+        except Exception as e:
+            logger.warning(f"Failed to initialize GenAI client: {e}")
+    
+    async def analyze_content(self, url: str, html_content: str, cleaned_text: str) -> ExtractedContent:
+        """Comprehensively analyze webpage content"""
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            
+            # Extract basic metadata
+            title = self._extract_title(soup)
+            metadata = self._extract_metadata(soup, url)
+            
+            # AI-powered analysis
+            page_type = await self._classify_page_type(cleaned_text, title)
+            quality_score = self._calculate_quality_score(cleaned_text, soup)
+            key_concepts = await self._extract_key_concepts(cleaned_text)
+            summary = await self._generate_summary(cleaned_text, title)
+            extracted_data = await self._extract_structured_data(soup, page_type)
+            
+            # Extract links and images
+            links = self._extract_links(soup, url)
+            images = self._extract_images(soup, url)
+            
+            return ExtractedContent(
+                url=url,
+                title=title,
+                content=cleaned_text,
+                metadata=metadata,
+                page_type=page_type,
+                quality_score=quality_score,
+                key_concepts=key_concepts,
+                summary=summary,
+                extracted_data=extracted_data,
+                links=links,
+                images=images,
+                analysis_timestamp=datetime.utcnow()
+            )
+            
+        except Exception as e:
+            logger.error(f"Content analysis failed for {url}: {e}")
+            r
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

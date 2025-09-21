@@ -1,0 +1,164 @@
+---
+title: "RAG EMBEDDINGS INTEGRATION GUIDE"
+description: "guide for Back End Architecture for Turborepo with RAG Embeddings"
+category: "guide"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "guide,main-platform"
+---
+
+# RAG + Embeddings Integration Guide
+
+This guide provides a comprehensive technical overview of how Retrieval-Augmented Generation (RAG) and embeddings are integrated in the LostMind AI backend architecture.
+
+## Architecture Overview
+
+The RAG + Embeddings integration consists of four core services that work together:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   API Gateway   │───▶│  RAG Service     │───▶│ Embedding Svc   │
+│   (main.py)     │    │  (rag_service)   │    │ (Google GenAI)  │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         │              ┌─────────────────┐              │
+         │              │  Vector DB Svc  │◀─────────────┘
+         │              │ (Multi-provider)│
+         │              └─────────────────┘
+         │                       │
+         └──────────────┐ ┌─────────────────┐
+                        │ │ Document Proc   │
+                        │ │    Service      │
+                        └─┘─────────────────┘
+```
+
+## Service Dependencies and Relationships
+
+### 1. RAG Service Dependencies
+```python
+# From packages/rag-pipeline/rag_service.py
+from ..core_services.embedding_service import get_embedding_service
+from ..core_services.vector_db_service import get_vector_db_service_advanced
+from ..core_services.document_processing_service import get_document_processing_service
+```
+
+### 2. Service Initialization Pattern
+```python
+# From apps/api-gateway/main.py
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Services are initialized in dependency order
+    services['embedding'] = await get_embedding_service()
+    services['vector_db'] = await get_vector_db_service_advanced()
+    services['rag'] = await get_rag_service()
+    
+    yield
+    
+    # Cleanup in reverse order
+    if 'rag' in services:
+        await services['rag'].cleanup()
+```
+
+## Data Flow: From Document to RAG Response
+
+### Phase 1: Document Ingestion
+```
+1. Document Upload → Document Processing Service
+   ├── PDF/DOCX parsing (PyPDF2, python-docx)
+   ├── Text extraction and cleaning
+   ├── Intelligent chunking (semantic boundaries)
+   └── Metadata extraction
+
+2. Text Chunks → Embedding Service
+   ├── Google Generative AI API call
+   ├── Model: text-embedding-004 (768 dimensions)
+   ├── Task type: RETRIEVAL_DOCUMENT
+   └── Caching for performance
+
+3. Embeddings → Vector Database Service
+   ├── Multi-provider support (Pinecone/ChromaDB/Weaviate)
+   ├── Metadata storage alongside vectors
+   ├── Index organization
+   └── Performance optimization
+```
+
+### Phase 2: RAG Query Processing
+```
+1. User Query → RAG Service
+   ├── Query preprocessing
+   ├── Conversation context loading
+   └── Query embedding generation
+
+2. Query Embedding → Vector Database Search
+   ├── Similarity search (cosine similarity)
+   ├── Top-K retrieval (configurable)
+   ├── Metadata filtering
+   └── Confidence scoring
+
+3. Retrieved Context + Query → Gemini Generation
+   ├── Context assembly and ranking
+   ├── Prompt engineering with context
+   ├── Model: gemini-2.0-flash-exp or gemini-2.0-pro-exp
+   └── Streaming response generation
+
+4. Response → Client
+   ├── Source attribution
+   ├── Confidence metrics
+   ├── Conversation history update
+   └── Usage analytics
+```
+
+## Configuration and Setup
+
+### 1. Environment Variables
+```bash
+# Core AI Configuration (Modern Google GenAI SDK)
+GOOGLE_API_KEY=your_google_api_key
+GEMINI_API_KEY=your_google_api_key  # Alternative env var for genai.Client()
+EMBEDDING_MODEL=text-embedding-004
+GEMINI_MODEL=gemini-2.5-flash  # Current stable model
+GEMINI_PRO_MODEL=gemini-2.0-flash-exp
+
+# Vector Database Configuration
+VECTOR_DB_PROVIDER=pinecone  # pinecone, chromadb, weaviate
+VECTOR_DB_API_KEY=your_vector_db_key
+VECTOR_DB_ENVIRONMENT=us-east-1-aws
+VECTOR_DB_INDEX=lostmind-embeddings
+VECTOR_DB_DIMENSION=768
+
+# Performance Tuning
+MODEL_TEMPERATURE=0.2
+MAX_OUTPUT_TOKENS=8192
+REQUESTS_PER_MINUTE=60
+TOKENS_PER_MINUTE=100000
+```
+
+### 2. Configuration Classes
+```python
+# From packages/core-services/config.py - REQUIRES SDK MIGRATION
+@dataclass
+class AIConfig:
+    google_api_key: Optional[str] = os.getenv("GOOGLE_API_KEY")
+    embedding_model: str = os.getenv("EMBEDDING_MODEL", "text-embedding-004")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")  # Updated stable model
+    temperature: float = float(os.getenv("MODEL_TEMPERATURE", "0.2"))
+    max_output_tokens: int = int(os.getenv("MAX_OUTPUT_TOKENS", "8192"))
+
+@dataclass
+class VectorDBConfig:
+    provider: str = os.getenv("VECTOR_DB_PROVIDER", "pinecone")
+    api_key: Optional[str] = os.getenv("VECTOR_DB_API_KEY")
+    dimension: int = int(os.getenv("VECTOR_DB_DIMENSION", "768"))
+```
+
+## Code Examples: Integration Patterns
+
+### 1. RAG Query Processing
+```python
+# RAG Service Query Method
+async def query(self, rag_query: RAGQuery) -> RAGResponse:
+    # Generate query embedding
+    query_embedding = await self.embedding_service.gene
+
+---
+*This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings. For the most up-to-date information, refer to the source project.*

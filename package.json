@@ -20,9 +20,13 @@
     "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
     "migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
     "clean": "git clean -xdf node_modules",
-    "docs:scan": "node scripts/docs-automation/scan-projects.mjs",
+    "docs:scan": "node scripts/docs-automation/enhanced-scan-projects.cjs",
+    "docs:scan:verbose": "node scripts/docs-automation/enhanced-scan-projects.cjs --verbose",
+    "docs:scan:dry-run": "node scripts/docs-automation/enhanced-scan-projects.cjs --dry-run --verbose",
+    "docs:scan:legacy": "node scripts/docs-automation/scan-projects.mjs",
     "docs:extract": "node scripts/docs-automation/extract-content.mjs",
-    "docs:update": "npm run docs:scan && npm run docs:extract",
+    "docs:update": "npm run docs:scan && npm run docs:build",
+    "docs:validate": "node scripts/docs-automation/validate-docs.cjs",
     "docs:dev": "cd apps/docs && mintlify dev",
     "docs:build": "cd apps/docs && mintlify build"
   },
@@ -45,7 +49,14 @@
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
     "@clack/prompts": "^0.11.0",
-    "commander": "^14.0.0"
+    "chalk": "^5.6.2",
+    "commander": "^14.0.0",
+    "glob": "^11.0.3",
+    "gray-matter": "^4.0.3",
+    "inquirer": "^12.9.6",
+    "markdown-link-check": "^3.13.7",
+    "ora": "^9.0.0",
+    "yaml": "^2.8.1"
   },
   "type": "module"
 }

@@ -1,0 +1,67 @@
+---
+title: "MAINTENANCE RUNBOOK"
+description: "documentation for Claude Code Framework by LOSTMIND AI"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# LostMind AI – Phase 1 Stabilization Runbook
+
+Purpose: A zero‑assumption, step‑by‑step guide to stabilize installs, preserve context, and verify the end‑to‑end journey for Claude Code users.
+
+## 1) Pre‑flight (Git + Safety)
+- Ensure on `main`: `git checkout main`
+- Update remotes: `git fetch --all --prune`
+- Check ahead/behind: `git status -sb`
+- Create a safety branch if unsure: `git switch -c safekeep/phase1-<date>`
+
+## 2) Environment & Variables
+- Python venv (engine):
+  - `cd lostmind_ai_engine && python3 -m venv .venv && source .venv/bin/activate`
+  - `pip install -r ../framework_hub/requirements.txt`
+- Gemini key (optional but recommended): set `GEMINI_API_KEY` in `lostmind_ai_engine/.env`.
+- Framework path: set `LOSTMIND_FRAMEWORK_PATH` to the absolute `framework_hub` path.
+
+## 3) Bridge Installation (external projects)
+- `bash framework_hub/installation/install_bridge.sh <target_project_path>`
+- This writes `<target_project_path>/lostmind_framework_config.json` so the bridge resolves deterministically.
+- Smoke test: `cd <target_project_path> && python3 test_framework_bridge.py`
+
+## 4) Hooks/Commands (“Safe Mode”)
+- Copy project `.claude/commands/*` → `~/.claude/commands/`
+- Copy project `.claude/hooks/*` → `~/.claude/hooks/` and `chmod +x ~/.claude/hooks/*.sh`
+- Back up and minimally update `~/.claude/settings.json` to enable PreCompact/SessionEnd if disabled.
+
+## 5) Engine Shims (execution path)
+- Do not duplicate logic into engine. Engine scripts must import from `framework_hub/core/*`.
+- `run_engine.sh guardian` → calls a small Python shim that adds `framework_hub/core` to `sys.path` then imports `context_guardian`.
+- `onboarder.py` → import Guardian via the bridge or add a resolver using `LOSTMIND_FRAMEWORK_PATH` and per‑project config.
+
+## 6) Verification (required)
+- Bridge: `python test_bridge_installation/test_framework_bridge.py`
+- Guardian wrapper: `python lostmind_ai_engine/guardian_wrapper.py status`
+- Hooks: start a Claude Code session and ensure `.lostmind_ai_context/*` updates after `PreCompact`/`SessionEnd`.
+- Optional: `bash test_end_to_end.sh`
+
+## 7) Commit Protocol
+- Stage and commit focused changes only (docs, shims, installer tweaks).
+- Use semantic prefix + imperative subject; include a checklist of steps performed and verification evidence.
+- Example:
+  - `git add DOCS/MAINTENANCE_RUNBOOK.md AGENTS.md ...`
+  - `git commit -m "🔧 CHORE: Phase 1 stabilization runbook + bridge/shim guidance" -m "Steps: Pre‑flight, env, bridge, safe‑mode hooks, shims, verification. Verified: bridge test OK, wrapper status OK."`
+
+## 8) Rollback
+- Keep backups of `~/.claude/settings.json` (timestamped).
+- If shims fail: unset `LOSTMIND_FRAMEWORK_PATH`, re‑run bridge smoke test, and verify `.env`.
+- Revert commit: `git revert <commit_sha>` or `git switch safekeep/*` branch.
+
+Notes
+- Source of truth remains `framework_hub/core/*`. Engine acts as wrappers only in Phase 1.
+- Phase 2 (optional): consolidation/cleanup after green tests.
+
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

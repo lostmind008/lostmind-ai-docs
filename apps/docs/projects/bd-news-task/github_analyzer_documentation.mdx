@@ -1,0 +1,145 @@
+---
+title: "Github Analyzer Documentation"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# 🔍 GitHub Repository Analyzer - Resource Documentation
+
+## 📋 **Overview**
+High-performance GitHub repository analyzer with 378x concurrent processing improvement, built using Google Gemini 2.5 Pro and modern async patterns.
+
+**Source Location**: `/Users/sumitm1/Documents/New Ongoing Projects/GitHub Repository Analyzer with Gemini 2.5 Pro/`
+
+## 🚀 **Key Performance Metrics**
+- **378x faster processing** (450s → 1.19s for 10 repositories)
+- **10-20 concurrent workers** for parallel analysis
+- **46.63% test coverage** with 157 implemented tests
+- **Production-ready** with verified API connections
+
+## 🛠️ **Core Components**
+
+### **1. Main Analyzer** (`github_analyzer_verified.py`)
+- **Capabilities**: Repository analysis, verification protocols, anti-hype assessment
+- **Dependencies**: `google-genai>=1.0.0`, `PyGithub>=2.3.0`, `requests>=2.32`
+- **Features**:
+  - Structured analysis results with `RepositoryAnalysis` dataclass
+  - Evidence-based verification (not just claims)
+  - Tech stack detection and build verification
+  - Deployment status checking
+
+### **2. Concurrent Analyzer** (`src/github_analyzer/core/concurrent_analyzer.py`)
+- **Advanced Features**:
+  - Circuit breaker pattern for API resilience
+  - Configurable concurrency limits (10 concurrent analyses, 20 API calls)
+  - Memory monitoring with 1GB limit
+  - Retry mechanisms with exponential backoff
+  - Performance metrics collection
+  - Health check intervals
+
+### **3. Concurrency Configuration**
+```python
+@dataclass
+class ConcurrencyConfig:
+    MAX_CONCURRENT_ANALYSIS: int = 10      # Parallel repository analysis
+    MAX_CONCURRENT_API_CALLS: int = 20     # GitHub API concurrent requests
+    MAX_CONCURRENT_AI_CALLS: int = 5       # Gemini API concurrent requests  
+    RATE_LIMIT_DELAY: float = 1.0          # Seconds between API calls
+    ANALYSIS_TIMEOUT: int = 300            # 5 minute timeout per repository
+    MEMORY_LIMIT_MB: int = 1000            # Memory usage limit
+```
+
+## 🔧 **Integration Patterns for News Analysis**
+
+### **Repository Discovery for News Sources**
+```python
+# Analyze news organization repositories
+analyzer = GitHubAnalyzer("news_analysis_output")
+results = await analyzer.analyze_user_repositories_async("bbcnews")
+
+# Filter for active news tools/APIs
+active_repos = [r for r in results if r.actual_status == "Production"]
+```
+
+### **Concurrent News Source Analysis**
+```python
+news_orgs = ["reuters", "apnews", "nytimes", "bbcnews", "cnntech"]
+async with ConcurrentGitHubAnalyzer(config) as analyzer:
+    for org in news_orgs:
+        await analyzer.analyze_user_repositories_async(org)
+```
+
+### **Tech Stack Detection for News Sites**
+- Detects APIs, scraping tools, content management systems
+- Identifies deployment status and live URLs
+- Measures TODO ratio to assess maintenance quality
+- Provides evidence-based functionality assessment
+
+## 🎯 **Value for BD-News-Task Project**
+
+### **Direct Applications**:
+1. **News Source Discovery**: Find active news APIs and tools
+2. **Competitor Analysis**: Assess other news scraping projects  
+3. **Technology Stack Intelligence**: Understand what tools news orgs use
+4. **Quality Assessment**: Evidence-based evaluation (not just README claims)
+
+### **Concurrent Processing Benefits**:
+- **Massive Scale**: Process hundreds of news repos simultaneously
+- **Rate Limiting**: Built-in respect for GitHub API limits
+- **Error Recovery**: Circuit breakers prevent cascade failures
+- **Memory Efficiency**: Monitors and controls resource usage
+
+## 📊 **Performance Comparison**
+
+| Mode | Processing Time | Memory Usage | Success Rate |
+|------|----------------|---------------|--------------|
+| Sequential | 45s per repo | 100MB | 100% |
+| Concurrent | 0.12s per repo | 0.08MB | 100% |
+| **Improvement** | **378x faster** | **Minimal** | **Maintained** |
+
+## 🔍 **Key Files to Import**
+
+### **Essential Files**:
+1. `github_analyzer_verified.py` - Main analyzer class
+2. `src/github_analyzer/core/concurrent_analyzer.py` - Concurrent processing engine
+3. `src/github_analyzer/services/` - API clients and verification services
+4. `examples/concurrent_analysis.py` - Usage patterns
+
+### **Configuration Files**:
+- `src/github_analyzer/utils/config.py` - Configuration management
+- `src/github_analyzer/utils/logging.py` - Logging setup
+
+## ⚡ **Quick Start Integration**
+
+### **Environment Setup**:
+```bash
+export GITHUB_TOKEN="gho_your_token_here"
+export GOOGLE_API_KEY="your_gemini_key_here"
+```
+
+### **Basic Usage**:
+```python
+from scouted_resources.analyzers.github_analyzer import GitHubAnalyzer
+
+analyzer = GitHubAnalyzer("output_dir")
+results = analyzer.analyze_user("news_organization")
+```
+
+### **High-Performance Mode**:
+```python
+from scouted_resources.analyzers.concurrent_analyzer import ConcurrentGitHubAnalyzer
+
+config = get_config()
+async with ConcurrentGitHubAnalyzer(config) as analyzer:
+    await analyzer.analyze_user_repositories_async("news_org")
+```
+
+## 🛡️ **Error Handling & Resilience**
+
+- **Circuit Breaker*
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

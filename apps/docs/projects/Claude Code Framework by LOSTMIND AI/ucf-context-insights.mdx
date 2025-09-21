@@ -1,0 +1,168 @@
+---
+title: "Ucf Context Insights"
+description: "Get Guardian AI-generated insights about project context and patterns"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-context-insights
+
+## Your Role: Context Insights Specialist
+
+This command provides Guardian's AI-generated insights about project patterns, trends, and strategic context.
+
+## Your Workflow
+
+1. **Check Guardian Context**:
+   ```bash
+   ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+   PROJECT_CONTEXT="./.claude/context"
+
+   if [ ! -d "$PROJECT_CONTEXT" ]; then
+       echo "❌ No Guardian context found. Run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Display AI-Generated Insights**:
+   ```bash
+   echo "💡 Guardian AI Insights"
+   echo "======================="
+   echo ""
+
+   if [ -f "$PROJECT_CONTEXT/context_insights.md" ]; then
+       echo "🎯 **Strategic Context Analysis:**"
+       echo ""
+       cat "$PROJECT_CONTEXT/context_insights.md"
+       echo ""
+   else
+       echo "💡 No AI insights generated yet"
+       echo "   Guardian context insights will be available after:"
+       echo "   - Project conversations are analyzed"
+       echo "   - Pattern recognition is complete"
+       echo "   - Strategic themes are identified"
+   fi
+   ```
+
+3. **Show Conversation Patterns**:
+   ```bash
+   echo "🧵 **Conversation Patterns:**"
+   echo "----------------------------"
+
+   if [ -f "$PROJECT_CONTEXT/conversation_threads.json" ]; then
+       python3 -c "
+import json
+from collections import Counter
+
+try:
+    with open('$PROJECT_CONTEXT/conversation_threads.json', 'r') as f:
+        data = json.load(f)
+
+    if 'threads' in data and isinstance(data['threads'], list):
+        threads = data['threads']
+        print(f'📊 Total Conversation Threads: {len(threads)}')
+
+        # Analyze conversation topics
+        topics = []
+        for thread in threads[:20]:  # Analyze recent threads
+            if isinstance(thread, dict) and 'content' in thread:
+                content = str(thread.get('content', '')).lower()
+                # Simple topic detection
+                if 'bug' in content or 'error' in content or 'fix' in content:
+                    topics.append('bug_fixing')
+                elif 'feature' in content or 'implement' in content or 'add' in content:
+                    topics.append('feature_development')
+                elif 'test' in content or 'testing' in content:
+                    topics.append('testing')
+                elif 'deploy' in content or 'production' in content:
+                    topics.append('deployment')
+                elif 'refactor' in content or 'improve' in content:
+                    topics.append('refactoring')
+                else:
+                    topics.append('general_discussion')
+
+        if topics:
+            topic_counts = Counter(topics)
+            print('')
+            print('📈 **Topic Distribution:**')
+            for topic, count in topic_counts.most_common(5):
+                percentage = (count / len(topics)) * 100
+                topic_name = topic.replace('_', ' ').title()
+                print(f'   {topic_name}: {count} threads ({percentage:.1f}%)')
+
+        print('')
+
+    else:
+        print('No conversation patterns available yet')
+
+except Exception as e:
+    print(f'Could not analyze conversation patterns: {e}')
+"
+   else
+       echo "No conversation thread data available"
+   fi
+   ```
+
+4. **Session Analysis Summary**:
+   ```bash
+   echo "📈 **Session Analysis:**"
+   echo "----------------------"
+
+   if [ -f "$PROJECT_CONTEXT/session_analysis.md" ]; then
+       # Extract key statistics
+       grep -E "(Total Sessions|Average|Peak|Most)" "$PROJECT_CONTEXT/session_analysis.md" | head -10
+       echo ""
+
+       # Show session trends
+       echo "🔄 **Recent Session Trends:**"
+       tail -20 "$PROJECT_CONTEXT/session_analysis.md" | grep -E "(Session|Trend|Pattern)" | head -5
+   else
+       echo "Session analysis not available yet"
+       echo "Will be generated after multiple sessions"
+   fi
+   ```
+
+5. **Key Metrics Summary**:
+   ```bash
+   echo ""
+   echo "📊 **Key Metrics:**"
+   echo "-----------------"
+
+   # Count total files in context
+   TOTAL_CONTEXT_FILES=$(find "$PROJECT_CONTEXT" -type f 2>/dev/null | wc -l)
+   echo "📁 Context Files: $TOTAL_CONTEXT_FILES"
+
+   # Check context size
+   if [ -d "$PROJECT_CONTEXT" ]; then
+       CONTEXT_SIZE=$(du -sh "$PROJECT_CONTEXT" 2>/dev/null | cut -f1)
+       echo "💾 Context Size: $CONTEXT_SIZE"
+   fi
+
+   # Check last update
+   if [ -f "$PROJECT_CONTEXT/chat_history.md" ]; then
+       LAST_UPDATE=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$PROJECT_CONTEXT/chat_history.md" 2>/dev/null)
+       echo "🕐 Last Update: $LAST_UPDATE"
+   fi
+
+   echo ""
+   echo "✨ **Guardian Status**: Active and monitoring"
+   ```
+
+## Benefits
+
+- **Strategic Understanding**: AI-generated insights about project direction
+- **Pattern Recognition**: Identify conversation trends and focus areas
+- **Session Intelligence**: Understand how project discussions evolve
+- **Metric Overview**: Quick stats about context and activity
+- **Immediate Access**: Works in current session without hooks
+
+## Usage Notes
+
+- Requires 
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

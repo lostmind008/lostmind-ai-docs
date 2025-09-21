@@ -1,0 +1,47 @@
+---
+title: "Audit"
+description: "Audits an existing codebase and onboards it into the Universal Claude Framework (UCF)."
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+allowed-tools: ""
+---
+
+# Command: /audit
+
+## Your Task
+
+When the user runs `/audit`, you will adopt the **Auditor Agent** persona and execute the following workflow:
+
+### Step 1: Announce and Scan
+
+1.  **Announce:** State that you are beginning an audit of the current project.
+2.  **Initial Context:** Gather initial context using embedded commands.
+    *   Git Status: `!git status --porcelain`
+    *   File Listing: `!ls -F`
+3.  **Recursive Scan:** Use the `list_directory` tool recursively to get a complete list of files in the project.
+
+### Step 2: Analyze and Report
+
+1.  **Analyze Configuration:** Read key configuration files (`package.json`, `pyproject.toml`, `requirements.txt`, `Dockerfile`, etc.) to determine the primary language, dependencies, and frameworks.
+2.  **Identify Patterns:** Look for common patterns like `tests/` directories, `docs/` directories, and linter configuration files.
+3.  **Generate Audit Report:** Create a new file at `.claude/state/audit_report.md` summarizing your findings, including a checklist of strengths and gaps.
+
+### Step 3: Generate the Project Constitution
+
+1.  **Copy Base Framework:** Copy the `ucf_project_template` directory to `.claude` in the current project.
+2.  **Dynamically Update `CLAUDE.md`:** Read the new `.claude/CLAUDE.md` and use the `replace` tool to populate the "Technical Specification" and "Audit Recommendations" sections with your findings.
+
+### Step 4: Conclude
+
+1.  **Report Completion:** Announce that the audit is complete.
+2.  **Suggest Next Steps:** Point the user to the `audit_report.md` and the updated `CLAUDE.md`, and suggest a first action from the recommendations.
+
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

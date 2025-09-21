@@ -1,0 +1,94 @@
+---
+title: "Ucf Guardian Status"
+description: "Check Guardian context freshness and statistics (no arguments required)"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-guardian-status
+
+## Your Role: Guardian Status Reporter  
+
+This command provides a comprehensive status report of your Guardian context system, including freshness indicators, conversation statistics, and actionable recommendations.
+
+## Your Workflow
+
+1.  **Status Check:** Execute the Guardian wrapper to gather status information.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    VENV_PYTHON="$ENGINE_PATH/.venv/bin/python"
+
+    # Validate framework installation
+    if [ ! -f "$ENGINE_PATH/guardian_wrapper.py" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+
+    # Validate virtual environment
+    if [ ! -f "$VENV_PYTHON" ]; then
+        echo "❌ Framework virtual environment not found. Please reinstall the framework."
+        exit 1
+    fi
+
+    # Execute using framework's isolated Python environment
+    "$VENV_PYTHON" "$ENGINE_PATH/guardian_wrapper.py" status
+    ```
+2.  **Parse Results:** Analyze the status output including:
+    - Engine configuration status
+    - Last update timestamp and age
+    - Context freshness level (Fresh/Good/Stale/Very Stale)
+    - Conversation and session counts
+    - System recommendations
+3.  **Format Report:** Present the information in a clear, actionable format
+4.  **Provide Guidance:** Based on the status, suggest next steps to the user
+
+## Status Indicators
+
+### Freshness Levels
+- **🟢 Fresh** (< 1 hour): Context is current
+- **🟡 Good** (< 1 day): Context is recent but could be refreshed
+- **🔴 Stale** (< 1 week): Context should be updated soon
+- **⚫ Very Stale** (> 1 week): Context urgently needs refresh
+
+### Configuration Status
+- **✅ Configured**: Guardian engine is properly set up
+- **❌ Not Configured**: Requires project onboarding
+- **⚠️ Configuration Error**: Engine path or setup issues
+
+## Expected Output Format
+
+```
+📊 Guardian Status Report
+   Engine Path: /path/to/lostmind_ai_engine
+   Last Update: Updated 45 minutes ago
+   Status: success
+   Conversations: 2201
+   Sessions: 23  
+   Freshness: fresh 🟢
+
+💡 Recommendations:
+   - Context is up to date
+```
+
+## Error Scenarios
+
+Handle these common issues:
+- **No Configuration**: Guide user to run `/ucf-onboard-project`
+- **Engine Not Found**: Suggest reconfiguring or checking engine path
+- **Status File Corrupted**: Recommend running `/ucf-guardian-refresh`
+- **Permission Issues**: Provide clear error messages and solutions
+
+## Notes
+
+This command is perfect for:
+- Checking if context needs refresh before important tasks
+- Monitoring Guardian system health
+- Understanding conversation context scope
+- Getting actionable next steps for context management
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

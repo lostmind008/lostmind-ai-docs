@@ -1,0 +1,171 @@
+---
+title: "Lostmind Master Plan"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# LostMind AI - Master Architecture Plan
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🗓️ Implementation Roadmap](implementation-roadmap.md)** | **[📋 ADRs](lostmind-adrs.md)**
+
+**Version**: 1.0 FINAL  
+**Date**: September 2025  
+**Status**: APPROVED - Ready for Implementation  
+**Tech Stack**: Next.js 15 + Turborepo + FastAPI
+
+## Executive Summary
+
+LostMind AI is transitioning to a **Next.js-first monorepo architecture** with selective FastAPI retention for compute-intensive operations. This approach delivers **60% faster development** while maintaining scalability for AI workloads.
+
+## Core Architecture Decisions
+
+### 1. Framework Selection ✅
+- **Primary Stack**: Next.js 15 (App Router) 
+- **Heavy Compute**: FastAPI on Google Cloud Run
+- **Monorepo Tool**: Turborepo
+- **Package Manager**: pnpm
+- **Database**: PostgreSQL with Row Level Security (RLS)
+- **React Version**: React 19 (with Next.js 15)
+
+### 2. Deployment Strategy ✅
+- **Next.js Apps**: Vercel (Edge Functions + Serverless)
+- **FastAPI Services**: Google Cloud Run (60-minute execution limit)
+- **Static Assets**: Vercel CDN
+- **Database**: Supabase/Neon/Cloud SQL with pgvector
+
+### 3. Migration Philosophy ✅
+- **Next.js handles 95% of API endpoints** (CRUD, auth, webhooks)
+- **FastAPI retained for**:
+  - Document processing (PDF, OCR)
+  - Web crawling and scraping
+  - ML model inference
+  - Long-running tasks (>30 seconds)
+  - Batch processing jobs
+
+## Project Structure
+
+```
+lostmind-ai-monorepo/
+├── apps/
+│   ├── marketing/              # lostmindai.com (Next.js 15)
+│   ├── ask/                    # ask.lostmindai.com (Next.js 15)
+│   ├── chatcrawler/            # chatcrawler.lostmindai.com
+│   ├── justdropit/             # justdropit.lostmindai.com
+│   └── admin/                  # Internal admin dashboard
+├── packages/
+│   ├── ui/                     # Shared UI components (shadcn/ui)
+│   ├── config/                 # ESLint, TypeScript, Tailwind configs
+│   ├── auth/                   # Auth.js v5 implementation
+│   ├── db/                     # Prisma schema + client
+│   ├── billing/                # Stripe integration
+│   ├── ai-clients/             # Google Generative AI abstraction
+│   ├── rag/                    # RAG utilities with pgvector
+│   └── utils/                  # Shared utilities
+├── services/                   # FastAPI microservices
+│   ├── document-processor/     # PDF, OCR processing
+│   ├── crawler-engine/         # Web scraping
+│   └── ai-compute/            # Heavy ML operations
+├── infra/                      # Terraform configurations
+├── docs/                       # Architecture documentation
+│   └── adrs/                   # Architecture Decision Records
+├── .github/workflows/          # CI/CD pipelines
+├── Taskfile.yml               # Task automation
+├── turbo.json                 # Turborepo configuration
+└── pnpm-workspace.yaml        # Workspace definition
+```
+
+## Technology Stack Details
+
+### Frontend & APIs (Next.js 15)
+```json
+{
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@auth/nextjs": "^5.0.0",
+    "@tanstack/react-query": "^5.0.0",
+    "zod": "^3.22.0"
+  }
+}
+```
+
+**Key Features**:
+- App Router with React Server Components
+- Route Handlers for API endpoints
+- Server Actions for mutations
+- Uncached by default (perfect for SaaS)
+- TypeScript with strict mode
+- Tailwind CSS + shadcn/ui
+
+### Backend Services (FastAPI)
+```python
+# Python 3.11+
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.5.0",
+    "sqlmodel>=0.0.14",
+    "google-generativeai>=0.3.0",
+    "pypdf2>=3.0.0",
+    "playwright>=1.40.0",
+]
+```
+
+### Database Layer
+```prisma
+// PostgreSQL with Row Level Security
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Multi-tenant schema with RLS policies
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  plan      Plan     @default(FREE)
+  // RLS policy ensures tenant isolation
+}
+```
+
+### AI Integration Strategy
+```typescript
+// Provider abstraction layer
+interface AIProvider {
+  generateText(prompt: string): Promise<string>
+  embedDocument(content: string): Promise<number[]>
+  searchRAG(query: string, context: Document[]): Promise<SearchResult[]>
+}
+
+// Swappable providers
+const provider = createAIClient('google') // or 'openai', 'anthropic'
+```
+
+## Security Architecture
+
+### Multi-Tenancy Implementation
+1. **Database Level**: PostgreSQL Row Level Security (RLS)
+2. **Application Level**: JWT with tenant claims
+3. **API Level**: Middleware validation
+4. **Audit Level**: Comprehensive logging
+
+### Authentication Flow
+```typescript
+// Auth.js v5 with multiple providers
+export const authOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  callbacks: {
+    jwt: async ({ toke
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

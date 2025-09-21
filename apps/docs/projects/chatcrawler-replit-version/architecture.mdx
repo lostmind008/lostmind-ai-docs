@@ -1,42 +1,59 @@
 ---
-title: "Architecture - ChatCrawler-Replit-version"
-description: "System architecture and design overview"
+title: "ARCHITECTURE"
+description: "architecture for ChatCrawler-Replit-version"
+category: "architecture"
+project: "ChatCrawler-Replit-version"
+lastUpdated: "2025-09-21"
+tags: "architecture,data-processing"
 ---
 
-# Architecture Overview
+# ChatCrawler Architecture (Current)
 
-## System Design
+This document describes the current, implemented architecture. For the consolidated current-and-future blueprint and monorepo plan, see `docs/ARCHITECTURE_AND_MONOREPO_PLAN.md`.
 
-This project follows modern software architecture principles with clear separation of concerns and scalable design patterns.
+## Overview
 
-## Technology Stack
+Status: development prototype. The running stack today is:
 
-<CardGroup cols="2">
-  <Card title="Framework" icon="layer-group">
-    React
-  </Card>
-  <Card title="Category" icon="tags">
-    other
-  </Card>
-  <Card title="Last Updated" icon="clock">
-    04/09/2025
-  </Card>
-  <Card title="Documentation" icon="book">
-    Available
-  </Card>
-</CardGroup>
+- Frontend: Vite + React app in `client/` and a Next.js app in `apps/chatcrawler/`.
+- API: Express 4 + TypeScript in `server/` serving REST endpoints and, in development, the Vite client.
+- Worker: FastAPI (Python) in `services/worker/` for web scraping and future document processing.
+- Webhooks: Express service in `services/webhook/` for Stripe events (forwarder; main server endpoints pending).
+- Data: PostgreSQL via Drizzle ORM (`shared/schema.ts`), but the API currently stores application data in-memory.
+- Auth: Replit OIDC with `passport` + PostgreSQL-backed sessions.
+- AI: OpenAI preferred with Gemini fallback.
 
 ## Key Components
 
-- **Core Application**: Main application logic and business rules
-- **Data Layer**: Database and data management components
-- **API Layer**: External interfaces and service endpoints
+- `server/`
+  - `index.ts`: Express app, middleware, error handling, dev Vite integration.
+  - `routes.ts`: REST endpoints for auth, dashboard, jobs, documents, chat, billing, subscriptions.
+  - `storage.ts`: In-memory storage (`MemStorage`) for app data; replace with DB-backed storage.
+  - `openai.ts`: OpenAI client with Gemini fallback and helpers.
+  - `replitAuth.ts`: Replit OIDC configuration and session management.
+
+- `services/worker/`
+  - `main.py`: FastAPI app with CORS and health check; routers for scrape/upload/chat/visualise.
+  - `app/core/scraper.py`: Async web scraper with robots.txt support, content/link/image extraction.
+
+- `services/webhook/`
+  - `index.ts`: Stripe webhook receiver forwarding events to main app (pending endpoints).
+
+- `shared/schema.ts`: Drizzle schema for users, jobs, documents, conversations, messages, credits, plans, subscriptions, assets, audit logs.
+
+- `apps/chatcrawler/`: Next.js app (App Router) with dashboard, chat, documents, and scrape pages; DB client using Drizzle.
+
+- `client/`: Vite + React application using shadcn/ui.
+
+## Current Limitations
+
+- Application data stored in-memory — no persistence for users/jobs/docs/conversations/credits.
+- No input validation middleware or rate limiting on the API.
+- Stripe lifecycle webhooks not integrated into the main server.
+- Worker stores job status/results in-process memory; no DB updates.
+
+See the blueprint document for a migration path to a Next.js 15 Turborepo and production readiness steps.
 
 
-## Deployment
-
-This project is designed for flexible cloud deployment.
-
-<Note>
-Architecture details are extracted from project analysis. For detailed technical specifications, refer to the project's documentation folder.
-</Note>
+---
+*This content was automatically extracted from ChatCrawler-Replit-version. For the most up-to-date information, refer to the source project.*

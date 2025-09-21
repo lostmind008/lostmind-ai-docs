@@ -1,0 +1,136 @@
+---
+title: "RAG EMBEDDINGS INTEGRATION GUIDE"
+description: "guide for LostMindAI-TurboRepo"
+category: "guide"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "guide,main-platform"
+---
+
+# 🧠 LostMind AI RAG Embeddings System Integration Guide
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🤖 Ask App Guide](INTEGRATION_GUIDE_FOR_ASK_APP.md)**
+
+**SOURCE PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/Back End Architecture for Turborepo with RAG Embeddings`
+
+**TARGET LOCATIONS**: 
+- `packages/rag/` - RAG utilities and interfaces
+- `services/ai-compute/` - Heavy compute operations
+
+## 🎯 Mission Overview
+
+You are tasked with migrating the **RAG Embeddings Backend Architecture** into the TurboRepo monorepo structure as both a shared package and compute service. This will serve as the foundational AI intelligence layer powering document understanding, semantic search, and contextual AI responses across all applications.
+
+## 🏆 Integration Objectives
+
+### Primary Goals
+1. **Migrate** RAG architecture into `packages/rag/` as shared utilities
+2. **Deploy** compute-intensive operations to `services/ai-compute/`
+3. **Implement** pgvector-powered similarity search with PostgreSQL
+4. **Integrate** with Google Generative AI for embeddings and RAG processing
+5. **Provide** scalable RAG infrastructure for all TurboRepo applications
+
+### Success Criteria
+- ✅ RAG package provides reusable utilities across all apps
+- ✅ AI compute service handles embedding generation at scale
+- ✅ pgvector integration enables fast similarity search
+- ✅ Supports multiple document types (PDF, text, images, web pages)
+- ✅ Sub-second query response times for most operations
+- ✅ Horizontally scalable for enterprise document volumes
+
+## 🏗️ Target Architecture Integration
+
+### Dual Integration Strategy
+```
+packages/rag/                    # ← SHARED UTILITIES
+├── src/
+│   ├── index.ts                # Main exports
+│   ├── embedding/
+│   │   ├── embedder.ts         # Embedding interfaces
+│   │   ├── chunking.ts         # Document chunking
+│   │   └── similarity.ts       # Similarity calculations
+│   ├── retrieval/
+│   │   ├── retriever.ts        # Document retrieval
+│   │   ├── ranking.ts          # Result ranking
+│   │   └── filtering.ts        # Content filtering
+│   ├── types/
+│   │   ├── document.ts         # Document models
+│   │   ├── embedding.ts        # Embedding models
+│   │   └── query.ts           # Query models
+│   └── utils/
+│       ├── preprocessing.ts    # Text preprocessing
+│       ├── postprocessing.ts   # Result processing
+│       └── validation.ts       # Input validation
+
+services/ai-compute/            # ← COMPUTE SERVICE
+├── src/
+│   ├── main.py                # FastAPI application
+│   ├── api/
+│   │   ├── v1/
+│   │   │   ├── embeddings.py   # Embedding endpoints
+│   │   │   ├── rag.py         # RAG endpoints
+│   │   │   └── search.py      # Search endpoints
+│   ├── core/
+│   │   ├── embedder.py        # Embedding engine
+│   │   ├── vectordb.py        # Vector database
+│   │   ├── retriever.py       # RAG retrieval
+│   │   └── generator.py       # Response generation
+│   ├── models/
+│   │   ├── document.py        # Document models
+│   │   ├── embedding.py       # Embedding models
+│   │   └── response.py        # Response models
+│   └── services/
+│       ├── embedding_service.py
+│       ├── retrieval_service.py
+│       └── generation_service.py
+```
+
+### RAG Tech Stack
+- **Vector Database**: PostgreSQL with pgvector extension
+- **Embeddings**: Google Generative AI (text-embedding-004 model)
+- **Document Processing**: LangChain, PyPDF2, python-docx
+- **Chunking Strategy**: Semantic and recursive text splitting
+- **Search**: Hybrid vector + keyword search with BM25
+- **Generation**: Google Gemini for RAG response synthesis
+- **Caching**: Redis for embedding and query result caching
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Architecture Analysis & Planning
+
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/Back\ End\ Architecture\ for\ Turborepo\ with\ RAG\ Embeddings
+   git checkout -b integration/turbo-repo-rag-system
+   ```
+
+2. **Analyze Current RAG Implementation**
+   - **Document Processing**: How documents are currently parsed and chunked
+   - **Embedding Strategy**: Current embedding models and vector dimensions
+   - **Storage System**: How embeddings and metadata are stored
+   - **Retrieval Logic**: Search and ranking algorithms implemented
+   - **Generation Pipeline**: How contextual responses are generated
+   - **Performance Characteristics**: Current latency and throughput metrics
+
+3. **Define Integration Requirements**
+   ```python
+   # Document current RAG capabilities
+   from dataclasses import dataclass
+   from typing import List, Dict, Any, Optional
+   from enum import Enum
+
+   class DocumentType(Enum):
+       PDF = "pdf"
+       TEXT = "text"
+       HTML = "html"
+       MARKDOWN = "markdown"
+       IMAGE = "image"
+       AUDIO = "audio"
+
+   @dataclass
+   class RAGCapabilities:
+       supported_document_types: List[DocumentType]
+       max
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

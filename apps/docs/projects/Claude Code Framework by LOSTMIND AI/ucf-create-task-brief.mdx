@@ -1,0 +1,49 @@
+---
+title: "Ucf Create Task Brief"
+description: "Creates a structured Task Briefing document using the LostMind AI engine with Claude Code integration."
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "\"<a high-level description of the task>\""
+---
+
+# Command: /ucf-create-task-brief
+
+## Your Role: Task Brief Generator with Claude Code Integration
+
+Transform high-level user requests into detailed, structured Task Briefing documents using the LostMind AI engine. Leverage Claude Code's project context and file system access for optimal integration.
+
+## Your Workflow
+
+1.  **Validate Claude Code Environment:** Ensure LostMind AI framework integration is available:
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_framework"
+    if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installation first."
+        exit 1
+    fi
+    ```
+
+2.  **Process Task Description:** Extract and validate the user's task description from arguments.
+
+3.  **Generate Task Briefing:** Execute the LostMind AI engine to create the initial brief:
+    ```bash
+    bash "$ENGINE_PATH/run_engine.sh" create_brief "$ARGUMENTS"
+    ```
+
+4.  **Enhance with Project Context:** After generation, use Claude Code's file access to:
+    - Read the generated briefing file
+    - Analyze current project structure and context  
+    - Fill in detailed technical specifications
+    - Add project-specific implementation details
+    - Update timeline estimates based on existing codebase
+
+5.  **Validate and Present:** Present the completed Task Briefing to the user with:
+    - Summary of key requirements and deliverables
+    - Integration points with existing project structure
+    - Recommendation for agent delegation using `/ucf-delegate-task`
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,48 @@
+---
+title: "Ucf Onboard Project"
+description: "Onboards a project into the LostMind AI Framework with Guardian integration"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-onboard-project
+
+## Your Role: Enhanced Onboarding Specialist
+
+This is the primary command to prepare a project for the LostMind AI Protocol-Driven Framework with advanced Guardian context integration. Your task is to execute the master `run_engine.sh` script to automate context-gathering, project-mapping, and Guardian UCF setup.
+
+## Your Workflow
+
+1.  **Auto-Detect Engine:** The command automatically detects the LostMind AI Engine at the global installation location. No user input required.
+2.  **Execute Enhanced Onboarding:** Run the `run_engine.sh` script with the `onboard` task. The script will automatically target the current project directory and configure Guardian integration.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+    bash "$ENGINE_PATH/run_engine.sh" onboard
+    ```
+3.  **Confirm Guardian Setup:** After the script finishes, announce that the project is now fully onboarded with Guardian integration. Inform the user about:
+    - The new `.claude/context` directory with comprehensive context files
+    - Guardian UCF commands now available for easy context management
+    - Engine configuration stored for future automated operations
+4.  **Report Generated Assets:** List all generated context files including:
+    - `PROJECT_MAP.md` - Project structure mapping
+    - `chat_history.md` - Full conversation history timeline  
+    - `session_analysis.md` - Session breakdown and statistics
+    - `context_insights.md` - AI-generated insights and patterns
+    - `conversation_threads.json` - Complete conversation data
+    - `decision_timeline.json` - Chronological decision tracking
+5.  **Introduce Guardian Commands:** Inform the user about new UCF commands:
+    - `/ucf-guardian-refresh` - Update context with latest conversations  
+    - `/ucf-guardian-status` - Check context freshness and statistics
+    - `/ucf-guardian-auto` - Configure automatic refresh settings
+6.  **Advise Next Steps:** Guide the user to begin the "Office Team" workflow using `/ucf-create-task-brief` with their enhanced context foundation.
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

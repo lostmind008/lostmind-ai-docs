@@ -1,0 +1,213 @@
+---
+title: "TROUBLESHOOTING GUIDE"
+description: "guide for Claude Code Framework by LOSTMIND AI"
+category: "guide"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# LostMind AI Framework - Troubleshooting Guide
+
+## 🛠 Quick Fix Guide
+
+This guide helps resolve common installation and deployment issues with the LostMind AI Framework.
+
+## 🚨 Emergency Quick Fixes
+
+### Issue: "Engine not found" error when running UCF commands
+
+**Symptoms:**
+```
+❌ LostMind AI engine not found. Please run the framework installation first.
+```
+
+**Quick Fix:**
+```bash
+# Check if engine is installed
+ls -la "$HOME/.claude/lostmind_framework/run_engine.sh"
+
+# If missing, reinstall
+bash install_lostmind_ai_framework.sh
+```
+
+### Issue: Python syntax errors in engine components
+
+**Symptoms:**
+```
+SyntaxError: unmatched ')' or similar Python errors
+```
+
+**Quick Fix:**
+```bash
+# Validate all engine syntax
+python3 -m py_compile lostmind_ai_engine/*.py
+
+# If errors found, check for the fixed version
+grep '"""$' lostmind_ai_engine/task_brief_generator.py | tail -1
+# Should show """ without extra )
+```
+
+### Issue: Auto-detection not working in commands
+
+**Symptoms:**
+```
+Manual path configuration still required
+```
+
+**Quick Fix:**
+```bash
+# Check if command has auto-detection
+grep "ENGINE_PATH.*lostmind_framework" ~/.claude/commands/ucf-create-task-brief.md
+
+# If missing, reinstall commands
+bash install_lostmind_ai_framework.sh
+```
+
+## 📋 Systematic Troubleshooting
+
+### Step 1: Run Automated Diagnosis
+
+```bash
+# Run comprehensive verification
+bash verify_installation.sh
+
+# Run end-to-end validation
+bash test_end_to_end.sh
+```
+
+### Step 2: Check Installation Status
+
+```bash
+# Verify project structure
+ls -la .claude/
+ls -la .claude/commands/
+ls -la .claude/hooks/
+ls -la lostmind_ai_engine/
+
+# Check global installation
+ls -la ~/.claude/commands/ucf-*
+ls -la ~/.claude/hooks/
+ls -la ~/.claude/lostmind_framework/
+```
+
+### Step 3: Validate Source Files
+
+```bash
+# Check commands have fixes
+grep -n "ENGINE_PATH" .claude/commands/ucf-create-task-brief.md
+grep -n "Claude Code Project Context" .claude/commands/ucf-delegate-task.md
+
+# Check hooks have integration
+grep -n "Claude Code Integration Status" .claude/hooks/on-session-start.sh
+
+# Check engine syntax
+python3 -m py_compile lostmind_ai_engine/task_brief_generator.py
+```
+
+## 🔍 Detailed Problem Diagnosis
+
+### Problem Category: Installation Issues
+
+#### Issue: Installation script fails
+
+**Diagnosis Steps:**
+1. Check script permissions: `ls -la install_lostmind_ai_framework.sh`
+2. Validate script syntax: `bash -n install_lostmind_ai_framework.sh`
+3. Run with verbose output: `bash -x install_lostmind_ai_framework.sh`
+
+**Common Causes:**
+- Missing Python 3 installation
+- Insufficient permissions for ~/.claude directory
+- Network issues during dependency installation
+
+**Solutions:**
+```bash
+# Fix permissions
+chmod +x install_lostmind_ai_framework.sh
+
+# Install Python 3 (macOS)
+brew install python3
+
+# Manual directory creation
+mkdir -p ~/.claude/{commands,hooks,agents}
+```
+
+#### Issue: Commands not copied during installation
+
+**Diagnosis Steps:**
+1. Check installation script logic: `grep "cp \.claude/commands" install_lostmind_ai_framework.sh`
+2. Verify source files exist: `ls -la .claude/commands/ucf-*.md`
+3. Check target directory permissions: `ls -la ~/.claude/commands/`
+
+**Solutions:**
+```bash
+# Manual command installation
+cp .claude/commands/ucf-create-task-brief.md ~/.claude/commands/
+cp .claude/commands/ucf-delegate-task.md ~/.claude/commands/
+cp -r .claude/hooks/* ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
+```
+
+### Problem Category: Runtime Issues
+
+#### Issue: UCF commands not working
+
+**Diagnosis Steps:**
+1. Verify commands installed: `ls ~/.claude/commands/ucf-*.md`
+2. Check engine installation: `ls ~/.claude/lostmind_framework/`
+3. Test engine directly: `bash ~/.claude/lostmind_framework/run_engine.sh`
+
+**Common Causes:**
+- Engine not installed in expected location
+- Missing Python dependencies
+- Incorrect file permissions
+
+**Solutions:**
+```bash
+# Reinstall engine to correct location
+mkdir -p ~/.claude/lostmind_framework
+cp -r lostmind_ai_engine/* ~/.claude/lostmind_framework/
+chmod +x ~/.claude/lostmind_framework/*.sh
+
+# Install Python dependencies
+cd ~/.claude/lostmind_framework
+python3 -m pip install google-generativeai
+```
+
+#### Issue: Session hooks not executing
+
+**Diagnosis Steps:**
+1. Check hook installation: `ls -la ~/.claude/hooks/`
+2. Verify hook permissions: `ls -la ~/.claude/hooks/*.sh`
+3. Test hook directly: `bash ~/.claude/hooks/on-session-start.sh`
+
+**Solutions:**
+```bash
+# Fix hook permissions
+chmod +x ~/.claude/hooks/*.sh
+
+# Reinstall hooks
+cp -r .claude/hooks/* ~/.claude/hooks/
+```
+
+### Problem Category: Integration Issues
+
+#### Issue: Claude Code integration not working
+
+**Diagnosis Steps:**
+1. Check for Claude Code installation: `which claude-code`
+2. Verify project is in Claude Code session
+3. Check command integration options
+
+**Solutions:**
+```bash
+# Verify in Claude Code session
+echo "Current directory: $(pwd)"
+echo "Claude Code status: Check if in Claude Code session"
+
+# Use appropriate delegation option
+# Option 1: External 
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

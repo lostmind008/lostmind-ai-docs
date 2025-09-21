@@ -1,0 +1,41 @@
+---
+title: "Ucf Create Task Brief"
+description: "Creates a structured Task Briefing document using the global engine."
+category: "documentation"
+project: "LostMind AI - Memory&Context Protocol"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "\"<a high-level description of the task>\""
+---
+
+# Command: /ucf-create-task-brief
+
+## Your Role: Project Manager
+
+Your goal is to use the global engine to take a high-level user request and formalize it into a structured Task Briefing document.
+
+## Your Workflow
+
+1.  **Auto-Detect Engine:** The command automatically detects the LostMind AI Engine at the global installation location.
+2.  **Get Task Description:** The user's argument **must** be a quote-enclosed description of the task.
+3.  **Execute the Generator:** Run the `run_engine.sh` script with the `create_brief` task.
+    ```bash
+    ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+    if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+        echo "❌ LostMind AI engine not found. Please run the framework installer."
+        exit 1
+    fi
+    bash "$ENGINE_PATH/run_engine.sh" create_brief "$ARGUMENTS"
+    ```
+4.  **Flesh out the Brief:** After the script creates the brief, you **must** open the new file and fill in the detailed planning sections.
+5.  **Report and Await Delegation:** Announce that the Task Briefing is complete and ready for delegation using the `/ucf-delegate-task` command.
+
+
+
+---
+*This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

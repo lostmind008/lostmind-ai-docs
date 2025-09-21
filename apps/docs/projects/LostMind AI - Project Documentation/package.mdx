@@ -1,0 +1,52 @@
+---
+title: "Package"
+description: "config for LostMind AI - Project Documentation"
+category: "config"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "config,ai-services"
+---
+
+{
+  "name": "lostmind-ai-documentation-hub",
+  "version": "1.0.0",
+  "description": "Centralized documentation system for all LostMind AI projects",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "scan:projects": "node scripts/scan-projects.js",
+    "extract:content": "node scripts/extract-content.js",
+    "build:docs": "npm run extract:content && npm run build",
+    "deploy:all": "node scripts/deploy-all.js"
+  },
+  "keywords": [
+    "documentation",
+    "nextra",
+    "lostmind-ai",
+    "saas",
+    "automation"
+  ],
+  "author": "Sumit Mondal - LostMind AI",
+  "license": "MIT",
+  "dependencies": {
+    "next": "^14.0.0",
+    "nextra": "^2.13.0",
+    "nextra-theme-docs": "^2.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

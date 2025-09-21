@@ -1,0 +1,185 @@
+---
+title: "Lostmind Adrs"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# Architecture Decision Records (ADRs)
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🎯 Master Plan](lostmind-master-plan.md)** | **[🗓️ Implementation Roadmap](implementation-roadmap.md)**
+
+## ADR-001: Next.js 15 with App Router
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Need to select the primary framework for web applications and API endpoints, considering developer experience, performance, and future scalability.
+
+### Decision
+Adopt Next.js 15 with App Router as the primary framework for all user-facing applications and most API endpoints.
+
+### Alternatives Considered
+1. **Next.js 14**: Stable but missing key improvements
+2. **Pure FastAPI**: All Python, poor frontend DX
+3. **Remix**: Good but smaller ecosystem
+4. **SvelteKit**: Excellent performance but limited team expertise
+
+### Consequences
+**Positive**:
+- React 19 support with future-proofing
+- Uncached by default (better for dynamic SaaS)
+- Improved build performance with stable Turbopack
+- Enhanced TypeScript support
+- Server Components and Actions reduce client bundle
+
+**Negative**:
+- Breaking changes from Next.js 14
+- React 19 may have minor issues
+- Team needs training on App Router patterns
+
+---
+
+## ADR-002: Turborepo for Monorepo Management
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Multiple repositories causing duplicated tooling, inconsistent dependencies, and slow CI pipelines. Need unified build system.
+
+### Decision
+Use Turborepo for monorepo management with pnpm workspaces.
+
+### Alternatives Considered
+1. **Nx**: More features but higher complexity
+2. **Lerna**: Legacy, less maintained
+3. **Rush**: Microsoft's tool, complex setup
+4. **Bazel**: Powerful but steep learning curve
+
+### Consequences
+**Positive**:
+- Simple configuration
+- Built-in remote caching
+- Excellent TypeScript/JavaScript support
+- Vercel ecosystem integration
+- Fast incremental builds
+
+**Negative**:
+- Limited polyglot support
+- Less mature than Nx
+- May need migration if adding Go/Rust services
+
+**Migration Trigger**: Consider Nx when team >10 developers or Python services >30% of codebase
+
+---
+
+## ADR-003: PostgreSQL with RLS for Multi-tenancy
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Multi-tenant SaaS requiring secure data isolation with good performance and operational simplicity.
+
+### Decision
+PostgreSQL with Row Level Security (RLS) policies, application validation, and comprehensive audit logging.
+
+### Implementation
+```sql
+-- Enable RLS on tables
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+
+-- Create tenant isolation policy
+CREATE POLICY tenant_isolation ON documents 
+  FOR ALL TO authenticated 
+  USING (tenant_id = current_setting('app.tenant_id')::uuid);
+```
+
+### Alternatives Considered
+1. **Separate databases per tenant**: Maximum isolation, complex ops
+2. **Schema per tenant**: Good isolation, moderate complexity
+3. **Application-only isolation**: Simple but less secure
+
+### Consequences
+**Positive**:
+- Database-level security enforcement
+- Single database simplifies operations
+- Cost-effective at small-medium scale
+- Good performance with proper indexing
+
+**Negative**:
+- Performance impact at massive scale
+- Complex RLS policy management
+- Potential for policy bypass if misconfigured
+
+---
+
+## ADR-004: Google Generative AI with Provider Abstraction
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Primary AI provider selection while maintaining flexibility for future changes and avoiding vendor lock-in.
+
+### Decision
+Google Generative AI SDK as primary with abstraction layer for provider swapping.
+
+### Implementation
+```typescript
+interface AIProvider {
+  generateText(prompt: string): Promise<string>
+  embedDocument(content: string): Promise<number[]>
+  searchRAG(query: string): Promise<Result[]>
+}
+
+class GoogleAIProvider implements AIProvider { }
+class OpenAIProvider implements AIProvider { }
+```
+
+### Alternatives Considered
+1. **OpenAI only**: Excellent API, expensive
+2. **Anthropic only**: High quality, limited models
+3. **Multi-provider from start**: Complex overhead
+
+### Consequences
+**Positive**:
+- Cost-effective with Google's pricing
+- Strong multimodal capabilities
+- Gemini 2.0 Flash for speed
+- Future-proof abstraction
+
+**Negative**:
+- Initial abstraction overhead
+- Google ecosystem dependency
+- Multiple adapter maintenance
+
+---
+
+## ADR-005: Hybrid Deployment Strategy
+
+**Date**: 2025-09-02  
+**Status**: Accepted  
+**Deciders**: LostMind AI Technical Team  
+
+### Context
+Different workload types require different execution environments for optimal cost and performance.
+
+### Decision
+- **Vercel**: Next.js apps and APIs <2 second response
+- **Google Cloud Run**: FastAPI services for heavy compute
+- **Pub/Sub**: Async task orchestration
+
+### Deployment Matrix
+| Workload Type 
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

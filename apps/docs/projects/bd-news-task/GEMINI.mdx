@@ -1,0 +1,71 @@
+---
+title: "GEMINI"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+## Project Overview
+
+This project is a universal AI-powered scraping platform designed to adapt to any target website. It evolves from a proven job discovery system, which itself was an enhancement of a generic web scraper. The core of the project is an AI agent-based architecture that intelligently analyzes and extracts data from web pages.
+
+The system is designed to be highly modular, with different agents responsible for specific tasks such as reconnaissance, authentication, content strategy, and data extraction. This allows the platform to handle a wide variety of websites, from static HTML pages to dynamic, JavaScript-heavy applications.
+
+The project uses Google's Gemini language models for its AI capabilities and Google Cloud Storage for data persistence. The configuration is managed through YAML files, allowing for easy customization of scraping tasks.
+
+## Building and Running
+
+### Prerequisites:
+- Python 3.11+
+- Google Cloud credentials (for GCP Console targets)
+- Gemini API key for AI agent decision making
+- Playwright for JavaScript rendering capabilities
+
+### Installation:
+```bash
+# Clone and setup
+cd "/Users/sumitm1/Documents/myproject/Ongoing Projects/new ai scraper agent"
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies (requirements.txt to be created)
+pip install -r requirements.txt
+```
+
+### Running the Job Discovery System:
+The existing job discovery system can be run directly:
+```bash
+python resources/job_discovery_orchestrator_FIXED.py --user <username>
+```
+This will execute the job discovery process based on the configuration in `job_search_config.yaml` (which needs to be created in the `resources` directory).
+
+### Running the Universal Scraper (Future):
+The enhanced universal scraper is planned to be run as follows:
+```python
+from enhanced_orchestrator import UniversalAIOrchestrator
+
+scraper = UniversalAIOrchestrator()
+
+# Example usage
+data = await scraper.process_target(
+    url="<target_url>",
+    goals={"extract": ["<data_to_extract>"], "format": "<output_format>"}
+)
+```
+
+## Development Conventions
+
+- **AI-First:** The system is designed to be driven by AI agents. Most of the logic for handling different websites should be implemented within the agents.
+- **Modularity:** Each agent should be a self-contained module with a specific responsibility. This allows for easy extension and maintenance.
+- **Configuration-driven:** The system should be highly configurable, with most of the scraping parameters defined in YAML files.
+- **Cloud-based:** The system is designed to run on Google Cloud Platform, using services like Gemini and Cloud Storage.
+- **Asynchronous:** The core of the system is built using Python's `asyncio` library for high performance and scalability.
+- **Logging:** The system uses Python's `logging` module for detailed logging of the scraping process.
+
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

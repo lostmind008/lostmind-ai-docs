@@ -1,0 +1,157 @@
+---
+title: "Ucf Context Search"
+description: "Search through project conversation history for specific topics"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "<search_term>"
+---
+
+# Command: /ucf-context-search
+
+## Your Role: Context Search Specialist
+
+This command searches through the Guardian's synthesized conversation history to find discussions about specific topics.
+
+## Your Workflow
+
+1. **Validate Input**: Ensure user provided a search term
+   ```bash
+   SEARCH_TERM="$ARGUMENTS"
+   if [ -z "$SEARCH_TERM" ]; then
+       echo "❌ Usage: /ucf-context-search <topic>"
+       echo "Example: /ucf-context-search authentication"
+       exit 1
+   fi
+   ```
+
+2. **Check Guardian Context**:
+   ```bash
+   ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+   PROJECT_CONTEXT="./.claude/context"
+
+   if [ ! -d "$PROJECT_CONTEXT" ]; then
+       echo "❌ No Guardian context found. Run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+3. **Search Conversation History**:
+   ```bash
+   echo "🔍 Searching for: '$SEARCH_TERM'"
+   echo "================================"
+   echo ""
+
+   # Search in chat history
+   if [ -f "$PROJECT_CONTEXT/chat_history.md" ]; then
+       echo "📝 **Found in Chat History:**"
+       grep -i -n -A 2 -B 1 "$SEARCH_TERM" "$PROJECT_CONTEXT/chat_history.md" | head -20
+       echo ""
+   fi
+
+   # Search in context insights
+   if [ -f "$PROJECT_CONTEXT/context_insights.md" ]; then
+       echo "💡 **Found in Context Insights:**"
+       grep -i -n -A 1 -B 1 "$SEARCH_TERM" "$PROJECT_CONTEXT/context_insights.md"
+       echo ""
+   fi
+
+   # Search decision timeline
+   if [ -f "$PROJECT_CONTEXT/decision_timeline.json" ]; then
+       echo "📋 **Found in Decisions:**"
+       python3 -c "
+import json
+import sys
+search_term = '$SEARCH_TERM'.lower()
+try:
+    with open('$PROJECT_CONTEXT/decision_timeline.json', 'r') as f:
+        data = json.load(f)
+
+    matches = []
+    if isinstance(data, list):
+        for item in data:
+            if isinstance(item, dict):
+                item_str = json.dumps(item).lower()
+                if search_term in item_str:
+                    summary = item.get('summary', 'Decision')
+                    matches.append(summary)
+
+    if matches:
+        for i, match in enumerate(matches[:5], 1):
+            print(f'{i}. {match}')
+    else:
+        print('No matches found in decision timeline')
+
+except Exception as e:
+    print(f'Could not search decisions: {e}')
+"
+       echo ""
+   fi
+
+   # Search conversation threads
+   if [ -f "$PROJECT_CONTEXT/conversation_threads.json" ]; then
+       echo "🧵 **Conversation Context:**"
+       python3 -c "
+import json
+search_term = '$SEARCH_TERM'.lower()
+try:
+    with open('$PROJECT_CONTEXT/conversation_threads.json', 'r') as f:
+        data = json.load(f)
+
+    # Count total conversations containing the term
+    count = 0
+    if 'threads' in data:
+        for thread in data['threads']:
+            if isinstance(thread, dict) and 'content' in thread:
+                if search_term in str(thread.get('content', '')).lower():
+                    count += 1
+
+    print(f'Found \"{search_term}\" in {count} conversation entries')
+
+except Exception as e:
+    print(f'Could not search conversation threads: {e}')
+"
+   fi
+   ```
+
+4. **Provide Search Results**: Present all matches found across Guardian context files
+
+## Benefits
+
+- **Quick Topic Lookup**: Find past discussions about specific subjects
+- **Multiple Sources**: Searches across all Guardian context files
+- **Context Preservation**: See how topics evolved over time
+- **Immediate Results**: Works in current session without hooks
+
+## Usage Examples
+
+```bash
+/ucf-context-search authentication
+/ucf-context-search "project structure"
+/ucf-context-search bugs
+/ucf-context-search deployment
+```
+
+## Usage Notes
+
+- Requires Guardian context (run `/ucf-onboard-project` first)
+- Case-insensitive search
+- Shows line numbers and context
+- Searches all Guardian-generated files
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

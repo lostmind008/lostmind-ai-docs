@@ -1,0 +1,89 @@
+---
+title: "Ucf Context Summary"
+description: "Get AI-generated summary of recent project decisions and context"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-context-summary
+
+## Your Role: Context Summary Specialist
+
+This command provides an AI-generated summary of recent project decisions and key context from the Guardian's conversation synthesis.
+
+## Your Workflow
+
+1. **Load Guardian Context**: Read the project's Guardian-generated context files
+   ```bash
+   ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+   PROJECT_CONTEXT="./.claude/context"
+
+   if [ ! -d "$PROJECT_CONTEXT" ]; then
+       echo "❌ No Guardian context found. Run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Key Context Files**:
+   ```bash
+   echo "📊 Guardian Context Summary"
+   echo "=========================="
+   echo ""
+
+   # Show project insights
+   if [ -f "$PROJECT_CONTEXT/context_insights.md" ]; then
+       echo "🎯 **Key Insights:**"
+       head -50 "$PROJECT_CONTEXT/context_insights.md"
+       echo ""
+   fi
+
+   # Show recent decisions
+   if [ -f "$PROJECT_CONTEXT/decision_timeline.json" ]; then
+       echo "📋 **Recent Decisions:**"
+       python3 -c "
+import json
+import sys
+try:
+    with open('$PROJECT_CONTEXT/decision_timeline.json', 'r') as f:
+        data = json.load(f)
+    if isinstance(data, list) and len(data) > 0:
+        for i, decision in enumerate(data[-5:]):  # Last 5 decisions
+            if isinstance(decision, dict):
+                print(f'{i+1}. {decision.get(\"summary\", \"Decision\")}')
+    else:
+        print('No decisions found in timeline')
+except Exception as e:
+    print(f'Could not parse decisions: {e}')
+"
+       echo ""
+   fi
+
+   # Show session statistics
+   if [ -f "$PROJECT_CONTEXT/session_analysis.md" ]; then
+       echo "📈 **Session Statistics:**"
+       grep -E "(Total Sessions|Total Conversations)" "$PROJECT_CONTEXT/session_analysis.md" | head -10
+       echo ""
+   fi
+   ```
+
+3. **Provide Summary**: Present the consolidated context summary to help orient the user with current project state
+
+## Benefits
+
+- **Immediate Context**: Get project context without reading large files
+- **Decision History**: See what decisions were made recently
+- **Session Awareness**: Understand conversation patterns
+- **No Injection**: Works in current session without hooks
+
+## Usage Notes
+
+- Requires Guardian context (run `/ucf-onboard-project` first)
+- Provides summary of last 5 decisions and key insights
+- Safe to run multiple times - just reads existing context
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,152 @@
+---
+title: "Critical Environment Variables Analysis For Your L"
+description: "documentation for LostMind AI - Documentation Site"
+category: "documentation"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# Critical Environment Variables Analysis for Your LostMindAI Repository
+
+Let me provide a comprehensive explanation of what's missing and why it's critical, with enough detail for your AI agents to verify and cross-check.
+
+## 🚨 **Critical Context: Why These Variables Matter**
+
+Based on my repository analysis and research, your architecture has **unique requirements** that aren't covered in your current environment guide. Here's the evidence-based breakdown:
+
+***
+
+## **1. MICROSERVICES ARCHITECTURE REQUIREMENTS**
+
+### **Problem Identified:**
+
+Your repository shows you have **separate FastAPI services** (`services/ai-compute`, `services/document-processor`) that need to communicate with your Next.js apps. This creates **service discovery and authentication challenges** that LobeChat doesn't have (since it's all in one Next.js app).
+
+### **Missing Variables (High Priority):**
+
+```bash
+# SERVICE DISCOVERY - Your microservices need to find each other
+AI_COMPUTE_SERVICE_URL="http://localhost:8000"
+DOCUMENT_PROCESSOR_URL="http://localhost:8001" 
+CRAWLER_ENGINE_URL="http://localhost:8002"
+
+# PRODUCTION URLs (when deployed to Google Cloud Run)
+AI_COMPUTE_SERVICE_URL="https://ai-compute-coral-muse-469919-m0.a.run.app"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `docker-compose.yml` shows services on different ports (3000, 3001, 8000)
+- **File**: `infra/terraform/gcp/main.tf` shows Cloud Run services being created
+- **Code**: Your frontend apps need to know where your FastAPI services are running
+
+
+### **Why It's Critical:**
+
+Without these, your frontend apps can't communicate with your backend services. Your AI features will fail.
+
+***
+
+## **2. GOOGLE CLOUD RUN AUTHENTICATION**
+
+### **Problem Identified:**
+
+Your `services/ai-compute` service implements **Google IAM OIDC authentication** (found in your code), but your environment guide doesn't include the required authentication variables.
+
+### **Missing Variables (Critical):**
+
+```bash
+# OIDC AUTHENTICATION - Required for service-to-service calls
+OIDC_ISSUER_URL="https://accounts.google.com"
+OIDC_AUDIENCE="coral-muse-469919-m0"  # Your GCP project ID
+GOOGLE_CLOUD_PROJECT="coral-muse-469919-m0"
+
+# SERVICE ACCOUNT AUTHENTICATION
+GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `infra/terraform/gcp/main.tf` lines 200+ show OIDC service account creation
+- **File**: `services/ai-compute` (referenced in your analysis) implements OIDC middleware
+- **Your Tech Stack**: States "Google Cloud Run (FastAPI)" deployment
+
+
+### **Why It's Critical:**
+
+Without these, your microservices can't authenticate with each other. All service-to-service calls will fail with 401 errors.
+
+***
+
+## **3. TURBOREPO-SPECIFIC CONFIGURATION**
+
+### **Problem Identified:**
+
+Your `turbo.json` shows task orchestration, but you're missing environment variables that Turborepo needs to know about for proper caching and builds.
+
+### **Missing Variables (Medium Priority):**
+
+```bash
+# BUILD-TIME VARIABLES - Turborepo needs these for consistent builds
+NEXT_PUBLIC_APP_URL="http://localhost:3000"   # marketing app
+NEXT_PUBLIC_ASK_APP_URL="http://localhost:3001"  # ask app
+NEXT_PUBLIC_API_BASE_URL="http://localhost:8000"  # FastAPI backend
+
+# DEPLOYMENT URLS (production)
+NEXT_PUBLIC_APP_URL="https://lostmindai.com"
+NEXT_PUBLIC_ASK_APP_URL="https://ask.lostmindai.com"
+NEXT_PUBLIC_API_BASE_URL="https://api.lostmindai.com"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `turbo.json` - Your build orchestration config
+- **File**: `pnpm-workspace.yaml` - Shows multiple app workspaces
+- **Research**: [Turborepo docs](https://turborepo.com/docs/crafting-your-repository/using-environment-variables) confirm this requirement
+
+
+### **Why It's Critical:**
+
+Without these, your builds will be inconsistent across environments, and your frontend apps won't know how to reach your APIs.
+
+***
+
+## **4. FASTAPI-SPECIFIC CONFIGURATION**
+
+### **Problem Identified:**
+
+Your FastAPI services need specific configuration that's different from Next.js apps.
+
+### **Missing Variables (High Priority):**
+
+```bash
+# FASTAPI CONFIGURATION - Required for your Python services
+FASTAPI_ENV="development"  # development | staging | production
+API_BASE_URL="http://localhost:8000"
+CORS_ALLOWED_ORIGINS="http://localhost:3000,http://localhost:3001"
+MAX_WORKERS=4
+WORKER_TIMEOUT=3600
+UVICORN_HOST="0.0.0.0"
+UVICORN_PORT=8000
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `docker-compose.yml` shows FastAPI services with specific ports
+- **Directory**: `services/ai-compute` exists (FastAPI service)
+- **Research**: [FastAPI environment docs](https://fastapi.tiangolo.com/advanced/settings/) confir
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

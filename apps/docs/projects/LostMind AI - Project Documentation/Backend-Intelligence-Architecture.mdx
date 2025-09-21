@@ -1,0 +1,183 @@
+---
+title: "Back End Architecture for Turborepo with RAG Embeddings"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "architecture"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "architecture,ai-services"
+---
+
+# Backend Intelligence Architecture
+
+A comprehensive backend application architecture using modern embedding models (Gemma) and RAG capabilities, designed for integration with Turborepo monorepos.
+
+## 🚀 Features
+
+- **RAG Pipeline** - Advanced Retrieval-Augmented Generation with conversation management
+- **Excel Intelligence** - Comprehensive Excel analysis with formula intelligence and VBA analysis
+- **Web Scraping Intelligence** - AI-powered web scraping with content analysis and quality assessment
+- **Job Discovery Intelligence** - Intelligent job discovery with AI-powered matching and career insights
+- **Modern AI Integration** - Uses latest Google GenAI SDK with Gemma embeddings
+- **Scalable Architecture** - Microservices design with service orchestration
+- **Production Ready** - Comprehensive API, monitoring, and deployment support
+
+## 📁 Project Structure
+
+```
+backend-architecture/
+├── apps/
+│   └── api-gateway/           # FastAPI application
+│       ├── main.py           # Main API gateway
+│       └── requirements.txt  # API dependencies
+├── packages/
+│   ├── core-services/        # Core backend services
+│   │   ├── embedding_service.py
+│   │   ├── vector_db_service.py
+│   │   └── document_processing_service.py
+│   ├── rag-pipeline/         # RAG implementation
+│   │   └── rag_service.py
+│   ├── analysis-modules/     # Intelligence modules
+│   │   ├── excel_intelligence_service.py
+│   │   ├── web_scraping_intelligence_service.py
+│   │   └── job_discovery_intelligence_service.py
+│   ├── orchestration/        # Service orchestration
+│   │   └── service_orchestrator.py
+│   └── shared-utils/         # Shared utilities
+│       └── config.py
+├── docs/                     # Documentation
+│   ├── api_documentation.md
+│   ├── deployment_guide.md
+│   └── turborepo_integration_guide.md
+└── README.md
+```
+
+## 🛠 Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- Google API Key for GenAI
+- Vector Database (Pinecone, ChromaDB, or Weaviate)
+
+### Installation
+
+1. **Clone or copy the backend-architecture directory to your project**
+
+2. **Install dependencies:**
+   ```bash
+   cd backend-architecture/apps/api-gateway
+   pip install -r requirements.txt
+   ```
+
+3. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys and configuration
+   ```
+
+4. **Start the API Gateway:**
+   ```bash
+   python main.py
+   ```
+
+The API will be available at `http://localhost:8000`
+
+## 🔧 Configuration
+
+All services are configured through environment variables. Key configuration options:
+
+```bash
+# Google AI Configuration
+GOOGLE_API_KEY=your_google_api_key
+GEMINI_MODEL=gemini-1.5-pro
+
+# Vector Database Configuration
+VECTOR_DB_PROVIDER=pinecone  # or chromadb, weaviate
+PINECONE_API_KEY=your_pinecone_key
+PINECONE_ENVIRONMENT=your_environment
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=8000
+```
+
+## 📚 API Documentation
+
+The API provides comprehensive endpoints for all services:
+
+- **RAG Service:** `/api/v1/rag/*`
+- **Excel Intelligence:** `/api/v1/excel/*`
+- **Web Scraping:** `/api/v1/scraping/*`
+- **Job Discovery:** `/api/v1/jobs/*`
+- **Embeddings:** `/api/v1/embeddings/*`
+- **Vector Database:** `/api/v1/vectordb/*`
+
+Full API documentation is available at `/docs` when the server is running.
+
+## 🏗 Architecture Overview
+
+### Core Services
+
+1. **Embedding Service** - Generates embeddings using Google's Gemma model
+2. **Vector Database Service** - Manages vector storage and similarity search
+3. **Document Processing Service** - Handles document ingestion and processing
+
+### Intelligence Modules
+
+1. **RAG Pipeline** - Complete RAG implementation with conversation management
+2. **Excel Intelligence** - Advanced Excel analysis and formula intelligence
+3. **Web Scraping Intelligence** - AI-powered web scraping and content analysis
+4. **Job Discovery Intelligence** - Intelligent job matching and career insights
+
+### API & Orchestration
+
+1. **API Gateway** - FastAPI-based unified API interface
+2. **Service Orchestrator** - Manages service lifecycle and health monitoring
+
+## 🚀 Deployment
+
+### Docker Deployment
+
+```bash
+docker-compose up -d
+```
+
+### Kubernetes Deployment
+
+```bash
+helm install backend-intelligence ./helm/backend-intelligence
+```
+
+### Turborepo Integration
+
+Add to your `turbo.json`:
+
+```json
+{
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "backend-architecture/apps/*",
+    "backend-architecture/packages/*"
+  ]
+}
+```
+
+See the [Turborepo Integration Guide](./docs/turborepo_integration_guide.md) for detailed instructions.
+
+## 📖 Documentation
+
+- [API Documentation](./docs/api_documentation.md) - Complete API reference
+- [Deployment Guide](./docs/deployment_guide.md) - Deployment instructions
+- [Turborepo Integration](./docs/turborepo_integration_guide.md) - Integration guide
+
+## 🔍 Key Features
+
+### RAG Pipeline
+- Advanced document processing and chunking
+- Semantic search with multiple vector databases
+- Conversation management and context building
+- Streaming responses and real-t
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

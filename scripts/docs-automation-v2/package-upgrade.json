@@ -1,0 +1,43 @@
+{
+  "name": "lostmind-ai-docs-scraper",
+  "version": "2.0.0",
+  "description": "Enhanced documentation scraper for LostMind AI projects",
+  "main": "scripts/docs-automation/enhanced-scan-projects.js",
+  "scripts": {
+    "docs:scan": "node scripts/docs-automation/enhanced-scan-projects.js",
+    "docs:scan:verbose": "node scripts/docs-automation/enhanced-scan-projects.js --verbose",
+    "docs:scan:dry-run": "node scripts/docs-automation/enhanced-scan-projects.js --dry-run --verbose",
+    "docs:update": "npm run docs:scan && npm run docs:build",
+    "docs:extract": "npm run docs:scan",
+    "docs:build": "cd apps/docs && mintlify build",
+    "docs:dev": "cd apps/docs && mintlify dev",
+    "docs:validate": "node scripts/docs-automation/validate-docs.js",
+    "docs:cleanup": "node scripts/docs-automation/cleanup-stale-docs.js"
+  },
+  "dependencies": {
+    "glob": "^10.3.10",
+    "gray-matter": "^4.0.3",
+    "yaml": "^2.3.4",
+    "markdown-link-check": "^3.11.2",
+    "commander": "^11.1.0",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "inquirer": "^9.2.12"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/node": "^20.8.0",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3"
+  },
+  "keywords": [
+    "documentation",
+    "scraper",
+    "automation",
+    "mintlify",
+    "ai",
+    "lostmind"
+  ],
+  "author": "LostMind AI",
+  "license": "MIT"
+}

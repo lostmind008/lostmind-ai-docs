@@ -1,0 +1,168 @@
+---
+title: "FRAMEWORK FIXES PLAN"
+description: "documentation for Claude Code Framework by LOSTMIND AI"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# LostMind AI Framework - Comprehensive Fixes Plan
+
+## Date: 2025-09-20
+## Context: Fix critical architecture issues identified during debugging session
+
+## Issues Identified
+
+### 1. Hooks-Based Context Injection is Broken
+- **Problem**: Automatic context injection via hooks is failing
+- **Evidence**: `ERROR: Script failed: chat_exporter.py --auto-preserve`
+- **Root Cause**: Timing issues, wrong project paths, unreliable injection
+- **Impact**: Context preservation not working, hooks failing silently
+
+### 2. Installation is Not Portable
+- **Problem**: Framework depends on original clone location
+- **Evidence**: UCF commands break if source directory is moved/deleted
+- **Root Cause**: Hardcoded paths to source instead of installed location
+- **Impact**: Cannot distribute framework like proper software
+
+### 3. Project Mapping Too Generic
+- **Problem**: Shows ALL files including irrelevant package manager internals
+- **Evidence**: 2MB PROJECT_MAP.md with noise like `.DS_Store`, cache files
+- **Root Cause**: No intelligent filtering or framework-aware categorization
+
+## Solution Architecture
+
+### Phase 1: Replace Push-Based with Pull-Based Context Retrieval ✅ APPROVED
+
+**Remove:**
+- Auto-preserve hooks that are failing
+- Context injection hooks
+- Session start/end injection attempts
+
+**Add New UCF Commands:**
+- `/ucf-context-summary` - Get AI summary of recent project decisions
+- `/ucf-context-search <topic>` - Search conversation history
+- `/ucf-context-decisions` - Show chronological decision timeline
+- `/ucf-context-insights` - Get Guardian AI-generated insights
+
+**Benefits:**
+- Works immediately in current session
+- No interference with Claude's native systems
+- User controls when context is needed
+- Cannot "break" silently like hooks
+
+### Phase 2: Make Installation Truly Portable
+
+**Current Broken Flow:**
+```bash
+git clone framework ~/some-path/
+./install.sh
+# UCF commands reference ~/some-path/
+rm -rf ~/some-path/  # BREAKS EVERYTHING
+```
+
+**Fixed Portable Flow:**
+```bash
+git clone framework ~/temp/install/
+cd ~/temp/install/
+./install.sh  # Copies everything to ~/.claude/
+rm -rf ~/temp/install/  # Framework still works!
+```
+
+**Implementation:**
+1. Update `install_lostmind_ai_framework.sh` for complete self-contained copy
+2. Fix all UCF commands to use `$HOME/.claude/lostmind_ai_engine/` only
+3. Remove any references to source directory
+4. Test: install → delete source → verify functionality
+
+### Phase 3: Improve Project Mapping Intelligence ✅ COMPLETED
+
+**Enhanced categorization:**
+- Framework-specific component detection
+- Claude Code extension recognition
+- Intelligent file filtering (no noise)
+- Semantic understanding of project types
+
+## Implementation Tasks
+
+### Task 1: Create Pull-Based Context Commands
+- [ ] `/ucf-context-summary.md`
+- [ ] `/ucf-context-search.md`
+- [ ] `/ucf-context-decisions.md`
+- [ ] `/ucf-context-insights.md`
+
+### Task 2: Remove Problematic Hooks
+- [ ] Delete auto-preserve hooks from `.claude/hooks/`
+- [ ] Remove context injection hooks
+- [ ] Keep only essential hooks (if any)
+
+### Task 3: Fix UCF Commands for Portability
+- [ ] Update `ucf-onboard-project.md` to use installed path
+- [ ] Update `ucf-guardian-*.md` commands
+- [ ] Remove hardcoded source paths from all commands
+
+### Task 4: Fix Installer
+- [ ] Ensure complete copy to `~/.claude/lostmind_ai_engine/`
+- [ ] Update paths during installation
+- [ ] No symlinks or references to source
+
+### Task 5: Testing
+- [ ] Clone to temp directory
+- [ ] Run installer
+- [ ] Delete temp directory
+- [ ] Verify all UCF commands work
+- [ ] Test context retrieval functionality
+
+## Files That Need Modification
+
+### UCF Commands (`.claude/commands/`):
+- `ucf-onboard-project.md` - Update path references
+- `ucf-guardian-*.md` - Update path references
+- NEW: `ucf-context-*.md` - Create new context commands
+
+### Framework Scripts:
+- `install_lostmind_ai_framework.sh` - Make truly portable
+- `lostmind_ai_engine/onboarder.py` - Already updated with smart mapping
+
+### Hooks to Remove:
+- Any auto-preserve or context injection hooks
+- Session start/end hooks that inject context
+
+## Testing Strategy
+
+1. **Portable Installation Test:**
+   ```bash
+   mkdir /tmp/test-install
+   git clone framework /tmp/test-install/
+   cd /tmp/test-install/
+   ./install_lostmind_ai_framework.sh
+   rm -rf /tmp/test-install/
+   # Test: Do UCF commands still work?
+   ```
+
+2. **Context Retrieval Test:**
+   ```bash
+   /ucf-context-summary
+   /ucf-context-search "onboarding"
+   /ucf-context-insights
+   # Should work without hooks
+   ```
+
+## Success Criteria
+
+✅ **Installation Independence**: Framework works after deleting source
+✅ **Context Availability**: Context retrievable on-demand in any session
+✅ **No Hook Failures**: No more auto-preserve errors
+✅ **Smart Mapping**: PROJECT_MAP.md shows relevant files only
+✅ **True Portability**: Can install from any location
+
+## Progress Tracking
+
+**Completed:**
+- ✅ Identified root causes
+- ✅ Designed solution architecture
+- ✅ Enhanced
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

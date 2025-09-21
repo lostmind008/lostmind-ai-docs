@@ -1,0 +1,168 @@
+---
+title: "QUICK START"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# 🚀 Beginner's Quick Start Guide for Claude Code
+
+## Your Safety Commands (Use These Often!)
+
+```bash
+# Before starting any work
+pnpm run safety          # Checks for problems
+
+# Save your work frequently  
+pnpm run checkpoint      # Creates a save point you can return to
+
+# If something breaks
+pnpm run rollback        # Undo last change
+pnpm run emergency-reset # Fix everything if badly broken
+
+# Before deploying
+pnpm run pre-deploy      # Make sure everything is ready
+```
+
+## 🎯 Your First Session with Claude Code
+
+Copy and paste this exactly:
+
+```
+Please start by:
+1. Running `pnpm run safety` to check everything is OK
+2. Creating a checkpoint with `pnpm run checkpoint`
+3. Showing me the current project status
+Then: [Tell Claude what you want to do]
+```
+
+## 📋 Daily Workflow
+
+### Morning Start
+1. Open terminal in project folder
+2. Run: `git pull` (get latest code)
+3. Run: `pnpm install` (update packages)
+4. Run: `pnpm run safe-start` (safety check + start app)
+
+### Before Any Major Work
+Ask Claude: "Please create a checkpoint and explain what we're about to change"
+
+### Every Hour
+Run: `pnpm run checkpoint` (or ask Claude to do it)
+
+### End of Day
+Ask Claude: "Please create an end-of-day summary and checkpoint"
+
+## 🚨 Red Flags - Stop and Ask for Help
+
+If Claude Code wants to:
+- Delete more than 3 files
+- Change database structure
+- Modify authentication/login code  
+- Install packages you don't recognize
+- Make changes to payment/billing code
+
+**Say**: "Please stop and explain what this will do first"
+
+## 💡 Magic Phrases to Use
+
+- "Please explain this in simple terms"
+- "Create a checkpoint first"
+- "Is this safe to do?"
+- "What could go wrong?"
+- "How do I undo this if needed?"
+- "Test that it still works"
+
+## 🛠️ If Something Breaks
+
+Don't panic! Use this template:
+
+```
+The app is broken. Please:
+1. Don't change anything yet
+2. Show me what's wrong
+3. Explain how to fix it safely
+The problem is: [describe what you see]
+```
+
+## 📚 Your Safety Net Features
+
+### Automatic Protections
+- **Pre-commit hooks**: Checks your code before saving
+- **GitHub Actions**: Tests code when you push
+- **Safety script**: Warns about problems
+- **Checkpoints**: Easy rollback points
+
+### Manual Checks
+- `pnpm run safety` - Run before starting work
+- `pnpm run validate` - Check everything is correct
+- `pnpm run checkpoint` - Save current state
+
+## 🎯 Common Tasks Made Simple
+
+### "I want to add a new feature"
+```
+I want to add [FEATURE]. Please:
+1. Break it into small steps
+2. Test after each step
+3. Commit frequently
+4. Explain what you're doing
+```
+
+### "I want to fix something"
+```
+There's a problem with [DESCRIBE]. Please:
+1. Investigate first without changes
+2. Explain the issue simply
+3. Fix it carefully
+4. Test the fix works
+```
+
+### "I want to deploy"
+```
+I want to deploy to [staging/production]. Please:
+1. Run pre-deploy checks
+2. List what will change
+3. Deploy to staging first
+4. Verify everything works
+```
+
+## 📖 Essential Files to Know
+
+- `.env.local` - Your secret settings (NEVER share this!)
+- `CLAUDE.md` - Instructions for Claude Code
+- `package.json` - Project configuration and scripts
+- `docs/CLAUDE_CODE_SESSION_TEMPLATES.md` - More templates
+
+## ✅ Your Daily Checklist
+
+- [ ] Started with `pnpm run safety`
+- [ ] Created checkpoints before major changes
+- [ ] Tested app still works after changes
+- [ ] Committed code with clear messages
+- [ ] No secrets or passwords in code
+- [ ] Created end-of-day checkpoint
+
+## 🚀 Remember
+
+1. **Small steps are safer than big leaps**
+2. **Commits are your save points - make lots!**
+3. **When in doubt, create a checkpoint**
+4. **It's OK to ask Claude to explain things**
+5. **The safety scripts are your friends**
+
+## 🆘 Getting Help
+
+- Check `docs/CLAUDE_CODE_SESSION_TEMPLATES.md` for more templates
+- Run `pnpm run safety` to check for issues
+- Use `pnpm run rollback` if something just broke
+- Ask Claude: "Please explain what went wrong"
+
+---
+
+💡 **Pro Tip**: Keep this guide open in another window while working!
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

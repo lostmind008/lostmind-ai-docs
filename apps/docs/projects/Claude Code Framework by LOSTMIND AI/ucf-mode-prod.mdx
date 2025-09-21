@@ -1,0 +1,162 @@
+---
+title: "Ucf Mode Prod"
+description: "Set project to PROD mode for production deployment preparation and validation"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-prod
+
+## Your Role: SDLC Mode Manager - PRODUCTION Stage
+
+This command sets the current project to **PROD MODE** - the production preparation stage where you're ensuring deployment readiness, security compliance, and operational excellence.
+
+## Your Workflow
+
+1. **Update Project Mode**: Set the current SDLC mode in the project's CLAUDE.md
+   ```bash
+   # Check if .claude/CLAUDE.md exists
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Load the existing project configuration to preserve content
+
+3. **Update Mode Section**: Add or update the SDLC mode section in CLAUDE.md:
+   ```markdown
+   ## CURRENT SDLC MODE: PROD
+   **Set**: [Current timestamp]
+   **Context**: Production deployment preparation and validation phase
+
+   ### PROD MODE BEHAVIORS
+   Claude will focus on:
+   - Enforcing ALL quality gates without exception
+   - Verifying production environment configuration
+   - Ensuring security compliance and best practices
+   - Validating performance and scalability requirements
+   - Creating comprehensive deployment documentation
+   - Generating monitoring and alerting configurations
+   - Preparing rollback and disaster recovery procedures
+   - Final security and compliance validation
+
+   **MAXIMUM QUALITY STANDARDS - ZERO COMPROMISE MODE**
+   ```
+
+4. **Run Production Readiness Checks**: Execute comprehensive production validation
+
+5. **Generate Deployment Documentation**: Create complete production deployment guide
+
+## PROD Mode Guidelines for Claude
+
+When in PROD mode, Claude should:
+
+**🚨 MANDATORY QUALITY GATES (ALL MUST PASS):**
+- Zero linting errors or warnings
+- 100% test coverage for critical paths
+- All security scans must pass
+- All dependencies verified and up-to-date within 7 days
+- No hardcoded secrets or development configurations
+- Performance benchmarks meet requirements
+- All documentation complete and current
+
+**🔒 SECURITY VALIDATION:**
+- Comprehensive security audit
+- Environment variable security validation
+- API rate limiting and authentication verified
+- HTTPS/TLS configuration validated
+- Input validation and XSS protection confirmed
+- SQL injection protection verified
+- CORS configuration properly restricted
+
+**📊 PERFORMANCE VALIDATION:**
+- Load testing results within acceptable limits
+- Database query optimisation confirmed
+- Caching strategies implemented
+- CDN configuration (if applicable)
+- Memory and CPU usage profiling
+- API response time benchmarks
+
+**🌐 DEPLOYMENT PREPARATION:**
+- Production environment configuration files
+- Environment-specific settings validation
+- Database migration scripts (if needed)
+- Backup and recovery procedures
+- Monitoring and alerting configuration
+- Health check endpoints implemented
+
+## Expected Output
+
+```
+✅ Project mode set to: PROD
+📋 Mode Context: Production deployment preparation
+
+🎯 PROD Mode Active:
+   • Focus: Maximum quality standards and deployment readiness
+   • Behavior: Validate, secure, optimise, deploy
+   • ZERO COMPROMISE on quality gates
+
+🚨 Running COMPREHENSIVE production readiness validation...
+
+📋 PRODUCTION READINESS CHECKLIST:
+   🔍 Security Audit: [PASS/FAIL]
+   ⚡ Performance Tests: [PASS/FAIL]
+   🧪 Quality Gates: [PASS/FAIL]
+   📚 Documentation: [COMPLETE/INCOMPLETE]
+   🔧 Environment Config: [VALID/INVALID]
+   🛡️ Monitoring Setup: [CONFIGURED/MISSING]
+
+🚀 Production deployment readiness: [READY/NOT READY]
+```
+
+## Production Quality Checklist
+
+**Security Compliance:**
+- [ ] All security scans pass with zero high/critical issues
+- [ ] No hardcoded secrets or API keys
+- [ ] Environment variables properly configured
+- [ ] HTTPS enforced with proper certificates
+- [ ] Security headers configured (HSTS, CSP, etc.)
+- [ ] Authentication and authorisation working correctly
+- [ ] Input validation comprehensive
+- [ ] Error messages don't leak sensitive information
+
+**Performance Standards:**
+- [ ] Load testing completed successfully
+- [ ] API response times < 200ms for critical endpoints
+- [ ] Database queries optimised
+- [ ] Caching implemented where appropriate
+- [ ] CDN configured for static assets
+- [ ] Memory usage within acceptable limits
+
+**Operational Readiness:**
+- [ ] Health check endpoints implemented
+- [ ] Logging configured for production
+- [ ] Monitoring and alerting set up
+- [ ] Backup procedures documented and tested
+- [ ] Rollback procedures documented
+- [ ] Error tracking configured (e.g., Sentry)
+
+**Documentation:**
+- [ ] Deployment guide complete
+- [ ] API documentation current and accurate
+- [ ] Environment setup instructions clear
+- [ ] Troubleshooting guide available
+- [ ] Contact information for support
+
+**Dependencies & Configuration:**
+- [ ] All dependencies verified within 7 days
+- [ ] No development dependencies in production
+- [ ] Environment configurations validated
+- [ ] Database migrations tested
+- [ ] External service integrations verified
+
+#
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

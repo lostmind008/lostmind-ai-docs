@@ -1,0 +1,118 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "documentation"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# 📊 LostMind AI TurboRepo — Current Project State
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🗺️ Project Map](PROJECT_MAP.md)**
+
+**Last Updated:** September 18, 2025  
+**Maintainer:** Sumit (source-of-truth steward)
+
+---
+
+## 🔑 Canonical Status Statement
+
+This document is the **single source of truth** for repository scope, implementation status, and near-term plans.  
+When the codebase changes, update this file first, then point every other status summary back here.  
+If another document diverges, treat this file as authoritative.
+
+---
+
+## 🚦 Snapshot
+
+**Implemented foundations**
+
+- Turborepo + pnpm workspace layout with shared packages (`config`, `ui`, `db`, `auth`, `ai-clients`, `billing`).
+- Two Next.js 15 apps: `apps/marketing` (public marketing shell) and `apps/ask` (orb experience scaffold).
+- `services/ai-compute` FastAPI service with Google IAM-compatible auth hooks, Redis rate limiting, and new `google-genai` SDK integration (requires production hardening).
+- Docker Compose stack for Postgres, Redis, Ask, Marketing, and AI Compute services.
+- Security scaffolding in `packages/auth` (NextAuth + middleware) and Redis-backed rate limiting bridge.
+
+**In progress**
+
+- Restoring dependable testing (Vitest smoke tests need fixes; FastAPI lacks pytest coverage).
+- Establishing CI scripts for lint/type-check/test (currently manual).
+- Aligning documentation, security commands, and scripts with actual implementation.
+
+**Planned / not yet delivered**
+
+- Additional apps (`private-docs`, `chatcrawler`, `justdropit`, `admin`).
+- Additional packages (`security`, `rag`, `utils`) and FastAPI services (`document-processor`, `crawler-engine`, `security-monitor`).
+- Full billing workflows, production-ready Stripe webhooks, and automated deploy pipeline.
+
+Keep aspirational content in this “Planned” section until code lands in `main`.
+
+---
+
+## 🎯 Focus Initiative — ask.lostmindai.com
+
+**Experience Contract**
+
+- Preserve the current 3D orb UI and interactions exactly as deployed at ask.lostmindai.com.
+- Visitors must land, see the orb, and start chatting immediately without sign-up, checkboxes, or gating.
+
+**Security & Data Plan**
+
+1. Issue short-lived, signed visitor tokens automatically on first load (HTTP-only cookie). No manual auth flow.
+2. Accept visitor tokens in chat APIs alongside authenticated sessions; enforce Redis-backed quotas per visitor tier.
+3. Persist transcripts and “leave a message” intents via Prisma so the assistant can brief Sumit later.
+4. Enable OpenAI Live voice streaming using the same visitor token for authorization.
+5. Flip `REQUIRE_AUTH` to `true` by default in `services/ai-compute` and treat visitor tokens as scoped identities.
+6. Instrument usage logging for per-visitor analytics and daily AI-generated summaries.
+
+Document each step here as it ships so the rest of the repo stays aligned.
+
+---
+
+## 📁 Repository Structure (Current)
+
+```
+LostMindAI-TurboRepo/
+├── README.md
+├── CLAUDE.md
+├── AGENTS.md
+├── apps/
+│   ├── ask/            # Orb experience scaffold (public visitors + auth roadmap)
+│   └── marketing/      # Marketing shell ready for redesign
+├── packages/
+│   ├── ai-clients/     # google-genai abstraction (placeholder implementations)
+│   ├── auth/           # NextAuth v5 + middleware + soon visitor tokens
+│   ├── billing/        # Stripe scaffolding (not wired end-to-end)
+│   ├── config/         # Shared ESLint/TS/Tailwind configs
+│   ├── db/             # Prisma schema foundation (RLS work pending)
+│   └── ui/             # Shared UI components (shadcn-derived)
+├── services/
+│   └── ai-compute/     # FastAPI service w/ IAM + Redis rate limiting (needs tests)
+├── docs/
+│   └── project/        # This file + roadmap + map
+├── docker-compose.yml  # Local stack (database, redis, apps, FastAPI)
+└── state/, infra/, scripts/ (tooling + infrastructure assets)
+```
+
+Refer to [`docs/project/PROJECT_MAP.md`](PROJECT_MAP.md) for a more granular tree; update both when structure changes.
+
+---
+
+## ✅ Verified Hygiene
+
+- Documentation hub at `docs/` is organized and cross-linked (navigation breadcrumbs intact).
+- Root contains only canonical high-level docs (README, CLAUDE, AGENTS, ROADMAP, PROGRESS_UPDATE).
+- Google GenAI migration guardrails exist (husky, documentation), though production usage still pending validation.
+
+---
+
+## 🚧 Immediate Action Items
+
+1. **Visitor session auth layer** — Extend `@lostmind/auth` with visitor token issuance/verification, flip `REQUIRE_AUTH` default, and update chat API guards. Add Vitest + Pytest coverage proving both visitor and authenticated flows.
+2. **Transcript + message persistence** — Define Prisma models, capture chat turns/messages, and expose an internal digest endpoint for daily summaries.
+3. **Testing & CI baseline** — Repair existing Vitest suite, add FastAPI smoke tests, and wire lint/type-check/test into CI (GitHub Actions or Turbo pipeline).
+4. **Documentation sync** — After each milestone above, upd
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

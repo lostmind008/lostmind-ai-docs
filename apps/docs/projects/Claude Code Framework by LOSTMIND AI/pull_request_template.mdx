@@ -1,0 +1,51 @@
+---
+title: "Pull Request Template"
+description: "documentation for Claude Code Framework by LOSTMIND AI"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# PR Title (Semantic + Imperative)
+# e.g., 🔧 FIX: Deterministic bridge + CLAUDE.md integration (Phase 1)
+
+## Purpose
+- What problem does this PR solve? Why now?
+
+## Changes
+- High-level summary of changes (bullets)
+- Note any migrations or shims
+
+## Test Plan
+- Commands run (copy/paste outputs or attach logs):
+  - `python test_bridge_installation/test_framework_bridge.py`
+  - `python lostmind_ai_engine/guardian_wrapper.py status`
+  - Hooks exercised (PreCompact/SessionEnd) and resulting files in `.lostmind_ai_context/`
+  - CLAUDE.md updated once with markers and correct links
+- Optional: `bash test_end_to_end.sh`
+
+## Acceptance Criteria
+- [ ] Bridge resolves deterministically (env or per-project config)
+- [ ] `/ucf-onboard-project` generates `.lostmind_ai_context/*` and updates project memory file (idempotent)
+- [ ] `/ucf-guardian-status` reports configured engine and freshness
+- [ ] Hooks export/synthesize automatically; artifacts timestamps update
+- [ ] No duplication or movement of `framework_hub/core/*`
+
+## Risks & Rollback
+- Risks identified and mitigations
+- Rollback steps (files to revert, settings backups)
+
+## Config & Docs
+- Env vars (e.g., `LOSTMIND_FRAMEWORK_PATH`, `GEMINI_API_KEY`)
+- Docs updated (`AGENTS.md`, `DOCS/*`)
+
+## Checklist
+- [ ] Scope is minimal and changes are cohesive
+- [ ] Added/updated docs
+- [ ] Manually verified on macOS/Linux (if applicable)
+- [ ] No secrets committed
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

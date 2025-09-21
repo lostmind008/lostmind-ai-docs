@@ -1,0 +1,104 @@
+---
+title: "Api Reference"
+description: "api-reference for LostMind AI - Project Documentation"
+category: "api-reference"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "api-reference,ai-services"
+---
+
+# {{projectName}} - API Reference
+
+## Authentication
+
+{{authDescription}}
+
+### API Key Usage
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     {{baseUrl}}/api/endpoint
+```
+
+## Base URL
+
+```
+{{baseUrl}}
+```
+
+## Endpoints
+
+{{#endpoints}}
+### {{method}} {{path}}
+
+{{description}}
+
+**Parameters:**
+{{#parameters}}
+- `{{name}}` ({{type}}) - {{description}}
+{{/parameters}}
+
+**Example Request:**
+```bash
+curl -X {{method}} "{{baseUrl}}{{path}}" \
+     -H "Authorization: Bearer YOUR_API_KEY" \
+     -H "Content-Type: application/json"
+{{#hasBody}}     -d '{{exampleBody}}'{{/hasBody}}
+```
+
+**Example Response:**
+```json
+{{exampleResponse}}
+```
+
+---
+
+{{/endpoints}}
+
+## Rate Limiting
+
+{{rateLimitDescription}}
+
+## Error Handling
+
+| Status Code | Description |
+|-------------|-------------|
+| 200 | Success |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 429 | Rate Limited |
+| 500 | Internal Server Error |
+
+## SDK Examples
+
+### JavaScript/TypeScript
+```typescript
+import { {{projectSlug}}Client } from '@lostmind-ai/{{projectSlug}}';
+
+const client = new {{projectSlug}}Client({
+  apiKey: 'your-api-key'
+});
+
+const result = await client.{{exampleMethod}}();
+```
+
+### Python
+```python
+from lostmind_ai import {{projectSlug}}
+
+client = {{projectSlug}}.Client(api_key='your-api-key')
+result = client.{{exampleMethod}}()
+```
+
+---
+
+*API Version: {{apiVersion}} | Last updated: {{lastModified}}*
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*
+
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

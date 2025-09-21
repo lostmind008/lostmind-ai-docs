@@ -1,0 +1,59 @@
+---
+title: "AGENTS"
+description: "documentation for Claude Code Framework by LOSTMIND AI"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+---
+
+# Repository Guidelines
+
+## Project Structure & Module Organization
+- Core framework: `framework_hub/core/` (e.g., `context_guardian.py`, `forge_agent.py`, `dynamic_integration_system.py`).
+- Bridge + installer: `framework_hub/bridges/lostmind_framework_bridge.py`, `framework_hub/installation/`.
+- Engine utilities: `lostmind_ai_engine/` (e.g., `guardian_wrapper.py`, `onboarder.py`, `run_engine.sh`).
+- Context artifacts: `.lostmind_ai_context/` (auto‑generated insights, logs, exports).
+- Tests: `test_bridge_installation/`, top‑level `test_*.sh`, and `TESTING/` resources.
+
+## Architecture Overview
+- Responsibilities: Context Guardian orchestrates context; Forge Agent performs actions; Dynamic Integration System manages adapters; the Bridge exposes a lightweight client API; Engine provides legacy tooling and scripts.
+- Preferred path: use the Bridge and `framework_hub` modules rather than re‑implementing logic in `lostmind_ai_engine/`.
+
+## Build, Test, and Development Commands
+- Install bridge: `bash framework_hub/installation/install_bridge.sh <project_path>`
+- One‑shot setup: `bash install_lostmind_ai_framework.sh`
+- Python env: `cd lostmind_ai_engine && python3 -m venv .venv && source .venv/bin/activate && pip install -r ../framework_hub/requirements.txt`
+- Guardian status: `python lostmind_ai_engine/guardian_wrapper.py status`
+- Bridge test: `python test_bridge_installation/test_framework_bridge.py`
+- Shell E2E: `bash test_end_to_end.sh` (see other `test_*.sh`).
+
+## Coding Style & Naming Conventions
+- Language: Python 3.8+; 4‑space indentation; add type hints where practical.
+- Filenames: snake_case for Python (`context_guardian.py`), kebab/snake for scripts.
+- Docstrings: concise purpose; Google/NumPy style preferred.
+- Format/lint: `black`, `ruff`, `flake8` (optional dev deps in `framework_hub/requirements.txt`).
+
+## Testing Guidelines
+- Layout: Python tests under `test_bridge_installation/` or `tests/` with `test_*.py`.
+- Run tests: `python -m pytest -q` (if installed) or targeted scripts above.
+- Shell tests: keep executable and idempotent; run with `bash test_*.sh`.
+
+## Commit & PR Guidelines
+- Commits: semantic prefix + imperative; emoji optional.
+  - Examples: `🤖 FEAT: Agent template system`, `🔧 FIX: Path resolution in guardian wrapper`, `📚 DOCS: Update README quick start`.
+- PRs: include purpose, linked issues, test evidence (logs/screenshots), risk/rollback, and config changes (env vars, hooks).
+
+## Security & Configuration Tips
+- Secrets: never commit API keys. Set `GEMINI_API_KEY` via env or `lostmind_ai_engine/.env` (local only).
+- Path safety: validate paths in scripts; prefer the Bridge over duplicating engine code.
+- Confidentiality: `.lostmind_ai_context/` may contain sensitive conversation data.
+
+## Maintenance & Task Log
+- Runbook: see `DOCS/MAINTENANCE_RUNBOOK.md` for Phase 1 stabilization steps (pre‑flight, env, bridge install, safe‑mode hooks, shims, verification, rollback).
+- Memory overview: see `DOCS/CLAUDE_CODE_MEMORY_OVERVIEW.md` for Claude Code storage, hooks, and context artifacts.
+- Troubleshooting: see `DOCS/TROUBLESHOOTING_PHASE1.md` for path resolution, missing API key, and CLAUDE.md integration tips.
+
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

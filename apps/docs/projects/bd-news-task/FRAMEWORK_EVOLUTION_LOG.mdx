@@ -1,0 +1,78 @@
+---
+title: "FRAMEWORK EVOLUTION LOG"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# Claude Agentic Development Framework (CADF)
+
+**Version:** 1.0
+**Status:** Under Review
+**Date:** 2025-08-29
+
+## 1. Introduction
+
+This document provides a comprehensive overview of the Claude Agentic Development Framework (CADF), a structured environment designed to enhance the reliability, consistency, and capability of an AI agent for complex software development tasks.
+
+The primary goal of this framework is to transform the AI from a simple code generator into a disciplined, context-aware development partner. It achieves this by establishing a clear set of rules (Protocols), roles (Personas), and a persistent memory (State).
+
+This document is divided into three parts:
+1.  An explanation of the initial `v1` architecture.
+2.  A summary of research into the official Anthropic Claude CLI's functionality.
+3.  A cross-analysis identifying discrepancies between the `v1` design and the official implementation, leading to a proposal for a `v2` framework.
+
+---
+
+## 2. Framework Architecture (`v1`)
+
+The `v1` framework is designed around a two-tiered context system: a User-Level setup (`~/.claude/`) for global preferences and a Project-Level setup (`<project>/.claude/`) for project-specific rules.
+
+### 2.1. Logical Components
+
+The project-level framework is composed of four main logical components:
+
+*   **Protocols (`protocols/`):** The "constitution" of the project. A set of non-negotiable Markdown files that define the project's mission, tech stack, workflow, and security rules. The AI is instructed to read and adhere to these at all times.
+    *   **Logic:** This modular approach was chosen for clarity and separation of concerns, making it easier for both humans and the AI to manage different aspects of the project's rules.
+
+*   **Personas (`personas/`):** Defines distinct roles or "modes" for the AI to adopt (e.g., Architect, Coder, Tester). By assuming a persona, the AI can focus its attention on a specific aspect of the development lifecycle, improving the quality of its output.
+    *   **Logic:** This was designed to manage the AI's cognitive focus, preventing it from mixing high-level planning with low-level implementation details in the same response.
+
+*   **State (`state/`):** The AI's memory. It includes a short-term `session_summary.md` and a long-term `project_map.md` that the AI is responsible for maintaining.
+    *   **Logic:** This component was created to combat context window limitations and "agent amnesia," providing a persistent, structured memory of the project's architecture and session history.
+
+*   **Workflow & Setup (`setup.sh`, `workflow.md`, `prompts/`):** A set of tools for the human user to initialize the framework in a new project and interact with the AI in a structured way.
+    *   **Logic:** These files are the user-facing "interface" to the framework, designed to make it easy to deploy and use.
+
+---
+
+## 3. Research Findings: Official Claude CLI Functionality
+
+A targeted investigation into the official Anthropic Claude CLI ("Claude Code") documentation and community best practices yielded the following key findings:
+
+*   **Configuration Files:** The CLI officially recognizes `~/.claude/settings.json` (user) and `.claude/settings.json` (project) for configuration.
+*   **Primary Context File:** A single file, `CLAUDE.md`, in the project root is the officially recognized primary source of project-specific context. The CLI is hardwired to look for this file.
+*   **Custom Commands:** The CLI has a built-in system for custom commands. Users can add Markdown files to a `.claude/commands/` directory, and these become available as slash commands (e.g., `/mycommand`) within the interactive session.
+*   **Hooks:** The CLI supports hooks that are triggered on lifecycle events (e.g., `SessionStart`, `PreToolUse`). These are configured within `settings.json` and execute specified shell commands. This is the official mechanism for automation.
+*   **Agent Personas:** The concept of "personas" or "agents" is not a built-in feature of the CLI. It is a "soft" pattern, meaning it's implemented by providing instructions in the `CLAUDE.md` file that tell the agent to read other files and act in a certain way.
+
+---
+
+## 4. Cross-Analysis: `v1` vs. Official Documentation
+
+This section identifies the discrepancies and weaknesses of the `v1` framework when compared against the official Claude CLI implementation.
+
+### 4.1. Discrepancy: Context Mechanism
+
+*   **`v1` Approach:** A multi-file `protocols/` directory.
+*   **Official Method:** A single, primary `CLAUDE.md` file.
+*   **Analysis:** The `v1` approach is arguably cleaner but requires explicit instructions for the AI to find and read multiple files. The official method is more robust because the CLI is pre-programmed to automatically load and prioritize `CLAUDE.md`, guaranteeing the context is always available without special instructions. **This is a significant weakness in `v1`.**
+
+### 4.2. Discrepancy: Custom Commands
+
+*   **`v1` Approach:** A standalo
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

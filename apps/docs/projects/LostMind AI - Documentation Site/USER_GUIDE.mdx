@@ -1,0 +1,197 @@
+---
+title: "USER GUIDE"
+description: "guide for LostMind AI - Project Documentation"
+category: "guide"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "guide,ai-services"
+---
+
+# LostMind AI Documentation System - User Guide
+
+## 🎯 Overview
+
+This guide explains how to use and maintain the LostMind AI documentation system. The system automatically discovers projects, extracts documentation, and generates unified documentation sites.
+
+## 🚀 Quick Start
+
+### 1. Install Dependencies
+```bash
+cd "/Users/sumitm1/Documents/New Ongoing Projects/LostMind AI - Project Documentation"
+npm install
+```
+
+### 2. Discover Projects
+```bash
+npm run scan:projects
+```
+
+### 3. Extract Content
+```bash
+npm run extract:content
+```
+
+### 4. Build Documentation
+```bash
+npm run build:docs
+```
+
+### 5. Start Development Server
+```bash
+npm run dev
+```
+
+Visit `http://localhost:3000` to view your documentation.
+
+## 📁 System Architecture
+
+```
+LostMind AI - Project Documentation/
+├── config/                   # Auto-generated configuration
+│   └── discovered-projects.json
+├── content/                  # Extracted project content
+│   ├── lostmindai-turborepo/
+│   ├── rag-embeddings/
+│   └── [other-projects]/
+├── templates/                # Documentation templates
+├── scripts/                  # Automation scripts
+├── pages/                    # Nextra pages
+└── public/                   # Generated documentation sites
+```
+
+## 🔄 Automation Scripts
+
+### Project Scanner (`scripts/scan-projects.js`)
+- **Purpose**: Discovers all projects in your workspace
+- **Detects**: package.json, README files, CLAUDE.md, docs folders
+- **Output**: `config/discovered-projects.json`
+
+**Manual Run:**
+```bash
+node scripts/scan-projects.js
+```
+
+### Content Extractor (`scripts/extract-content.js`)
+- **Purpose**: Extracts documentation from discovered projects
+- **Sources**: README files, docs folders, CLAUDE.md files
+- **Output**: Processed content in `content/[project-slug]/`
+
+**Manual Run:**
+```bash
+node scripts/extract-content.js
+```
+
+## 📝 Adding New Projects
+
+The system automatically discovers new projects when you run the scanner. To ensure optimal detection:
+
+### 1. Project Structure Requirements
+Your project should have at least one of:
+- `package.json` (Node.js projects)
+- `README.md` (any project)
+- `CLAUDE.md` (AI development projects)
+- `docs/` folder (documented projects)
+
+### 2. Documentation Best Practices
+- **README.md**: Project overview, setup instructions, usage
+- **CLAUDE.md**: AI development guidelines, project context
+- **docs/ folder**: Detailed technical documentation
+
+### 3. Auto-Discovery Process
+1. Place your project in `/Users/sumitm1/Documents/New Ongoing Projects/`
+2. Run `npm run scan:projects`
+3. Run `npm run extract:content`
+4. Rebuild documentation with `npm run build:docs`
+
+## 🎨 Customizing Templates
+
+### Template Files
+- `templates/project-index.md`: Main project page template
+- `templates/architecture-overview.md`: Architecture documentation
+- `templates/api-reference.md`: API documentation template
+- `templates/_meta.json`: Navigation structure
+
+### Template Variables
+Templates use mustache-style syntax:
+- `{{projectName}}`: Project display name
+- `{{projectDescription}}`: Project description
+- `{{lastModified}}`: Last modification date
+- `{{hasReadme}}`: Boolean for README existence
+- `{{hasDocs}}`: Boolean for docs folder existence
+
+### Creating Custom Templates
+1. Create a new `.md` file in `templates/`
+2. Use template variables and conditionals
+3. Update extraction script to use your template
+
+Example:
+```markdown
+# {{projectName}}
+
+{{#hasCustomFeature}}
+This project has custom features!
+{{/hasCustomFeature}}
+```
+
+## 🚀 Deployment Options
+
+### Option 1: Vercel (Recommended)
+1. Connect your documentation repository to Vercel
+2. Set build command: `npm run build:docs`
+3. Set output directory: `.next`
+4. Deploy automatically on git push
+
+### Option 2: Netlify
+1. Connect repository to Netlify
+2. Build command: `npm run build:docs && npm run export`
+3. Publish directory: `out`
+
+### Option 3: GitHub Pages
+1. Use GitHub Actions for automated builds
+2. Deploy to `gh-pages` branch
+3. Enable GitHub Pages in repository settings
+
+### Option 4: Custom Server
+```bash
+npm run build:docs
+npm start
+```
+
+## 🔧 Maintenance Tasks
+
+### Weekly Tasks
+- [ ] Run project scan: `npm run scan:projects`
+- [ ] Extract updated content: `npm run extract:content`
+- [ ] Rebuild documentation: `npm run build:docs`
+
+### Monthly Tasks
+- [ ] Review discovered projects for accuracy
+- [ ] Update templates if needed
+- [ ] Check for broken links
+- [ ] Update dependencies: `npm update`
+
+### As Needed
+- [ ] Add new project-specific templates
+- [ ] Update navigation structure
+- [ ] Customize styling and branding
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### "No projects found"
+**Cause**: Projects don't meet detection criteria
+**Solution**: 
+- Ensure projects have README.md, package.json, or CLAUDE.md
+- Check project paths are correct
+- Verify file permissions
+
+#### "Content extraction failed"
+**Cause**: File read permissions or corrupted files
+**Solution**:
+- Check file permissions
+- Verify markdown files are properly formatted
+- Look for 
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

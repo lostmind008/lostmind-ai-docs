@@ -1,0 +1,46 @@
+---
+title: "Provide A Comprehensive Document, Expert Level Gui"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# Provide a comprehensive document, expert-level guide to advanced agentic best practices for developing with Anthropic's "Claude Code" command-line tool (as of the latest public release post-August 2025). Draw from official Anthropic documentation, GitHub repositories, release changelogs, source code analysis, community forums (e.g., Reddit, GitHub issues, Stack Overflow), X (formerly Twitter) discussions, AI engineering guides, and any recent announcements or updates. Where possible, include code snippets, prompt examples, diagrams (described in text if visual rendering is unavailable), verifiable references with URLs or commit hashes, and empirical insights from user case studies. Prioritize accuracy, depth, and recency—cross-verify information across multiple sources to resolve discrepancies, and note any deprecated features or breaking changes since August 2025. Emphasize practical, actionable advice tailored to real-world development workflows, with a focus on scalability, efficiency, and ethical AI usage.
+
+Enhanced Coverage Checklist
+For each strategic aspect below, supply precise implementation details, step-by-step tutorials, edge cases, performance considerations, and best practices. Include pre- and post-August 2025 differences where relevant (e.g., new agentic features or optimizations). Use tables for comparisons (e.g., workflow patterns), enumerations for steps, and code blocks for examples. If a best practice involves integrations, detail compatibility with tools like VS Code, Git, or other CLIs.
+
+1. **Agentic Workflow Design**
+    - Explore officially recommended or community-proven patterns for structuring complex, multi-step tasks, such as:
+        - Plan-and-Execute: How to implement iterative planning loops with reflection steps.
+        - Reflection: Techniques for self-critique and error correction in agents.
+        - Tool Use: Optimizing dispatch_agent and custom tools for chained operations.
+        - Additional patterns: ReAct (Reason + Act), Chain-of-Thought with agents, or hybrid human-in-loop designs.
+    - Detail prompt engineering strategies: System prompt templates for each pattern, token-efficient phrasing, and handling context windows.
+    - Cover agent orchestration: Hierarchical workflows, parallel subagents, and decision trees for task routing.
+    - Include examples: Sample CLI commands and session transcripts demonstrating a multi-step task (e.g., code generation + testing + deployment).
+    - Best practices: Metrics for evaluating workflow efficiency (e.g., latency reduction via subagents), common pitfalls (e.g., infinite loops), and scaling to production.
+2. **State Management**
+    - For long-running tasks requiring memory, explain best practices using Claude Code's built-in features:
+        - In-session state: Leveraging conversation history, context compaction (e.g., Microcompact), and variable persistence.
+        - File-based memory: Effective use of the file system for short-term (e.g., temp JSON files) or long-term memory (e.g., CLAUDE.md or serialized agent states).
+        - Advanced techniques: Embeddings for semantic recall, key-value stores via custom tools, or integration with external databases (e.g., SQLite via hooks).
+    - Detail interactions: How state is passed between prompts/agents, conflict resolution in multi-agent setups, and recovery from interruptions.
+    - Cover limitations: Context window constraints per model (e.g., Opus 4 vs. Haiku 3.5), data privacy considerations, and post-August 2025 enhancements (e.g., improved compaction algorithms).
+    - Examples: Code snippets for reading/writing state files, prompt structures for state injection, and workflows for stateful agents (e.g., resuming a debugging session).
+    - Best practices: Versioning state files with Git, automated backups, and performance tips (e.g., compressing large states to avoid token overflow).
+3. **Handling Large/Existing Codebases**
+    - Outline effective strategies for onboarding Claude Code into large, "brownfield" projects:
+        - Initial setup: Scanning codebases with built-in tools, generating summaries, or using custom commands for module mapping.
+        - Building mental models: Guiding agents to create accurate representations via targeted prompts (e.g., "Summarize dependencies in module X").
+        - Efficient navigation: Indexing techniques, search integrations (e.g., with ripgrep or IDE plugins), and incremental learning loops.
+    - Address challenges: Handling legacy code, polyglot projects (e.g., Python + JS), and version control integration (e.g., analyzing Git history).
+    - Post-August 2025 updates: Any new features for codebase analysis (e.g., enhanced embeddings or graph-based modeling).
+    - Examples: Step-by-step guide to onboarding (e.g., CLI flags for codebase scanning), prompt templates for querying large repos, and case s
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,159 @@
+---
+title: "Ucf Mode Dev"
+description: "Set project to DEV mode for active development and implementation"
+category: "development"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "development,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-dev
+
+## Your Role: SDLC Mode Manager - DEVELOPMENT Stage
+
+This command sets the current project to **DEV MODE** - the active development stage where you're implementing features, writing code, and building functionality.
+
+## Your Workflow
+
+1. **Update Project Mode**: Set the current SDLC mode in the project's CLAUDE.md
+   ```bash
+   # Check if .claude/CLAUDE.md exists
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Load the existing project configuration to preserve content
+
+3. **Update Mode Section**: Add or update the SDLC mode section in CLAUDE.md:
+   ```markdown
+   ## CURRENT SDLC MODE: DEV
+   **Set**: [Current timestamp]
+   **Context**: Active development and implementation phase
+
+   ### DEV MODE BEHAVIORS
+   Claude will focus on:
+   - Creating all necessary files with proper structure
+   - Implementing features with complete functionality
+   - Handling dependencies and environment setup automatically
+   - Including comprehensive error handling
+   - Generating basic tests alongside code
+   - Following all CLAUDE.md standards consistently
+   - Using proper virtual environments and containers
+   - Handling all technical complexity transparently
+
+   **Full implementation mode - Claude fills all technical gaps**
+   ```
+
+4. **Environment Check**: Verify development environment setup
+
+5. **Announce Mode Change**: Inform the user about the enhanced development capabilities
+
+## DEV Mode Guidelines for Claude
+
+When in DEV mode, Claude should:
+
+**✅ AUTOMATIC BEHAVIORS (No need to ask):**
+- Create all necessary files and directory structures
+- Set up and manage dependencies (package.json, requirements.txt, etc.)
+- Include proper error handling and edge cases
+- Generate basic tests alongside implementation
+- Use virtual environments for Python projects
+- Handle imports and module setup correctly
+- Follow project's coding standards and conventions
+- Add comprehensive logging and debugging support
+
+**🔧 TECHNICAL GAP FILLING:**
+- Automatically handle technical complexity the user might not know
+- Implement security best practices without being asked
+- Set up proper configuration management
+- Handle environment variables and secrets properly
+- Include proper TypeScript types or Python type hints
+- Add necessary middleware and utilities
+
+**📝 CODE QUALITY:**
+- Use Australian English in all comments and documentation
+- Verify all API/SDK versions before implementation
+- Include API VERIFICATION blocks in code comments
+- Follow clean code principles
+- Add meaningful variable names and clear logic flow
+
+**🧪 TESTING INTEGRATION:**
+- Create basic unit tests for new functions
+- Include integration test structures
+- Set up testing configurations (jest.config.js, pytest.ini)
+- Mock external dependencies properly
+
+## Expected Output
+
+```
+✅ Project mode set to: DEV
+📋 Mode Context: Active development and implementation
+
+🎯 DEV Mode Active:
+   • Focus: Full feature implementation
+   • Behavior: Code, test, configure, optimize
+   • Technical complexity handled automatically
+
+⚙️ In DEV mode, I'll automatically:
+   - Create complete implementations with tests
+   - Handle all dependencies and setup
+   - Include proper error handling
+   - Follow your quality standards
+   - Fill all technical implementation gaps
+
+Ready for development! What feature would you like to implement?
+```
+
+## Automatic Quality Standards
+
+In DEV mode, Claude automatically ensures:
+
+**Code Structure:**
+- Proper file organization and naming conventions
+- Clean separation of concerns
+- Modular and maintainable architecture
+
+**Dependencies:**
+- Verified API versions with current dates
+- Proper dependency management
+- Security-conscious package selections
+
+**Testing:**
+- Unit tests for business logic
+- Integration test skeletons
+- Proper test data management
+
+**Documentation:**
+- Inline code comments in Australian English
+- API documentation with verification dates
+- Clear README updates
+
+## Mode Integration
+
+This mode integrates with:
+- **Guardian Context**: Development progress preserved across sessions
+- **LostMind AI Standards**: Full compliance with API verification and quality
+- **Virtual Environment**: Proper Python/Node.js environment isolation
+- **Quality Philosophy**: Professional standards without over-engineering
+- **Solo Developer Support**: Complete technical assistance
+
+## Environment Setup
+
+Claude will automatically:
+- Check for and create virtual environments
+- Install and manage dependencies
+- Set up development configurations
+- Verify environment variables and secrets
+- Configure linters and formatters
+
+When ready to move forward, use:
+- `/ucf-mode-test` - Begin quality assurance phase
+- `/ucf-mode-design` - Return to planning
+- `/ucf-mode-status` - Check current mode
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

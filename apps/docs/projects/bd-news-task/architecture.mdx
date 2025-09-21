@@ -1,42 +1,146 @@
 ---
-title: "Architecture - BD-News-Task"
-description: "System architecture and design overview"
+title: "ARCHITECTURE"
+description: "architecture for BD-News-Task"
+category: "architecture"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "architecture,miscellaneous"
 ---
 
-# Architecture Overview
+# System Architecture
 
-## System Design
+## Overview
 
-This project follows modern software architecture principles with clear separation of concerns and scalable design patterns.
+The Autonomous News Extraction System uses a simplified, direct architecture that prioritizes reliability and performance over complexity. This document details the system's design, components, and data flow.
 
-## Technology Stack
+## High-Level Architecture
 
-<CardGroup cols="2">
-  <Card title="Framework" icon="layer-group">
-    Not specified
-  </Card>
-  <Card title="Category" icon="tags">
-    other
-  </Card>
-  <Card title="Last Updated" icon="clock">
-    20/09/2025
-  </Card>
-  <Card title="Documentation" icon="book">
-    Basic
-  </Card>
-</CardGroup>
+```
+┌──────────────────────────────────────────────────────┐
+│                   User Interface                      │
+│                  (Command Line)                       │
+└────────────────────┬─────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────────────────┐
+│              NewsExtractionSystem                     │
+│                 (Main Class)                          │
+│  ┌────────────────────────────────────────────────┐  │
+│  │            Initialization                      │  │
+│  │  • Gemini Client Setup                        │  │
+│  │  • Session Management                         │  │
+│  │  • Output Directory Creation                  │  │
+│  └────────────────────────────────────────────────┘  │
+│                                                       │
+│  ┌────────────────────────────────────────────────┐  │
+│  │           Website Processing                   │  │
+│  │  ┌──────────────────────────────────────┐     │  │
+│  │  │     1. Discovery Phase                │     │  │
+│  │  │  • Fetch main page                   │     │  │
+│  │  │  • Parse HTML with BeautifulSoup     │     │  │
+│  │  │  • Extract article links             │     │  │
+│  │  │  • Apply heuristic filters           │     │  │
+│  │  └──────────────────────────────────────┘     │  │
+│  │                                                │  │
+│  │  ┌──────────────────────────────────────┐     │  │
+│  │  │     2. Extraction Phase              │     │  │
+│  │  │  • Fetch individual articles         │     │  │
+│  │  │  • Clean HTML content                │     │  │
+│  │  │  • Optional AI enhancement           │     │  │
+│  │  │  • Structure extracted data          │     │  │
+│  │  └──────────────────────────────────────┘     │  │
+│  │                                                │  │
+│  │  ┌──────────────────────────────────────┐     │  │
+│  │  │     3. Storage Phase                 │     │  │
+│  │  │  • Generate multiple formats         │     │  │
+│  │  │  • Save to organized directories     │     │  │
+│  │  │  • Create metadata summaries         │     │  │
+│  │  └──────────────────────────────────────┘     │  │
+│  └────────────────────────────────────────────────┘  │
+│                                                       │
+│  ┌────────────────────────────────────────────────┐  │
+│  │            Results & Reporting                 │  │
+│  │  • Calculate success metrics                   │  │
+│  │  • Display performance stats                   │  │
+│  │  • Generate summary reports                    │  │
+│  └────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────┘
+```
 
-## Key Components
+## Core Components
 
-- **Core Application**: Main application logic and business rules
-- **Data Layer**: Database and data management components
-- **API Layer**: External interfaces and service endpoints
+### 1. HTTP Session Management
 
+```python
+# Robust SSL configuration
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
 
-## Deployment
+# Optimized headers (no brotli to avoid errors)
+headers = {
+    'User-Agent': 'Mozilla/5.0...',
+    'Accept-Encoding': 'gzip, deflate',  # Explicitly exclude 'br'
+}
+```
 
-This project is designed for flexible cloud deployment.
+**Key Features**:
+- Certificate verification with fallback
+- Connection pooling via aiohttp
+- Automatic retry with exponential backoff
+- Timeout management (30s default)
 
-<Note>
-Architecture details are extracted from project analysis. For detailed technical specifications, refer to the project's documentation folder.
-</Note>
+### 2. Article Discovery Engine
+
+```python
+async def discover_article_links(session, website_url, max_articles):
+    # 1. Fetch main page HTML
+    html = await fetch_with_retry(session, website_url)
+    
+    # 2. Parse with BeautifulSoup
+    soup = BeautifulSoup(html, 'html.parser')
+    
+    # 3. Extract all links
+    for a_tag in soup.find_all('a', href=True):
+        # 4. Apply heuristic filters
+        if is_likely_article(url, text):
+            article_links.append(link)
+```
+
+**Heuristic Filters**:
+- URL patterns: `/news/`, `/article/`, `/story/`
+- Exclude: social media, categories, search pages
+- Minimum text length: 10 characters
+- Numeric patterns in URLs (article IDs)
+
+### 3. Content Extraction Pipeline
+
+```python
+async def extract_article_content(session, article):
+    # 1. Fetch article HTML
+    html = await fetch_with_retry(session, article['url'])
+    
+    # 2. Clean HTML (remove scripts, styles, nav, ads)
+    text_content = clean_html_for_extraction(html)
+    
+    # 3. Optional AI enhancement
+    structured = await extract_with_ai(text_content, title)
+    
+    # 4. Return structured data
+    return {
+        'url': url,
+        'title': title,
+        'content': content,
+        'metadata': {...}
+    }
+```
+
+**Cleaning Strategy**:
+- Remove: `<script>`, `<style>`, `<noscript>`, `<iframe>`
+- Remove: `.nav`, `.menu`, `.sidebar`, `.ad`
+- Extract: Clean text with proper spacing
+
+### 4. AI Enhancement (Opti
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

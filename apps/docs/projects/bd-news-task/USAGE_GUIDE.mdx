@@ -1,0 +1,180 @@
+---
+title: "USAGE GUIDE"
+description: "guide for BD-News-Task"
+category: "guide"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "guide,miscellaneous"
+---
+
+# 🚀 Scouted Resources Usage Guide
+
+## 📋 **Quick Start**
+
+### **1. Install Dependencies**
+```bash
+# Minimal installation (file processing only)
+pip install tqdm
+
+# Full installation (all features)
+pip install -r scouted-resources/requirements.txt
+```
+
+### **2. Set Environment Variables** (for GitHub Analyzer)
+```bash
+export GITHUB_TOKEN="gho_your_github_token_here"
+export GOOGLE_API_KEY="your_gemini_api_key_here"
+```
+
+## 🛠️ **Available Tools**
+
+### **Processors**
+
+#### **Simple File Analyzer**
+Basic file analysis without external dependencies:
+```python
+import sys
+sys.path.append('scouted-resources/processors')
+from simple_file_analyzer import SimpleFileAnalyzer
+
+# Analyze news data directory
+analyzer = SimpleFileAnalyzer("scraped_news_data/", "analysis_output/")
+results = analyzer.run_analysis()
+
+print(f"Analyzed {len(analyzer.files_analyzed)} files")
+```
+
+#### **Batch Analyzer**
+Concurrent file processing with progress tracking:
+```python
+import sys
+sys.path.append('scouted-resources/processors')
+from batch_analyzer import batch_analyze
+import glob
+
+# Process news CSV files in batches
+news_files = glob.glob("news_data/**/*.csv", recursive=True)
+results = batch_analyze(
+    files=news_files,
+    analyzer_type='simple',  # or 'formula_intelligence'
+    output_dir='batch_output/',
+    max_workers=8
+)
+
+print(f"Processed {len(results)} files")
+```
+
+### **Analyzers**
+
+#### **GitHub Repository Analyzer**
+Analyze GitHub repositories for news sources:
+```python
+import sys
+sys.path.append('scouted-resources/analyzers')
+from github_analyzer_verified import GitHubAnalyzer
+
+# Analyze news organization repositories
+analyzer = GitHubAnalyzer("news_analysis_output")
+
+# Analyze specific user/organization
+results = analyzer.analyze_user("reuters")  # or "bbcnews", "nytimes", etc.
+
+# Filter for production-ready repositories
+active_repos = [r for r in results if r.actual_status == "Production"]
+print(f"Found {len(active_repos)} active repositories")
+```
+
+### **Utilities**
+
+#### **Universal Context Resolver**
+Manage conversation context and memory:
+```python
+import sys
+sys.path.append('scouted-resources/utilities')
+# Note: Requires project_detector.py and related modules
+# Use subagent analysis for full integration guidance
+
+# Basic usage pattern (requires additional setup):
+# from universal_context_resolver import UniversalContextResolver
+# resolver = UniversalContextResolver(project_config)
+# conversations = resolver.resolve_conversations()
+```
+
+## 📊 **Use Case Examples**
+
+### **News Source Discovery**
+```python
+# Find active news APIs and scraping tools
+analyzer = GitHubAnalyzer("news_discovery")
+news_orgs = ["reuters", "apnews", "bbcnews", "cnntech"]
+
+for org in news_orgs:
+    repos = analyzer.analyze_user(org)
+    api_repos = [r for r in repos if 'api' in r.name.lower()]
+    print(f"{org}: {len(api_repos)} API repositories found")
+```
+
+### **Large News Dataset Processing**
+```python
+# Process thousands of news files efficiently
+import glob
+from batch_analyzer import batch_analyze
+
+# Find all news data files
+all_files = glob.glob("news_archives/**/*.{csv,json}", recursive=True)
+print(f"Found {len(all_files)} files to process")
+
+# Process in batches with progress tracking
+results = batch_analyze(
+    files=all_files,
+    analyzer_type='simple',
+    output_dir='processed_news/',
+    max_workers=16  # High concurrency for I/O bound tasks
+)
+
+# Analyze results
+successful = [r for r in results if r['status'] == 'success']
+failed = [r for r in results if r['status'] == 'error']
+print(f"Success: {len(successful)}, Failed: {len(failed)}")
+```
+
+### **News File Quality Assessment**
+```python
+# Quick assessment of downloaded news files
+analyzer = SimpleFileAnalyzer("daily_news_downloads/", "quality_check/")
+analysis = analyzer.run_analysis()
+
+# Find large files that might need optimization
+large_files = [f for f in analysis if f.get('file_size', 0) > 10_000_000]
+print(f"Found {len(large_files)} files over 10MB")
+
+# Find empty or corrupt files
+empty_files = [f for f in analysis if f.get('file_size', 0) == 0]
+print(f"Found {len(empty_files)} empty files to investigate")
+```
+
+## ⚠️ **Important Notes**
+
+### **File Path Dependencies**
+- All tools expect absolute paths for reliability
+- Relative paths may fail depending on working directory
+- Use `Path.resolve()` for path normalization when needed
+
+### **Memory Considerations**
+- **Batch Analyzer**: Memory usage scales with `max_workers`
+- **GitHub Analyzer**: Can use significant memory for large repositories
+- **Simple Analyzer**: Minimal memory footprint
+- **Context Resolver**: Memory usage depends on conversation history size
+
+### **Error Handling**
+- All tools include error handling and reporting
+- Check return values for `status` fields
+- Failed operations include error messages in results
+- Use try/catch for robust error handling in production
+
+### **Performance Tips**
+- **I/O Bound Tasks**: Use higher `max_workers` (16-32) for file processing
+- **CPU Bound Tasks**: Use `cpu_count
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

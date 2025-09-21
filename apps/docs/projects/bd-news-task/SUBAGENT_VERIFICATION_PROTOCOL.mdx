@@ -1,0 +1,100 @@
+---
+title: "SUBAGENT VERIFICATION PROTOCOL"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# SUBAGENT VERIFICATION PROTOCOL
+
+## 🚨 MANDATORY - NO EXCEPTIONS
+
+**EVERY SUBAGENT OUTPUT MUST PASS ALL VERIFICATION STEPS BEFORE ACCEPTANCE**
+
+### API Key for Testing
+```
+GEMINI_API_KEY="YOUR_CLIENT_API_KEY_HERE"
+```
+
+### 1. BASIC FUNCTIONALITY CHECK
+```bash
+cd "/Users/sumitm1/Documents/myproject/Ongoing Projects/new ai scraper agent"
+
+# Virtual environment MUST exist and work
+if [ -d "venv" ]; then
+    source venv/bin/activate
+    echo "✅ Virtual environment activated"
+else
+    echo "❌ Virtual environment missing - CRITICAL FAILURE"
+    exit 1
+fi
+
+# Dependencies MUST install correctly
+pip install -r requirements.txt || echo "❌ Dependencies failed"
+
+# Code MUST compile and import
+python -c "
+try:
+    from enhanced_orchestrator.agents.base_agent import BaseAgent
+    print('✅ BaseAgent imports')
+except Exception as e:
+    print('❌ BaseAgent failed:', e)
+"
+```
+
+### 2. API INTEGRATION CHECK
+```bash
+# API key MUST work with google-genai SDK
+export GEMINI_API_KEY="YOUR_CLIENT_API_KEY_HERE"
+
+python -c "
+import google.genai as genai
+genai.configure(api_key='YOUR_CLIENT_API_KEY_HERE')
+print('✅ API key configured successfully')
+
+# Test basic model access
+try:
+    model = genai.GenerativeModel('gemini-2.5-flash')
+    print('✅ Model access successful')
+except Exception as e:
+    print('❌ Model access failed:', e)
+"
+```
+
+### 3. ACCEPTANCE CRITERIA
+- [ ] Code compiles without errors
+- [ ] All imports work correctly  
+- [ ] Virtual environment configured
+- [ ] Dependencies install successfully
+- [ ] API key integration works
+- [ ] Basic functionality demonstrates
+- [ ] No critical TODO/FIXME markers
+- [ ] Error handling implemented
+- [ ] Meets client performance requirements
+
+### 4. PROGRESS TRACKING
+- Update CLIENT_PROJECT_TEMPLATE.md ONLY after verification passes
+- Mark todos complete ONLY after full verification
+- Document issues honestly, never claim false completion
+
+### 5. REJECTION CRITERIA
+**IMMEDIATE REJECTION IF:**
+- Code doesn't compile
+- Imports fail
+- Virtual environment not used
+- API key integration broken
+- Missing basic error handling
+- False completion claims
+
+## VERIFICATION COMMANDER RESPONSIBILITY
+**I (Claude Code orchestrator) MUST:**
+1. Run ALL verification steps before accepting work
+2. Test with provided API key
+3. Update progress tracking honestly
+4. Never accept incomplete work
+5. Create working application, not just documentation
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

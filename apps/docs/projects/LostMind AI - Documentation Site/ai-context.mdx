@@ -1,0 +1,167 @@
+---
+title: "Claude Memory Fix Task"
+description: "ai-context for LostMind AI - Documentation Site"
+category: "ai-context"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "ai-context,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md Memory Fix Task - Professional Documentation Correction
+
+## **TASK ID:** CLAUDE-MEMORY-FIX-001
+
+## **BRANCH:** `docs/claude-memory-accuracy-fix`
+
+## **ESTIMATED TIME:** 3-4 hours
+
+## **COMPLEXITY:** Medium
+
+## **CONTEXT MANAGEMENT:** Required
+
+---
+
+## **CRITICAL INSTRUCTIONS - READ BEFORE EVERY ACTION**
+
+### **CONTEXT WINDOW MANAGEMENT**
+
+- **AFTER EVERY 3 ACTIONS:** Re-read this complete task description
+- **BEFORE EACH PHASE:** Re-read the task objectives and current progress
+- **IF CONTEXT COMPRESSED:** Re-read task + progress files + current phase requirements
+- **WHEN UNCERTAIN:** Stop, re-read task, validate current action against objectives
+
+### **PROGRESS TRACKING REQUIREMENTS**
+
+- **IMMEDIATE FILE WRITING:** Write findings to files after each action
+- **PROGRESS COMMITS:** Git commit after each completed phase
+- **STATUS UPDATES:** Update progress tracking file continuously
+- **VALIDATION CHECKS:** Verify completion before moving to next phase
+
+### **TASK ADHERENCE PROTOCOL**
+
+- **SCOPE DISCIPLINE:** Only fix documentation accuracy, no code changes
+- **EVIDENCE-BASED:** All corrections must be backed by actual code analysis
+- **PROFESSIONAL TONE:** Maintain technical credibility throughout
+- **NO SCOPE CREEP:** Do not add features, improvements, or optimizations
+
+---
+
+## **TASK OBJECTIVE**
+
+Fix critical accuracy issues in CLAUDE.md files throughout the repository by replacing unverified claims with evidence-based documentation that properly distinguishes between "code exists" and "functionality verified."
+
+## **SUCCESS CRITERIA**
+
+- [ ] All CLAUDE.md files updated with accurate, evidence-based content
+- [ ] Clear distinction between static code analysis and runtime verification
+- [ ] Misleading security and functionality claims corrected
+- [ ] Professional disclaimer about analysis limitations added
+- [ ] All changes committed in clean, reviewable PR
+- [ ] No code functionality changed, only documentation accuracy
+
+## **SCOPE BOUNDARIES**
+
+### **INCLUDED IN SCOPE:**
+
+- Updating CLAUDE.md files with accurate assessments
+- Adding disclaimers about static analysis limitations
+- Correcting unverified functionality claims
+- Distinguishing between code presence and working features
+- Adding runtime verification requirements sections
+- Professional documentation standards compliance
+
+### **EXPLICITLY EXCLUDED:**
+
+- Any code modifications or improvements
+- Adding new features or functionality
+- Performance optimizations
+- Architectural changes
+- New file creation (except progress tracking)
+- Stylistic improvements beyond accuracy
+
+## **QUALITY STANDARDS**
+
+- All claims must be evidence-based from actual code analysis
+- Professional tone and credibility maintained throughout
+- Clear distinction between verified and unverified functionality
+- Comprehensive coverage of all CLAUDE.md files
+- Reviewable, atomic commits with clear messages
+
+---
+
+## **EXECUTION PHASES**
+
+### **PHASE 1: Setup and Discovery (30 minutes)**
+
+**Objective:** Initialize task tracking and identify all CLAUDE.md files requiring updates
+**Deliverable:** `docs/progress/claude-memory-fix-progress.md`
+**Validation Criteria:** All CLAUDE.md files identified and cataloged
+
+#### **Pre-Phase Checklist:**
+
+- [ ] Re-read full task description above
+- [ ] Verify current git status and branch
+- [ ] Confirm phase objectives understood
+- [ ] Check available context window
+
+#### **Phase Actions:**
+
+1. **Create Task Tracking System**
+
+```bash
+# Create branch and progress tracking
+git checkout -b docs/claude-memory-accuracy-fix
+mkdir -p docs/progress
+cd docs/progress
+
+# Create master progress file
+cat > claude-memory-fix-progress.md << 'EOF'
+# CLAUDE.md Memory Fix Progress
+
+## Task Objective
+Fix critical accuracy issues in CLAUDE.md files by replacing unverified claims with evidence-based documentation.
+
+## Phases
+- [ ] Phase 1: Setup and Discovery
+- [ ] Phase 2: Main CLAUDE.md Analysis and Fix
+- [ ] Phase 3: Package-Level CLAUDE.md Fixes
+- [ ] Phase 4: Application-Level CLAUDE.md Fixes
+- [ ] Phase 5: Final Validation and PR Creation
+
+## Current Phase: Phase 1 - Setup and Discovery
+**Started:** [timestamp]
+**Status:** In Progress
+
+## Files to Update:
+[To be populated]
+
+## Completed Actions:
+- [x] Created progress tracking system
+EOF
+
+git add claude-memory-fix-progress.md
+git commit -m "docs: initialize CLAUDE.md memory fix tracking"
+```
+
+- **Output:** Progress tracking system created
+- **File:** `docs/progress/claude-memory-fix-progress.md`
+- **Validation:** File exists and is committed to git
+
+2. **Discover All CLAUDE.md Files**
+
+```bash
+# Find all CLAUDE.md files in repository
+echo "## CLAUDE.md Files Discovery" >> claude-memory-fix-progress.md
+echo "**Discovery Date:** $(date)" >> claude-memory-fix-progress.md
+echo "" >> claude-memory-fix-progress.md
+
+# List all CLAUDE.md files
+echo "### Files
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

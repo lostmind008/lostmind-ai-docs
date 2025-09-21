@@ -1,0 +1,102 @@
+---
+title: "COMPLETE GUIDE"
+description: "guide for BD-News-Task"
+category: "guide"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "guide,miscellaneous"
+---
+
+# The Universal Claude Framework (UCF) v4 - Complete Guide & Project Log
+
+This document provides a complete overview of the Universal Claude Framework (UCF) v4, including its purpose, architecture, usage instructions, and the detailed design history of its creation.
+
+---
+
+## PART 1: QUICK START & USER GUIDE
+
+This section covers everything you need to know to install and use the framework effectively.
+
+### 1.1. Introduction
+
+Welcome to the Universal Claude Framework (UCF) v4. This framework transforms your AI assistant into a disciplined, context-aware, and reliable software development partner, built on the latest, validated best practices for Anthropic's Claude Code.
+
+It enforces professional workflows, automates quality control, and provides intelligent guidance for both new and existing projects.
+
+### 1.2. Installation
+
+1.  **Run the Installer:** Execute the installer script from the root of this directory to set up the user-level configuration in your `~/.claude` directory.
+    *   `./install_ucf.sh`
+
+2.  **Start Developing:** Once installed, you can create a new project directory and use the `/init` or `/audit` commands to begin working with your new AI development partner.
+
+### 1.3. Core Concepts
+
+*   **Two-Tiered Context:** The framework uses a `~/.claude/` directory for your global user preferences and a `<project>/.claude/` directory for project-specific rules. Project rules always win.
+*   **Agent Personas:** The AI adopts specialized roles (Architect, Coder, Tester, Security Agent) to apply the correct expertise to each task.
+*   **Model Tiering:** The framework automatically uses the best AI model for the job (e.g., Opus for architecture, Sonnet for coding) to optimize for both cost and performance.
+*   **Automated Quality Gates:** A powerful hook system automatically lints and formats code *before* it's saved, forcing the AI to adhere to quality standards.
+
+### 1.4. The UCF Commands
+
+*   `/init`: Run this in a new, empty directory to bootstrap a project with the UCF.
+*   `/audit`: Run this in an existing codebase. It scans your project, identifies the tech stack, and creates a tailored UCF configuration for it.
+*   `/help`: Run this anytime you're unsure what to do next. It provides intelligent, context-aware suggestions.
+
+### 1.5. The Development Workflow
+
+The UCF enforces a professional, step-by-step workflow:
+
+1.  **Goal:** You provide a high-level goal.
+2.  **Plan:** The **Architect** proposes a detailed plan.
+3.  **Team Review:** The AI automatically reviews its own plan from multiple perspectives (Tester, Coder, Security) to find flaws early.
+4.  **Approval:** You review the plan and the feedback, then give your approval.
+5.  **TDD & Implementation:** The **Tester** and **Coder** work in a loop to build the feature.
+6.  **Verification:** The AI runs all tests and quality checks.
+7.  **Finalize:** The AI documents the code and updates its project map.
+
+---
+
+## PART 2: FRAMEWORK CONTENTS
+
+This section details the contents of the final deliverable directory.
+
+*   `UCF_V4_USER_SETUP/`
+    *   This is the **user-level framework**. The `install_ucf.sh` script will copy the contents of this directory to `~/.claude`. It contains your global settings, default agent, custom commands, and hooks.
+
+*   `UCF_V4_PROJECT_TEMPLATE/`
+    *   This is the **project-level framework template**. The `/init` and `/audit` commands use this as a source to create the `.claude` directory inside your projects.
+
+*   `install_ucf.sh`
+    *   The installation script.
+
+*   `Perplexity Research output/`
+    *   Contains the raw, detailed research documents that were used to validate and refine the `v4` design of this framework.
+
+*   `FRAMEWORK_EVOLUTION_LOG.md`
+    *   The historical design document for v1 and v2 of the framework (also included below for completeness).
+
+---
+
+## PART 3: FRAMEWORK DESIGN & EVOLUTION LOG (HISTORICAL)
+
+This section provides a comprehensive overview of the design process that led to the final v4 framework, including the initial architecture, research findings, and the cross-analysis that prompted the iterative improvements.
+
+### 3.1. Initial `v1` Architecture
+
+The `v1` framework was designed around a two-tiered context system: a User-Level setup (`~/.claude/`) for global preferences and a Project-Level setup (`<project>/.claude/`) for project-specific rules. It was composed of four main logical components: Protocols, Personas, State, and Workflow/Setup tools.
+
+### 3.2. Research Findings: Official Claude CLI Functionality
+
+A targeted investigation into the official Anthropic Claude CLI ("Claude Code") documentation yielded the following key findings:
+*   Configuration is handled by `settings.json` files.
+*   A single `CLAUDE.md` file is the primary project context source.
+*   Custom commands are `.md` files in a `.claude/commands/` directory.
+*   Hooks are triggered by `settings.json` and execute shell commands.
+
+### 3.3. Cross-Analysis: `v1` vs. Official Documentation
+
+The analysis revealed se
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

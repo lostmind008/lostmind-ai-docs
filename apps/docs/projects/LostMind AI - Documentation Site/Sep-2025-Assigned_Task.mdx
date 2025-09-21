@@ -1,0 +1,106 @@
+---
+title: "Sep 2025 Assigned Task"
+description: "documentation for gemini-cloud-service-v2"
+category: "documentation"
+project: "gemini-cloud-service-v2"
+lastUpdated: "2025-09-21"
+tags: "documentation,backend-services"
+---
+
+**Objective**
+- Build an authenticated MCP/connector interface for the Gemini V2 service, support remote MCP usage (Cloud Run or Vercel), add high-value MCP tool calls and reusable custom prompt templates, and document a strict workflow with Dr/Cr update protocol.
+
+**Scope**
+- Add a remote-accessible MCP surface over the existing V2 HTTP service.
+- Support deployment on Vercel (preferred for this iteration) and Cloud Run (reference).
+- Add specific MCP tools and a prompt template library for repeatable tasks.
+- Require authentication, logging, and rigorously test each tool.
+- Enforce the Dr/Cr protocol: immediately reconcile tasks and documentation on completion.
+
+**Architecture**
+- Service Core: keep `app.py` (FastAPI/Flask) as-is for core V2 features.
+- MCP Layer (Remote): expose a minimal MCP-over-HTTP contract:
+  - `GET /mcp/health`: returns service name, version, and readiness.
+  - `GET /mcp/tools`: returns the list of available tools with JSON Schemas.
+  - `POST /mcp/execute`: body `{ tool: string, args: object }` executes the mapped V2 action.
+  - `GET /mcp/models` (optional): list model metadata used by V2.
+- Auth: require `Authorization: Bearer <TOKEN>` on all `/mcp/*` routes.
+- Compatibility: keep existing V2 endpoints (`/process`, `/youtube`, `/code`, `/research`) and map MCP tools to those.
+
+**Deployment Options**
+- Vercel (preferred):
+  - Add `vercel.json` with routes proxying `/mcp/*` to a Python serverless function.
+  - Use Vercel’s Python Runtime (or containerized via `Dockerfile`).
+  - Put secrets in Vercel env vars: `MCP_AUTH_TOKEN`, `GEMINI_API_KEY`, optional `RATE_LIMIT` settings.
+- Cloud Run (reference):
+  - Build from `Dockerfile` and deploy; set the same env vars; restrict ingress to authenticated callers or use IAP/Cloud Armor as needed.
+
+**Authentication & Security**
+- Required headers:
+  - `Authorization: Bearer ${MCP_AUTH_TOKEN}` for all `/mcp/*` endpoints.
+  - Reject requests with 401 if missing/invalid.
+- Rate limiting: minimally 100 req/min per IP on `/mcp/execute` (429 on exceed).
+- Logging: structured JSON log per call including `tool`, `status`, `latency_ms`, `request_id`.
+
+**MCP Tooling Model**
+- Tool registry (static JSON in repo): `mcp/tools.json`
+  - Contains: `name`, `description`, `input_schema` (JSON Schema), `output_schema` (JSON Schema), `service_route`, `timeout_s`.
+- Tool execution mapper: `mcp/execute.py`
+  - Validates `args` against `input_schema` using `jsonschema`.
+  - Calls the appropriate internal V2 client or existing route.
+  - Applies default prompt templates when referenced.
+  - Returns response shaped per `output_schema`.
+
+**Initial Tool Set (V2)**
+- v2.summarize_pdf
+  - Input: `{ file_path: string, prompt_override?: string, max_output_tokens?: number, temperature?: number }`
+  - Default prompt: `PROMPTS.SUMMARIZE_ACADEMIC`
+  - Maps to: `POST /process`
+- v2.youtube_tldr
+  - Input: `{ youtube_url: string, style?: "bullets"|"narrative", include_timestamps?: boolean, max_output_tokens?: number }`
+  - Default prompt: `PROMPTS.YT_TLDR`
+  - Maps to: `POST /youtube`
+- v2.code_security_audit
+  - Input: `{ file_path?: string, code?: string, language?: string }`
+  - Default prompt: `PROMPTS.CODE_SECURITY`
+  - Maps to: `POST /code` with `analysis_type="security"`
+- v2.research_with_citations
+  - Input: `{ topic: string, depth?: "basic"|"comprehensive", include_sources?: boolean }`
+  - Default prompt: `PROMPTS.RESEARCH_CITATIONS`
+  - Maps to: `POST /research`
+- v2.structured_extract
+  - Input: `{ file_path: string, schema: object }`
+  - Default prompt: instructs strict JSON extraction matching provided schema
+  - Maps to: `POST /process`
+
+**Prompt Template Library**
+- File: `mcp/prompts.py`
+  - `SUMMARIZE_ACADEMIC`: concise abstract, findings, methods, limitations, and future work; cite page numbers.
+  - `YT_TLDR`: produce summary in chosen style; include timestamps when requested.
+  - `CODE_SECURITY`: enumerate vulnerabilities with CWE references and remediations.
+  - `RESEARCH_CITATIONS`: web-grounded, numbered references with URLs and confidence scores.
+  - `STRUCTURED_EXTRACT`: return strictly valid JSON matching input schema; no prose.
+
+**File/Code Changes (Implementation Plan)**
+- Create directory `mcp/` with:
+  - `tools.json` (registry for tools listed above)
+  - `prompts.py` (constants)
+  - `schemas/` (optional example output schemas)
+  - `execute.py` (validation + routing to existing V2 handlers)
+- Update `app.py` to add routes:
+  - `GET /mcp/health`
+  - `GET /mcp/tools`
+  - `POST /mcp/execute`
+  - All guarded by `MCP_AUTH_TOKEN`.
+- Add minimal tests (CLI-compatible): `tests_mcp.sh` with `curl` calls covering auth failure, tool list, and one happy-path per tool.
+- Add `vercel.json` and, if using serverless, a Vercel function entry that imports `app`.
+
+**Vercel Deployment (Step-by-Step)**
+- Prerequisites:
+  - Vercel account and CLI installed (`vercel`).
+  - Project connected to your GitHub fork or local directory.
+- Steps:
+  - `vercel link` (select/create a
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

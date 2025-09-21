@@ -1,0 +1,164 @@
+---
+title: "Api Key Service"
+description: "api-reference for LostMindAI-TurboRepo"
+category: "api-reference"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "api-reference,main-platform"
+---
+
+"""
+Database API Key Service
+Secure API key management with PostgreSQL backend
+SECURITY FIX - CRITICAL-002: Replace hardcoded API keys with database
+"""
+
+import os
+import hashlib
+import secrets
+import time
+from typing import Optional, Dict, Any, List
+from datetime import datetime, timedelta
+import asyncpg
+import structlog
+from dataclasses import dataclass
+from enum import Enum
+
+from ..config import settings
+
+logger = structlog.get_logger()
+
+class APIKeyStatus(Enum):
+    ACTIVE = "active"
+    REVOKED = "revoked"
+    EXPIRED = "expired"
+    SUSPENDED = "suspended"
+
+@dataclass
+class APIKeyInfo:
+    """API Key information"""
+    key_id: str
+    user_id: str
+    tenant_id: str
+    name: str
+    status: APIKeyStatus
+    subscription_tier: str
+    permissions: List[str]
+    rate_limit: int
+    created_at: datetime
+    expires_at: Optional[datetime]
+    last_used_at: Optional[datetime]
+    usage_count: int
+    
+    def is_valid(self) -> bool:
+        """Check if API key is valid and active"""
+        if self.status != APIKeyStatus.ACTIVE:
+            return False
+        
+        if self.expires_at and self.expires_at < datetime.utcnow():
+            return False
+        
+        return True
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary"""
+        return {
+            "key_id": self.key_id,
+            "user_id": self.user_id,
+            "tenant_id": self.tenant_id,
+            "name": self.name,
+            "status": self.status.value,
+            "subscription_tier": self.subscription_tier,
+            "permissions": self.permissions,
+            "rate_limit": self.rate_limit,
+            "created_at": self.created_at.isoformat(),
+            "expires_at": self.expires_at.isoformat() if self.expires_at else None,
+            "last_used_at": self.last_used_at.isoformat() if self.last_used_at else None,
+            "usage_count": self.usage_count,
+            "is_valid": self.is_valid()
+        }
+
+class DatabaseAPIKeyService:
+    """Database-backed API key management service"""
+    
+    def __init__(self):
+        self.connection_pool: Optional[asyncpg.Pool] = None
+        self.db_url = settings.DATABASE_URL
+        self._initialized = False
+    
+    async def initialize(self):
+        """Initialize database connection and tables"""
+        try:
+            # Create connection pool
+            self.connection_pool = await asyncpg.create_pool(
+                self.db_url,
+                min_size=1,
+                max_size=10,
+                command_timeout=30
+            )
+            
+            # Create tables if they don't exist
+            await self._create_tables()
+            self._initialized = True
+            
+            logger.info("Database API key service initialized")
+            
+        except Exception as e:
+            logger.error("Failed to initialize database API key service", error=str(e))
+            raise
+    
+    async def _create_tables(self):
+        """Create API key tables"""
+        create_table_sql = """
+        CREATE TABLE IF NOT EXISTS api_keys (
+            key_id TEXT PRIMARY KEY,
+            key_hash VARCHAR(128) NOT NULL UNIQUE,
+            user_id TEXT NOT NULL,
+            tenant_id TEXT NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            status VARCHAR(20) DEFAULT 'active',
+            subscription_tier VARCHAR(50) DEFAULT 'free',
+            permissions TEXT[] DEFAULT '{}',
+            rate_limit INTEGER DEFAULT 100,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP NULL,
+            last_used_at TIMESTAMP NULL,
+            usage_count INTEGER DEFAULT 0,
+
+            -- Constraints
+            CONSTRAINT api_keys_status_check CHECK (status IN ('active', 'revoked', 'expired', 'suspended'))
+        );
+
+        -- Create indexes for performance
+        CREATE INDEX IF NOT EXISTS idx_api_keys_key_hash ON api_keys (key_hash);
+        CREATE INDEX IF NOT EXISTS idx_api_keys_user_id ON api_keys (user_id);
+        CREATE INDEX IF NOT EXISTS idx_api_keys_tenant_id ON api_keys (tenant_id);
+        CREATE INDEX IF NOT EXISTS idx_api_keys_status ON api_keys (status);
+
+        -- Enable Row Level Security
+        ALTER TABLE api_keys ENABLE ROW LEVEL SECURITY;
+        
+        -- Create updated_at trigger
+        CREATE OR REPLACE FUNCTION update_api_keys_updated_at()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = CURRENT_TIMESTAMP;
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+        
+        CREATE TRIGGER IF NOT EXISTS update_api_keys_updated_at
+            BEFORE UPDATE ON api_keys
+            FOR EACH ROW
+            EXECUTE FUNCTION update_api_keys_updated_at();
+        """
+        
+        async with self.connection_pool.acquire() as conn:
+            await conn.execute(create_table_sql)
+            logger.info("API keys table created/verified")
+    
+    def _hash_api_key(self, api_key
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

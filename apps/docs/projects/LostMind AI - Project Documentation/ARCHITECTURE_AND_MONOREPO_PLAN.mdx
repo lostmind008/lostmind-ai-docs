@@ -1,0 +1,96 @@
+---
+title: "ChatCrawler-Replit-version"
+description: ""
+category: "architecture"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "architecture,ai-services"
+---
+
+# ChatCrawler: Current Architecture and Monorepo Blueprint
+
+Status: Development prototype (approximately 40% complete). This document describes the current system, reconciles documentation with reality, and proposes a path to a Next.js 15 Turborepo monorepo with a marketing site and additional apps.
+
+## 1) Current System Overview
+
+- Frontend: Two UIs exist
+  - `client/`: Vite + React app with shadcn/ui.
+  - `apps/chatcrawler/`: Next.js app (App Router) with routes for dashboard, chat, documents, scrape, account.
+- Backend API: `server/` Express 4 + TypeScript
+  - Auth: Replit OIDC (`server/replitAuth.ts`) with PostgreSQL-backed sessions.
+  - Routes: `server/routes.ts` for auth, dashboard stats, jobs, documents, chat, billing, and subscription creation.
+  - AI: `server/openai.ts` selects OpenAI (if key) or Gemini fallback; provides chat, embeddings, summarization.
+  - Storage: `server/storage.ts` implements `MemStorage` — all data in memory (lossy, single-instance-only).
+  - Build/dev: `server/vite.ts` wires Express + Vite for the `client/` app in dev.
+- Worker Service: `services/worker/` FastAPI (Python)
+  - Scraper: Async crawler with robots.txt compliance, basic link traversal, content/image extraction.
+  - API: `/scrape` background jobs with in-memory status, `/health`, stubs for upload/chat/visualise.
+- Webhook Service: `services/webhook/` Express (Node.js)
+  - Stripe webhook receiver and forwarder to main app (endpoints not yet implemented in `server/`).
+- Data Layer
+  - Drizzle schema: `shared/schema.ts` defines users, jobs, docs, conversations, messages, credits, etc.
+  - Drizzle DB clients: `server/db.ts` and `apps/chatcrawler/lib/db.ts` configure `drizzle-orm` + `pg` (unused by `server/storage.ts`).
+  - Prisma schema exists in `shared/prisma/schema.prisma` but is not used by the running code.
+- Payments: Stripe subscription creation implemented; lifecycle webhooks not integrated into main server.
+- Observability: Console logging with safer API response logging in dev; no metrics or tracing.
+
+## 2) Reality Check vs Documentation
+
+Accurate
+- `DEVELOPMENT_STATUS.md`: Reflects prototype state (40% complete) and key gaps.
+
+Outdated or Overstated
+- `README.md`: Mixed messaging — correctly flags "DEVELOPMENT PROTOTYPE" but elsewhere implies production readiness and "Ready to Launch" steps.
+- `docs/ARCHITECTURE.md`: Describes a future/alternate stack (Next.js 15 + Prisma + Auth.js) rather than the current Express + Drizzle + Replit Auth stack.
+- `SETUP_COMPLETE.md` and `PRODUCTION_SETUP_GUIDE.md`: Overstate readiness and include concrete Stripe IDs; not aligned with actual implementation.
+
+Actions taken in this commit
+- Added this authoritative document consolidating current architecture and the future monorepo plan.
+- Plan: align `README.md` language and update `docs/ARCHITECTURE.md` to reflect current stack with a note on future target.
+
+Security note
+- The repository currently contains secrets in `.env`. Rotate immediately and remove from VCS. Reference `.env.example` for placeholders only.
+
+## 3) Detailed Current Architecture
+
+### 3.1 Frontend
+- `client/` (Vite + React):
+  - Routing: wouter
+  - State: TanStack Query
+  - UI: shadcn/ui components
+  - Talks to Express API under `/api/*`
+
+- `apps/chatcrawler/` (Next.js App Router):
+  - Pages: `/`, `/dashboard`, `/chat`, `/documents`, `/scrape`, `/account`
+  - API routes (example): `app/api/upload/route.ts` creates jobs and posts to worker (contains a minor missing import of `eq`)
+  - DB: `app/lib/db.ts` uses `drizzle-orm` + `pg` with `shared/schema.ts`
+  - Middleware: present but does not fully enforce auth
+
+Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
+
+### 3.2 Backend API (Express)
+- Auth: Replit OIDC via `passport` with PostgreSQL session store (`connect-pg-simple`).
+- Routes in `server/routes.ts`:
+  - Auth: `GET /api/auth/user`
+  - Dashboard: `GET /api/dashboard/stats`
+  - Jobs: `GET /api/jobs`, `POST /api/jobs/scrape` (contacts worker)
+  - Documents: `GET /api/documents`, `POST /api/upload` (stubbed)
+  - Chat: `POST /api/chat` (OpenAI/Gemini)
+  - Conversations: `GET /api/conversations/:id`
+  - Billing: `GET /api/billing`, `POST /api/create-subscription`
+- Error handling/logging: `server/index.ts` avoids logging bodies in prod and avoids process crashes in prod.
+- Persistence: Absent. `server/storage.ts` keeps everything in memory.
+
+### 3.3 Worker (FastAPI)
+- `/scrape`: Enqueues and processes scraping jobs (in-process background task). Tracks progress and results in in-memory dict.
+- `WebScraper`: robots.txt respect, link traversal with depth and page limits, extracted content and metadata.
+- Future: Upload parsing, embeddings, RAG/search integrations.
+
+### 3.4 Webhook Service
+- Stripe webhook endpoint with signature verification, forwards to main app endpoints (`/api/webhooks/*`) that are not yet implemented in `server/`.
+
+### 3.5 Data and AI
+- Drizzle schema covers: users, jobs, docs (kb_docs with pgvector), convers
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

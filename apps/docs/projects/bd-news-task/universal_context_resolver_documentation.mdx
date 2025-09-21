@@ -1,0 +1,143 @@
+---
+title: "Universal Context Resolver Documentation"
+description: "documentation for BD-News-Task"
+category: "documentation"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "documentation,miscellaneous"
+---
+
+# 🧠 Universal Context Resolver - Resource Documentation
+
+## 📋 **Overview**
+Sophisticated context management system that provides unlimited context memory by analyzing conversation history and preserving decision context across different Claude Code project configurations.
+
+**Source Location**: `/Users/sumitm1/Documents/New Ongoing Projects/LostMind AI - Memory&Context Protocol/framework_hub/core/universal_context_resolver.py`
+
+## 🎯 **Core Mission**
+Maintain unlimited context memory by intelligently resolving different conversation storage patterns and preserving sophisticated analysis capabilities across ANY Claude Code project configuration.
+
+## 🏗️ **Architecture Components**
+
+### **1. Storage Pattern Resolution**
+- **Adaptive JSONL Parsing**: Works across any Claude Code project configuration
+- **Universal Conversation Threading**: Maintains context regardless of storage format
+- **Context-Aware Analysis**: PURPOSE analysis independent of storage format
+- **Intelligent Fallback Mechanisms**: Robust operation across different patterns
+
+### **2. Data Structures**
+
+#### **ConversationMessage**
+```python
+@dataclass
+class ConversationMessage:
+    message_id: str
+    timestamp: datetime
+    role: str  # 'user', 'assistant', 'system'
+    content: str
+    session_uuid: Optional[str] = None
+    thread_id: Optional[str] = None
+    context_metadata: Dict[str, Any] = field(default_factory=dict)
+```
+
+#### **ConversationThread**
+```python
+@dataclass
+class ConversationThread:
+    thread_id: str
+    session_uuid: str
+    project_path: str
+    messages: List[ConversationMessage]
+    created_at: datetime
+    updated_at: datetime
+    purpose_analysis: Optional[str] = None
+    reasoning_chain: List[str] = field(default_factory=list)
+    context_score: float = 0.0
+```
+
+### **3. Context Analysis Engine**
+
+#### **Context Scoring Algorithm**
+The system calculates relevance scores based on:
+- **Content Volume**: `min(total_length / 10000, 1.0) * 0.3`
+- **Conversation Length**: `min(message_count / 50, 1.0) * 0.2` 
+- **Purpose Indicators**: Detection of purpose/goal/objective keywords (30% weight)
+- **Technical Content**: Detection of code/function keywords (20% weight)
+
+#### **Purpose Extraction Patterns**
+```python
+purpose_patterns = [
+    r"purpose[:\s]+([^\n]+)",
+    r"goal[:\s]+([^\n]+)", 
+    r"objective[:\s]+([^\n]+)",
+    r"mission[:\s]+([^\n]+)"
+]
+```
+
+## 🔍 **Key Capabilities**
+
+### **1. Project Pattern Detection**
+- Detects different Claude Code storage configurations
+- Identifies project directories using sophisticated path analysis
+- Maintains compatibility across storage pattern evolution
+
+### **2. Conversation Resolution**
+- **Standard JSONL Resolver**: For `~/.claude/projects/` patterns
+- **Project-Specific Resolvers**: Adaptable to custom storage patterns
+- **Path Matching**: Direct name matching + path-based matching
+- **Settings Integration**: Reads `settings.json` for project path verification
+
+### **3. Sophisticated Message Extraction**
+- **Legacy Format Support**: Maintains backward compatibility
+- **Modern Format Support**: Handles current Claude Code message formats
+- **Content Preservation**: Ensures all conversation content is captured
+- **Error Resilience**: Graceful handling of malformed data
+
+### **4. Context Chain Extraction**
+- **Reasoning Chain Analysis**: Extracts decision-making processes
+- **Purpose Analysis**: Identifies conversation objectives
+- **Context Threading**: Maintains relationships between conversations
+- **Metadata Preservation**: Retains important context information
+
+## 🎯 **Applications for BD-News-Task**
+
+### **Memory Management for News Analysis**
+```python
+from scouted_resources.utilities.universal_context_resolver import UniversalContextResolver
+
+resolver = UniversalContextResolver(project_config)
+conversations = resolver.resolve_conversations()
+
+# Extract news analysis context
+news_contexts = [c for c in conversations 
+                if any('news' in msg.content.lower() for msg in c.messages)]
+```
+
+### **Decision Context Preservation**
+- **Scraping Strategy Decisions**: Remember why certain approaches were chosen
+- **Source Prioritization**: Maintain context on news source reliability decisions
+- **Error Pattern Recognition**: Learn from previous scraping challenges
+- **Performance Optimization**: Remember successful configuration choices
+
+### **Cross-Session Learning**
+- **Pattern Recognition**: Identify recurring news analysis patterns
+- **Configuration Memory**: Remember effective scraping configurations
+- **Error Context**: Maintain history of what doesn't work
+- **Success Patterns**: Preserve successful analysis approaches
+
+## 🛠️ **Integration Patterns**
+
+### **Context-Aware News Processing**
+```python
+# Initialize with project configuration
+config = ProjectConfiguration(project_root=Path.cwd())
+resolver = UniversalContextResolver(config)
+
+# Resolve conversation history
+threads = resolver.resolve_conversations()
+
+# Filter for news-related contexts
+news_threads = [t
+
+---
+*This content was automatically extracted from BD-News-Task. For the most up-to-date information, refer to the source project.*

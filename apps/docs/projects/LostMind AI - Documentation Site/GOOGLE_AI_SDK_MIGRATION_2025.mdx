@@ -1,0 +1,203 @@
+---
+title: "GOOGLE AI SDK MIGRATION 2025"
+description: "migration for LostMind AI - Documentation Site"
+category: "migration"
+project: "LostMind AI - Documentation Site"
+lastUpdated: "2025-09-21"
+tags: "migration,ai-services"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Google Generative AI SDK Migration Guide 2025
+
+## CRITICAL: BREAKING CHANGES IN 2025
+
+This document outlines the **MANDATORY** migration from the deprecated `google-generativeai` SDK to the new `google-genai` SDK for all AI integrations in the LostMind AI project.
+
+**Migration Date**: 2025-09-05  
+**SDK Version**: google-genai 0.6.0+  
+**Status**: **COMPLETED**
+
+---
+
+## Executive Summary
+
+Google has released a completely new SDK for their Generative AI services in 2025. The old `google-generativeai` package is **DEPRECATED** and **END OF LIFE**. All AI integrations must be updated immediately.
+
+### Key Changes at a Glance
+
+| Component | OLD (Deprecated) | NEW (2025) |
+|-----------|-----------------|------------|
+| **Package** | `pip install google-generativeai` | `pip install google-genai` |
+| **Import** | `import google.generativeai as genai` | `from google import genai` |
+| **Client** | `genai.configure(api_key=...)` | `client = genai.Client(api_key=...)` |
+| **Models** | `gemini-pro`, `gemini-pro-vision` | `gemini-2.5-flash`, `gemini-2.5-flash-image-preview` |
+| **Video Model** | `veo-3.0-generate-preview` | `veo-2.0-generate-001` |
+| **Method Calls** | `model.generate_content()` | `client.models.generate_content()` |
+
+---
+
+## Detailed Migration Instructions
+
+### Package Installation
+
+```bash
+# REMOVE old package
+pip uninstall google-generativeai
+
+# INSTALL new package
+pip install google-genai>=0.6.0
+
+# For TypeScript/JavaScript projects
+npm uninstall @google/generative-ai
+npm install @google/genai
+```
+
+### Import Pattern Changes
+
+```python
+# ❌ OLD (DEPRECATED)
+import google.generativeai as genai
+from google.generativeai import types
+
+# ✅ NEW (2025)
+from google import genai
+from google.genai import types
+```
+
+### Client Initialization
+
+```python
+# ❌ OLD (DEPRECATED)
+import google.generativeai as genai
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel('gemini-pro')
+
+# ✅ NEW (2025)
+from google import genai
+client = genai.Client(api_key="YOUR_API_KEY")  # Auto-reads GEMINI_API_KEY env var
+# Now use: client.models.generate_content()
+```
+
+### Model Names Update
+
+```python
+# Model mapping
+MODELS_2025 = {
+    "TEXT": "gemini-2.5-flash",              # Primary text model
+    "IMAGE": "gemini-2.5-flash-image-preview", # Image generation
+    "VIDEO": "veo-2.0-generate-001",          # Video generation
+    "EMBEDDING": "text-embedding-004",         # Latest embeddings
+    "MULTIMODAL": "gemini-2.5-flash"          # Audio, video, image understanding
+}
+```
+
+### Method Call Patterns
+
+#### Text Generation
+```python
+# ❌ OLD
+response = model.generate_content(prompt)
+
+# ✅ NEW
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[prompt],
+    config=types.GenerateContentConfig(temperature=0.7)
+)
+```
+
+#### Structured Output with Pydantic
+```python
+# ✅ NEW Pattern with Pydantic v2
+from pydantic import BaseModel
+
+class StoryOutline(BaseModel):
+    title: str
+    genre: str
+    plot_points: list[str]
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[prompt],
+    config={
+        "response_mime_type": "application/json",
+        "response_schema": StoryOutline,
+    }
+)
+
+# Access parsed result
+outline = response.parsed  # Returns StoryOutline instance
+json_output = outline.model_dump_json()  # Pydantic v2 method
+```
+
+#### Image Generation
+```python
+# ✅ NEW
+response = client.models.generate_content(
+    model="gemini-2.5-flash-image-preview",
+    contents=[prompt]
+)
+
+# Extract image bytes
+image_bytes = response.candidates[0].content.parts[0].inline_data.data
+```
+
+#### Video Generation
+```python
+# ✅ NEW with polling pattern
+from PIL import Image
+
+operation = client.models.generate_videos(
+    model="veo-2.0-generate-001",
+    prompt=prompt,
+    image=Image.open("input.png"),  # Direct PIL Image object
+    config=types.GenerateVideosConfig(duration_seconds=5)
+)
+
+# Poll for completion
+while not operation.done:
+    time.sleep(20)
+    operation = client.operations.get(operation.name)
+
+# Download video
+video = operation.result().generated_videos[0]
+video_bytes = client.files.download(file=video.video)
+```
+
+#### Audio/TTS Generation
+```python
+# ✅ NEW - TTS is built into Gemini 2.5 models
+prompt = f"Please say the following with a clear voice: '{text}'"
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[prompt]
+)
+
+audio_bytes = response.candidates[0].content.parts[0].inline_data.data
+```
+
+### Advanced Features
+
+#### Google Search Grounding
+```python
+grounding_tool = types.Tool(google_search=types.GoogleSearch())
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=[question],
+    config=types.GenerateContentConfig(tools=[grounding_tool])
+)
+```
+
+#### Code Execution
+```python
+code_tool = types.Tool(code_execution=types.ToolCodeExec
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

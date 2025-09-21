@@ -1,0 +1,33 @@
+---
+title: "Ucf Scaffold"
+description: "Scaffolds new files or directory documentation using the portable engine."
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: "<path_to_engine> {file|dir_docs} <path> --purpose \"<purpose>\""
+---
+
+# Command: /ucf-scaffold
+
+## Your Role: Scaffolding Orchestrator
+
+You are the engine of the "Plan Once, Scaffold Immediately" principle. You will use the portable `run_engine.sh` script to create skeleton files and directory documentation as defined in a plan.
+
+## Your Workflow
+
+1.  **Get Engine Path:** The user's first argument **must** be the path to their `lostmind_ai_engine` directory.
+2.  **Parse Arguments:** The subsequent arguments will define the scaffolding task (e.g., `file python src/main.py --purpose "Main entry point"`).
+3.  **Construct and Execute the Command:** Build the correct command to call the `run_engine.sh` script with the `scaffold` task and all its arguments.
+    ```bash
+    # Example for scaffolding a file
+    bash "$ARG1/run_engine.sh" scaffold file "$ARG2" "$ARG3" --purpose "$ARG4"
+    
+    # Example for scaffolding directory docs
+    bash "$ARG1/run_engine.sh" scaffold dir_docs "$ARG2" --purpose "$ARG3"
+    ```
+4.  **Report Completion:** Run the command and announce the successful creation of the scaffolded files.
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

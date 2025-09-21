@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2025-09-21T02:32:02.520Z",
+  "totalProjects": 12,
+  "categories": {
+    "miscellaneous": 2,
+    "main-platform": 2,
+    "data-processing": 1,
+    "ai-services": 4,
+    "websites": 1,
+    "development-tools": 1,
+    "backend-services": 1
+  },
+  "projects": [
+    {
+      "name": "BD-News-Task",
+      "displayName": "BD-News-Task",
+      "description": "Comprehensive news analysis and scraping project powered by the LostMindAI News Agent system.",
+      "category": "miscellaneous",
+      "priority": 93,
+      "fileCount": 88,
+      "version": "1.0.0"
+    },
+    {
+      "name": "Back End Architecture for Turborepo with RAG Embeddings",
+      "displayName": "Back End Architecture for Turborepo with RAG Embeddings",
+      "description": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+      "category": "main-platform",
+      "priority": 100,
+      "fileCount": 22,
+      "version": "1.0.0"
+    },
+    {
+      "name": "ChatCrawler-Replit-version",
+      "displayName": "rest-express",
+      "description": "> AI-powered web scraping and chat platform — Development Prototype",
+      "category": "data-processing",
+      "priority": 85,
+      "fileCount": 46,
+      "version": "1.0.0"
+    },
+    {
+      "name": "Claude Code Framework by LOSTMIND AI",
+      "displayName": "Claude Code Framework by LOSTMIND AI",
+      "description": "Primary AI Assistant: Comet / \"LostMind AI Orb\" (ask.lostmindai.com)",
+      "category": "ai-services",
+      "priority": 100,
+      "fileCount": 186,
+      "version": "1.0.0"
+    },
+    {
+      "name": "GitHub Repository Analyzer with Gemini 2.5 Pro",
+      "displayName": "GitHub Repository Analyzer with Gemini 2.5 Pro",
+      "description": "[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)",
+      "category": "miscellaneous",
+      "priority": 93,
+      "fileCount": 111,
+      "version": "1.0.0"
+    },
+    {
+      "name": "LostMind AI - Documentation Site",
+      "displayName": "next-forge",
+      "description": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+      "category": "ai-services",
+      "priority": 100,
+      "fileCount": 1337,
+      "version": "5.0.4"
+    },
+    {
+      "name": "LostMind AI - Memory&Context Protocol",
+      "displayName": "LostMind AI - Memory&Context Protocol",
+      "description": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+      "category": "ai-services",
+      "priority": 100,
+      "fileCount": 159,
+      "version": "1.0.0"
+    },
+    {
+      "name": "LostMind AI - Project Documentation",
+      "displayName": "lostmind-ai-documentation-hub",
+      "description": "Centralized documentation system for all LostMind AI projects.",
+      "category": "ai-services",
+      "priority": 100,
+      "fileCount": 89,
+      "version": "1.0.0"
+    },
+    {
+      "name": "LostMindAI-TurboRepo",
+      "displayName": "lostmind-ai-monorepo",
+      "description": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+      "category": "main-platform",
+      "priority": 100,
+      "fileCount": 118,
+      "version": "0.0.0"
+    },
+    {
+      "name": "New Website Template - Claude Code Engineering",
+      "displayName": "ai-saas-template",
+      "description": "This project recreates a modern AI SaaS landing page based on the Aceternity UI template at https://ai-saas-template-aceternity.vercel.app/",
+      "category": "websites",
+      "priority": 93,
+      "fileCount": 103,
+      "version": "0.1.0"
+    },
+    {
+      "name": "Updated MCP Tools",
+      "displayName": "Updated MCP Tools",
+      "description": "You are a senior engineer at a production company where code quality determines employment. Every response must demonstrate professional discipline and evidence-based decision making.",
+      "category": "development-tools",
+      "priority": 93,
+      "fileCount": 82,
+      "version": "1.0.0"
+    },
+    {
+      "name": "gemini-cloud-service-v2",
+      "displayName": "gemini-cloud-service-v2",
+      "description": "Advanced multimodal processing service with YouTube support, Google Search grounding, code execution, and more!",
+      "category": "backend-services",
+      "priority": 65,
+      "fileCount": 5,
+      "version": "1.0.0"
+    }
+  ],
+  "statistics": {
+    "projectsFound": 12,
+    "filesProcessed": 2346,
+    "errorsEncountered": 1820,
+    "assetscopied": 0
+  }
+}

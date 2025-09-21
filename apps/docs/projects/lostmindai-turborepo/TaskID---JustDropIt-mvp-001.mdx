@@ -1,0 +1,93 @@
+---
+title: "TaskID   JustDropIt Mvp 001"
+description: "documentation for LostMindAI-TurboRepo"
+category: "documentation"
+project: "LostMindAI-TurboRepo"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+# **TASK ID: "** JUSTDROPIT-MVP-001"
+## **BRANCH: "** `feature/intelligence-hub-mvp`"
+## **ESTIMATED TIME: "** 6-8 hours"
+## **COMPLEXITY: "** High"
+---
+
+## **CRITICAL INSTRUCTIONS - READ BEFORE EVERY ACTION**
+
+### **CONTEXT WINDOW MANAGEMENT**
+
+*   **AFTER EVERY 3 ACTIONS:** Re-read this complete task description.
+*   **BEFORE EACH PHASE:** Re-read the task objectives and the specific phase requirements.
+*   **IF CONTEXT COMPRESSED:** Re-read this task file, the project's root `CLAUDE.md`, and the `ARCHITECTURE.md` from the `LostmindAI-PropTech-Backend-v1-master` context.
+*   **WHEN UNCERTAIN:** Stop, re-read the task, and validate your current action against the objectives.
+
+### **WORKFLOW INSTRUCTIONS**
+
+1.  **Create Branch:** Start by creating a new branch from `main`: `git checkout -b feature/intelligence-hub-mvp`.
+2.  **Incremental Commits:** Make small, focused commits after completing each major step within a phase. Use Conventional Commit messages (e.g., `feat(db): create initial schema for intelligence hub`).
+3.  **Final Deliverable:** After completing all phases, create a single, comprehensive Pull Request from `feature/intelligence-hub-mvp` to `main`. A detailed template for the PR description is provided in Phase 4.
+
+---
+
+## **TASK OBJECTIVE**
+
+To build the Minimum Viable Product (MVP) for the **LostMind AI Intelligence Hub** (codenamed `justdropit`). This involves creating a new, production-ready Next.js application within the existing Turborepo structure that allows users to upload documents and run sophisticated analyses powered by a new, integrated Python microservice.
+
+## **CONTEXT TO PROVIDE TO CLAUDE**
+
+*You will need to provide me with the full contents of the following projects and files so I have the necessary context to build this application correctly:*
+
+1.  **The Entire `LostmindAI-PropTech-Backend-v1-master` Project:** This is the most critical context. I need all the Python scripts (`sanitize_data.py`, `excel_to_sql.py`, `microservices/accrual_calculator/main.py`, etc.) and the architecture documents (`ARCHITECTURE.md`, `DATA_PRIVACY.md`). This contains the business logic for the analysis engine.
+2.  **The Entire `LostMind-AI---Markdown-to-PDF-Converter--main` Project:** This will serve as the UI/UX inspiration for the new `justdropit` application's file upload and management interface. I will adapt its components and user flow.
+3.  **The `CLAUDE.md` file from the root of the Turborepo:** This contains global rules and conventions I must follow.
+
+## **SUCCESS CRITERIA**
+
+*   [ ] A new Next.js application (`apps/justdropit`) is created and runs within the Turborepo.
+*   [ ] A new FastAPI microservice (`services/document-processor`) is created, containerized, and integrates the logic from the `PropTech-Backend` project.
+*   [ ] The database schema (`packages/db`) is updated to support users, documents, analysis jobs, and subscriptions.
+*   [ ] The authentication package (`packages/auth`) is configured to work with the new database schema.
+*   [ ] The `justdropit` app allows users to upload files, which are stored securely (e.g., GCS path in DB).
+*   [ ] Users can trigger an analysis, which calls the `document-processor` service.
+*   [ ] The app can poll for and display the results of the analysis.
+*   [ ] A basic billing foundation is in place with a Stripe webhook to manage subscriptions.
+*   [ ] A comprehensive Pull Request is created for review.
+
+## **SCOPE BOUNDARIES**
+
+### **INCLUDED IN SCOPE:**
+
+*   Creating the new `apps/justdropit` and `services/document-processor`.
+*   Updating `packages/db` and `packages/auth`.
+*   Refactoring Python code from the `PropTech-Backend` project into the new FastAPI service.
+*   Building the frontend workflow: Upload -> Analyze -> View Results.
+
+### **EXPLICITLY EXCLUDED:**
+
+*   Modifying the `apps/ask` or `apps/marketing` applications.
+*   Implementing every single analysis from the Python scripts. We will start with one (e.g., Accrual Analysis) as the proof-of-concept.
+*   Building a full-featured payment UI. A simple webhook is sufficient for the MVP.
+*   Deploying to production (this will be a separate task).
+
+---
+
+## **EXECUTION PHASES**
+
+### **PHASE 1: Foundational Setup (Database & Authentication)**
+
+**Objective:** Establish the data and user management backbone for the application.
+
+1.  **Update Database Schema:**
+    *   **Action:** Modify the file `packages/db/prisma/schema.prisma`.
+    *   **Details:** Add the `User`, `Document`, `AnalysisJob`, and `Subscription` models as defined in the architectural plan. Ensure relations are correctly defined.
+    *   **Validation:** Run `pnpm db:push` to apply the changes to your local development database.
+    *   **Commit:** `feat(db): add schema for intelligence hub documents and jobs`
+
+2.  **Configure Authentication:**
+    *   **Action:** Update `packages/auth/src/index.ts`.
+    *   **Details:** Ensure the `PrismaAdapter` is correctly configured and that the `session` callback populates the user object with necessary IDs from the new schema.
+    *   **Commit:** `feat(auth): align auth package with new user and subscription schema`
+
+### **PHAS
+
+---
+*This content was automatically extracted from LostMindAI-TurboRepo. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,155 @@
+---
+title: "LostMindAI-TurboRepo"
+description: "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
+category: "development"
+project: "LostMind AI - Project Documentation"
+lastUpdated: "2025-09-21"
+tags: "development,ai-services"
+---
+
+# 🛠️ LostMind AI TurboRepo - Complete CLI Development Toolkit
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🌐 Marketing Guide](MARKETING_WEBSITE_INTEGRATION_GUIDE.md)**
+
+## 🎯 Essential CLI Tools for Production Development
+
+This guide provides comprehensive CLI tooling for smooth development and production deployment of the LostMind AI TurboRepo monorepo.
+
+## 🔧 Core Development Tools
+
+### 1. **Google Cloud CLI** (`gcloud`)
+**Primary Use**: AI services, Cloud Run deployments, service authentication
+
+```bash
+# Installation (macOS)
+brew install google-cloud-sdk
+
+# Authentication & Project Setup
+gcloud auth login
+gcloud config set project coral-muse-469919-m0
+
+# Service Account Authentication
+gcloud auth activate-service-account --key-file=/Users/sumitm1/.config/gcloud/coral-muse-service-account-key.json
+
+# Useful Commands for Development
+gcloud services list --enabled                    # List enabled APIs
+gcloud functions list                              # List Cloud Functions
+gcloud run services list                          # List Cloud Run services
+gcloud ai-platform models list                    # List AI models
+gcloud logging tail "projects/coral-muse-469919-m0"  # Live log monitoring
+```
+
+**Development Workflow Integration**:
+```bash
+# Deploy FastAPI services to Cloud Run
+gcloud run deploy document-processor \
+  --source ./services/document-processor \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+
+# Monitor service logs
+gcloud logs tail "projects/coral-muse-469919-m0/logs/cloudrun.googleapis.com"
+```
+
+### 2. **Vercel CLI** (`vercel`)
+**Primary Use**: Next.js app deployments, preview deployments, domain management
+
+```bash
+# Installation
+npm i -g vercel
+
+# Authentication & Project Linking
+vercel login
+vercel link
+
+# Development & Deployment Commands
+vercel dev                          # Local development with Vercel functions
+vercel --prod                       # Deploy to production
+vercel --prebuilt                   # Deploy pre-built static files
+vercel env ls                       # List environment variables
+vercel env add NEXTAUTH_SECRET      # Add environment variable
+vercel domains ls                   # List domains
+vercel certs ls                     # List SSL certificates
+
+# Advanced Deployment
+vercel deploy --archive=tgz         # Deploy with archive
+vercel alias set deployment.vercel.app lostmindai.com  # Set custom domain
+```
+
+**Monorepo Integration**:
+```json
+// vercel.json for apps/marketing
+{
+  "buildCommand": "cd ../.. && pnpm build --filter=marketing",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install"
+}
+```
+
+### 3. **Stripe CLI** (`stripe`)
+**Primary Use**: Payment testing, webhook management, payment flow validation
+
+```bash
+# Installation (macOS)
+brew install stripe/stripe-cli/stripe
+
+# Authentication
+stripe login
+
+# Development Workflow
+stripe listen --forward-to localhost:3000/api/webhooks/stripe  # Forward webhooks locally
+stripe trigger payment_intent.succeeded                        # Test webhook events
+stripe products list                                            # List products
+stripe prices list                                             # List prices
+stripe customers list                                          # List customers
+stripe invoices list                                           # List invoices
+
+# Testing Payment Flows
+stripe checkout sessions create \
+  --success-url="https://example.com/success" \
+  --cancel-url="https://example.com/cancel" \
+  --line-items='[{"price": "price_1234", "quantity": 1}]' \
+  --mode=payment
+
+# Webhook Testing
+stripe fixtures payment_intent.json  # Load test fixtures
+```
+
+### 4. **Node.js Package Managers** 
+
+#### **pnpm** (Primary - Monorepo Optimized)
+```bash
+# Installation
+npm install -g pnpm
+
+# Monorepo Commands
+pnpm install                        # Install all dependencies
+pnpm add package --filter=marketing # Add package to specific app
+pnpm dev                           # Run all dev scripts
+pnpm dev --filter=ask             # Run specific app
+pnpm build                        # Build all apps
+pnpm test --filter=packages/ui    # Test specific package
+pnpm lint                         # Lint all packages
+
+# Workspace Management
+pnpm -r exec npm audit            # Run command in all workspaces  
+pnpm why package-name             # Why is package installed
+pnpm ls --depth=0                 # List top-level dependencies
+```
+
+#### **Turborepo CLI** (`turbo`)
+```bash
+# Comes with pnpm install, advanced usage:
+turbo run build --filter=./packages/*     # Build all packages
+turbo run test --cache-dir=.turbo/cache   # Custom cache directory
+turbo run lint --force                    # Force run ignoring cache
+turbo prune --scope=marketing             # Prune for specific app
+turbo gen workspace                       # Generate new workspace
+```
+
+## 🚀 
+
+---
+*This content was automatically extracted from LostMind AI - Project Documentation. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,235 @@
+---
+title: "API REFERENCE"
+description: "api-reference for BD-News-Task"
+category: "api-reference"
+project: "BD-News-Task"
+lastUpdated: "2025-09-21"
+tags: "api-reference,miscellaneous"
+---
+
+# API Reference - V2
+
+## NewsExtractionSystemV2 Class
+
+The enhanced V2 class with proper article navigation and full content extraction.
+
+### Constructor
+
+```python
+NewsExtractionSystemV2(api_key: str, output_dir: str = "./output")
+```
+
+#### Parameters
+- `api_key` (str): Gemini API key for AI-enhanced extraction
+- `output_dir` (str, optional): Base directory for output files. Default: "./output"
+
+#### Example
+```python
+extractor = NewsExtractionSystemV2(
+    api_key="your-gemini-api-key",
+    output_dir="./my_output"
+)
+```
+
+### Core Methods
+
+#### process_websites
+
+Main method for processing multiple websites with proper article navigation.
+
+```python
+async def process_websites(websites: List[str], max_articles: int) -> None
+```
+
+##### Parameters
+- `websites` (List[str]): List of website URLs to process
+- `max_articles` (int): Maximum number of articles to extract (capped at 50)
+
+##### Example
+```python
+await extractor.process_websites(
+    websites=["https://www.thedailystar.net/news"],
+    max_articles=10
+)
+```
+
+### Navigation Methods (NEW in V2)
+
+#### is_article_url
+
+Determines if a URL points to an actual article (not a category page).
+
+```python
+def is_article_url(self, url: str) -> bool
+```
+
+##### Detection Patterns
+- Article IDs: URLs ending with `-\d{5,}` (e.g., `-3961361`)
+- Date patterns: `/2025/08/13/article-title`
+- Long slugs: Multiple hyphenated words in URL
+
+##### Example
+```python
+# Returns True
+extractor.is_article_url("https://site.com/news/article-title-3961361")
+
+# Returns False  
+extractor.is_article_url("https://site.com/news/bangladesh")
+```
+
+#### is_category_or_section_page
+
+Identifies category/section pages that contain article lists.
+
+```python
+def is_category_or_section_page(self, url: str) -> bool
+```
+
+##### Detection Patterns
+- `/news/[category]/` without article ID
+- `/section/[name]/`
+- `/category/[name]/`
+- `/topics/[name]/`
+
+#### discover_categories
+
+Discovers category pages from the main page.
+
+```python
+async def discover_categories(
+    session: aiohttp.ClientSession,
+    main_url: str
+) -> List[str]
+```
+
+##### Returns
+List of category page URLs found on the main page.
+
+#### discover_articles_from_page
+
+Discovers article links from any page (main or category).
+
+```python
+async def discover_articles_from_page(
+    session: aiohttp.ClientSession,
+    page_url: str,
+    max_articles: int
+) -> List[Dict[str, str]]
+```
+
+##### Returns
+List of dictionaries containing:
+```python
+{
+    'url': str,      # Full article URL
+    'title': str,    # Article title/link text
+    'source': str    # Page where link was found
+}
+```
+
+#### discover_all_articles
+
+Multi-level discovery orchestrator (Main → Categories → Articles).
+
+```python
+async def discover_all_articles(
+    session: aiohttp.ClientSession,
+    website_url: str,
+    max_articles: int
+) -> List[Dict[str, str]]
+```
+
+##### Process Flow
+1. Discover articles on main page
+2. If needed, discover category pages
+3. Discover articles from each category
+4. Remove duplicates
+5. Return up to max_articles
+
+### Content Extraction Methods
+
+#### extract_article_content
+
+Extracts full content from an actual article page.
+
+```python
+async def extract_article_content(
+    session: aiohttp.ClientSession,
+    article: Dict[str, str]
+) -> Optional[Dict[str, Any]]
+```
+
+##### Returns
+```python
+{
+    'url': str,              # Article URL
+    'title': str,            # Extracted title
+    'content': str,          # Full article text (2000-4000 chars typical)
+    'author': str,           # Author name or 'Unknown'
+    'date': str,             # Publication date
+    'source': str,           # Source page URL
+    'extracted_at': str,     # Extraction timestamp
+    'content_length': int    # Character count
+}
+```
+
+#### extract_with_ai
+
+Uses Gemini AI to extract structured content.
+
+```python
+async def extract_with_ai(
+    text_content: str,
+    title_hint: str
+) -> Dict[str, str]
+```
+
+##### AI Extraction Fields
+- `title`: Actual article title
+- `content`: Clean article body (no ads)
+- `author`: Author name if found
+- `date`: Publication date if found
+
+### Output Methods
+
+#### save_article
+
+Saves article in multiple formats with proper HTML formatting.
+
+```python
+def save_article(article_data: Dict[str, Any], index: int) -> None
+```
+
+##### Output Formats
+1. **JSON**: Complete data structure
+2. **Markdown**: Formatted with metadata header
+3. **Text**: Plain text with title
+4. **HTML**: Styled HTML with full content (not raw HTML)
+
+##### HTML Output Example
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Article Title</title>
+    <style>/* Professional styling */</style>
+</head>
+<body>
+    <h1>Article Title</h1>
+    <div class="metadata">
+        <p><strong>Source:</strong> <a href="...">...</a></p>
+        <p><strong>Author:</strong> ...</p>
+        <p><strong>Date:</strong> ...</p>
+        <p><strong>Length:</strong> 2,543 characters</p>
+    </div>
+    <div class="content">
+        <p>Full article content here...</p>
+    </div>
+</body>
+</html>
+```
+
+### Stati
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,113 @@
+---
+title: "Ucf Mode Idea"
+description: "Set project to IDEA mode for exploration and early decision-making"
+category: "documentation"
+project: "Claude Code Framework by LOSTMIND AI"
+lastUpdated: "2025-09-21"
+tags: "documentation,ai-services"
+allowed-tools: ""
+argument-hint: ""
+---
+
+# Command: /ucf-mode-idea
+
+## Your Role: SDLC Mode Manager - IDEA Stage
+
+This command sets the current project to **IDEA MODE** - the early exploration stage where you're browsing files, discussing possibilities, and exploring options without implementation.
+
+## Your Workflow
+
+1. **Update Project Mode**: Set the current SDLC mode in the project's CLAUDE.md
+   ```bash
+   # Check if .claude/CLAUDE.md exists
+   if [ ! -f ".claude/CLAUDE.md" ]; then
+       echo "❌ No .claude/CLAUDE.md found. Please run /ucf-onboard-project first."
+       exit 1
+   fi
+   ```
+
+2. **Read Current CLAUDE.md**: Load the existing project configuration to preserve content
+
+3. **Update Mode Section**: Add or update the SDLC mode section in CLAUDE.md:
+   ```markdown
+   ## CURRENT SDLC MODE: IDEA
+   **Set**: [Current timestamp]
+   **Context**: Early exploration and decision-making phase
+
+   ### IDEA MODE BEHAVIORS
+   Claude will focus on:
+   - Exploration without implementation
+   - Pros/cons analysis of options
+   - Research and feasibility studies
+   - Architecture discussions
+   - API verification without coding
+   - Decision support and alternatives
+
+   **No file creation or coding in this mode**
+   ```
+
+4. **Announce Mode Change**: Inform the user about the new mode and its implications
+
+## IDEA Mode Guidelines for Claude
+
+When in IDEA mode, Claude should:
+
+**✅ DO:**
+- Discuss possibilities and alternatives
+- Research APIs and verify versions/compatibility
+- Provide architectural suggestions
+- Analyze existing code without modifying
+- Ask clarifying questions about requirements
+- Explore pros/cons of different approaches
+- Suggest design patterns and best practices
+- Review and explain existing project structure
+
+**❌ DON'T:**
+- Create new files or modify existing ones
+- Write actual implementation code
+- Install dependencies or packages
+- Make commits or changes to version control
+- Generate boilerplate or scaffolding
+
+**📝 COMMUNICATION STYLE:**
+- Exploratory and consultative
+- Focus on "what if" scenarios
+- Present options with trade-offs
+- Use Australian English consistently
+- Always verify API information with dates
+
+## Expected Output
+
+```
+✅ Project mode set to: IDEA
+📋 Mode Context: Early exploration and decision-making
+
+🎯 IDEA Mode Active:
+   • Focus: Exploration without implementation
+   • Behavior: Research, discuss, analyze
+   • No file creation or coding
+
+💡 In IDEA mode, I'll help you:
+   - Explore possibilities and alternatives
+   - Research and verify technologies
+   - Discuss architecture options
+   - Analyze feasibility and trade-offs
+
+Ready for exploration! What would you like to discuss?
+```
+
+## Mode Integration
+
+This mode integrates with:
+- **Guardian Context**: Mode preserved across sessions
+- **LostMind AI Standards**: API verification, Australian English
+- **Quality Philosophy**: No over-engineering, professional standards
+- **Solo Developer Support**: Transparent technical assistance
+
+When ready to move forward, use:
+- `/ucf-mode-design` - For architecture planning
+- `/ucf-mode-dev` - For active development
+- `/ucf-mode-status` - Check current mode
+
+---
+*This content was automatically extracted from Claude Code Framework by LOSTMIND AI. For the most up-to-date information, refer to the source project.*

@@ -1,0 +1,110 @@
+---
+title: "INVESTOR ANALYSIS PROMPT TEMPLATE"
+description: "documentation for Back End Architecture for Turborepo with RAG Embeddings"
+category: "documentation"
+project: "Back End Architecture for Turborepo with RAG Embeddings"
+lastUpdated: "2025-09-21"
+tags: "documentation,main-platform"
+---
+
+# UNIVERSAL INVESTOR ANALYSIS PROMPT TEMPLATE
+**Version:** 2.0  
+**Date Created:** September 12, 2025  
+**Use Case:** Comprehensive investor/auditor analysis for any tech project  
+**Designed for:** Claude Code sessions with MCP tools and subagents  
+ 
+---
+
+## 📋 HOW TO USE THIS TEMPLATE
+
+1. **Copy the prompt below** starting from "UNIVERSAL INVESTOR ANALYSIS REQUEST"
+2. **Customize the PROJECT CONTEXT section** with your specific project details
+3. **Paste into any Claude session** that has access to MCP tools and subagents
+4. **Ensure the session has access to:**
+   - File system tools (Read, Write, Search)
+   - Sequential thinking MCP tool
+   - Time MCP tool
+   - Web search capabilities
+
+---
+
+## 🎯 UNIVERSAL INVESTOR ANALYSIS REQUEST
+
+You are tasked with conducting a comprehensive investor/auditor-level analysis of a technology project. This is a critical business evaluation that requires deep technical understanding and strategic assessment suitable for investment decision-making.
+
+## PROJECT CONTEXT
+**⚠️ CUSTOMIZE THIS SECTION FOR YOUR PROJECT ⚠️**
+
+**Project Name:** [INSERT PROJECT NAME]
+**Project Location:** [INSERT FULL PATH TO PROJECT DIRECTORY]
+**Technology Stack:** [INSERT MAIN TECHNOLOGIES - e.g., Python/Node.js/React/etc.]
+**Stage:** [INSERT STAGE - e.g., MVP/Beta/Production/Pre-Revenue/Revenue-Generating]
+**Current Status:** [INSERT BRIEF DESCRIPTION OF CURRENT STATE]
+
+**Key Features:**
+- [INSERT KEY FEATURE 1]
+- [INSERT KEY FEATURE 2]
+- [INSERT KEY FEATURE 3]
+- [ADD MORE AS NEEDED]
+
+**Business Model (if any):**
+- [INSERT CURRENT MONETIZATION APPROACH OR "UNDEFINED"]
+
+**Target Market:**
+- [INSERT TARGET CUSTOMER SEGMENTS]
+
+## ANALYSIS SCOPE REQUIREMENTS
+
+Delegate this analysis to specialized subagents through the agent-organizer to ensure comprehensive coverage from both technical and business perspectives.
+
+### 1. TECHNICAL DEEP DIVE (Senior Staff Engineer + General Purpose Agent)
+- **Complete codebase analysis** - Read ALL source files, not just summaries
+- **Architecture assessment** - Scalability, maintainability, security evaluation
+- **Code quality metrics** - Lines of code, complexity, technical debt
+- **Technology stack evaluation** - Dependencies, frameworks, libraries assessment
+- **Performance and scalability analysis** - Current limitations and growth potential
+- **Security assessment** - Vulnerability analysis and best practices compliance
+- **Testing and reliability** - Test coverage, error handling, deployment readiness
+- **API and integration analysis** - External dependencies, vendor lock-in risks
+
+### 2. BUSINESS/MARKET ANALYSIS (General Purpose Agent + Web Research)
+- **Market size and opportunity** - TAM/SAM/SOM analysis with current data
+- **Competitive landscape** - Direct and indirect competitors with funding/market share
+- **Business model assessment** - Revenue streams, unit economics, scalability
+- **Customer analysis** - Target segments, acquisition costs, retention potential
+- **Monetization strategy** - Current approach and optimization opportunities
+- **Growth potential** - Market trends, expansion opportunities, viral coefficients
+- **Risk assessment** - Market risks, competitive threats, regulatory concerns
+
+### 3. INVESTMENT READINESS EVALUATION
+- **Financial projections** - Revenue potential, cost structure, profitability timeline
+- **Funding requirements** - Capital needs for next milestones
+- **Valuation assessment** - Comparable companies, stage-appropriate valuation
+- **Team evaluation** - Capability gaps, scaling requirements
+- **Go-to-market strategy** - Customer acquisition, partnerships, distribution
+- **Exit potential** - Acquisition targets, IPO timeline, strategic value
+
+### 4. STRATEGIC RECOMMENDATIONS
+- **Investment decision framework** - Go/No-Go with specific conditions
+- **Risk mitigation strategies** - Technical, market, and execution risks
+- **Growth acceleration opportunities** - Quick wins and strategic initiatives
+- **Partnership and acquisition opportunities** - Strategic alliances and exit paths
+
+## MANDATORY METHODOLOGY REQUIREMENTS
+
+### 🧠 CRITICAL ANALYSIS TOOLS
+1. **Sequential Thinking (REQUIRED):** Each agent MUST use the `mcp__sequential-thinking__sequentialthinking` tool for complex reasoning and decision-making
+2. **Think MCP Tool (REQUIRED):** Use `mcp__think-mcp-server__think` for additional reflection and analysis
+3. **Current Time Stamp:** Use `mcp__time__get_current_time` to timestamp all analysis
+4. **Web Research:** Use search tools for market research and competitive analysis
+
+### 📁 DOCUMENTATION REQUIREMENTS
+Create a structured analysis in a `reviews/` folder with the following files:
+
+1. **executive_summary.md** - 1-2 page investor-focused summary with clear recommendation
+2. **technical_assessment_report.md** - Detailed technical analysis (architecture, code quality, scalability)
+3. **business_assessment_report.md** - Market analysis, competitive landscape, business model
+4. **investment_analysis_final.md** - Comprehe
+
+---
+*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*
