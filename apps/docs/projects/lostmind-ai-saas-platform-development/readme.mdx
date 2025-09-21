@@ -1,0 +1,200 @@
+---
+title: "LostMind AI - SaaS Platform Development - Readme"
+description: "readme documentation for LostMind AI - SaaS Platform Development"
+category: "core-platforms"
+lastUpdated: "2025-09-21"
+project: "undefined"
+sourceFile: "README.md"
+---
+
+# LostMind AI Monorepo
+
+Production-ready AI-powered SaaS platform built with Next.js 15, Turborepo, and FastAPI.
+
+> 📌 **Source of truth:** [docs/project/CURRENT_PROJECT_STATE.md](./docs/project/CURRENT_PROJECT_STATE.md) is the canonical status document. Update it first whenever scope or implementation changes.
+
+## Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), React 19 Stable, TypeScript
+- **Backend**: FastAPI (Python) for compute-intensive tasks
+- **Database**: PostgreSQL with Prisma ORM and Row Level Security
+- **Authentication**: Auth.js v5 with Google OAuth
+- **Payments**: Stripe
+- **AI**: Google Generative AI (Gemini)
+- **Deployment**: Vercel (Next.js), Google Cloud Run (FastAPI)
+- **Monorepo**: Turborepo with pnpm workspaces
+
+## 🛠️ Development Tools & Enhancements
+
+### **Task Management System**
+
+- **Automated task lifecycle management** with status tracking (🟢 Active, ✅ Completed, 🔄 Blocked)
+- **Task cleanup automation** prevents accumulation of completed work
+- **Smart task auditing** with `pnpm run tasks:audit`
+- **Format validation** ensures consistent task file structure
+
+### **TypeScript Configuration Standards**
+
+- **Inheritance-aware configuration** prevents duplicate lib entries
+- **Monorepo-specific patterns** for package organization
+- **Automated validation** catches common configuration issues
+- **Clear inheritance guidelines** for all package configurations
+
+### **File Organization Automation**
+
+- **Standardized directory structures** for apps, packages, and services
+- **Naming convention enforcement** for components, tests, and documentation
+- **Location validation** prevents files in incorrect directories
+- **Automated cleanup** maintains project structure integrity
+
+```bash
+# Task management commands
+pnpm run tasks:audit      # Analyze all task files
+pnpm run tasks:cleanup    # Remove completed tasks
+pnpm run tasks:status     # Show statistics
+pnpm run tasks:validate   # Check format compliance
+```
+
+### **AI Development Memory System**
+
+- **CLAUDE.md** serves as comprehensive project memory file
+- **Context preservation** across development sessions
+- **Pattern recognition** for consistent code organization
+- **Standards enforcement** for TypeScript and file structure
+
+**📖 [View CLAUDE.md for complete AI development guidelines](./CLAUDE.md)**
+
+## Project Structure Overview
+
+For the live directory snapshot, visit the [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md#-repository-structure-current). Highlights below mirror that file:
+
+### Implemented foundations
+
+- `apps/ask` — Orb experience scaffold (UI locked to current production experience, security upgrades in flight)
+- `apps/marketing` — Marketing shell prepared for redesign
+- `packages/*` — Shared libraries (`config`, `ui`, `db`, `auth`, `ai-clients`, `billing`)
+- `services/ai-compute` — FastAPI service with IAM hooks and Redis rate limiting (needs production hardening)
+- `docker-compose.yml` — Local stack for Postgres, Redis, Next.js apps, FastAPI
+
+### Planned (not yet shipped)
+
+- Additional apps: `private-docs`, `chatcrawler`, `justdropit`, `admin`
+- Additional packages: `security`, `rag`, `utils`
+- Additional services: `document-processor`, `crawler-engine`, `security-monitor`
+
+### 📖 Directory Documentation
+
+Each directory contains its own README.md with specific implementation details:
+
+- **[apps/ask/README.md](./apps/ask/README.md)** - AI query interface documentation
+- **[apps/marketing/README.md](./apps/marketing/README.md)** - Marketing website documentation
+- **[packages/README.md](./packages/README.md)** - Shared packages overview
+- **[services/README.md](./services/README.md)** - Microservices documentation
+- **[infrastructure/README.md](./infrastructure/README.md)** - Infrastructure setup
+
+## Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Environment
+# Keep secrets out of git. See docs/secrets-policy.md
+# Configure Vercel/GCP Secret Manager for production/staging.
+# For local dev, copy and edit if needed (untracked):
+# cp .env.example .env.local
+
+# Push database schema
+pnpm run db:push
+
+# Start development
+pnpm run dev
+```
+
+## Development
+
+```bash
+# Run specific app
+pnpm run dev --filter=marketing
+
+# Run tests
+pnpm run test
+
+# Build all
+pnpm run build
+
+# Type checking
+pnpm run type-check
+```
+
+## 📚 Documentation
+
+Comprehensive documentation for the LostMind AI platform is organized for easy navigation:
+
+### 🏠 Documentation Hub
+
+- **[📖 Complete Documentation Index](./docs/README.md)** - Main documentation hub with all resources
+
+### 🚀 Getting Started
+
+- **[🔰 Beginner's Quick Start](./docs/guides/beginner/QUICK_START.md)** - Simple guide for non-technical users
+- **[🔐 Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)** - Step-by-step environment configuration
+- **[📋 Session Templates](./docs/CLAUDE_CODE_SESSION_TEMPLATES.md)** - Copy-paste templates for Claude Code
+
+### 🏗️ Architecture & Planning
+
+- **[🎯 Master Plan](./docs/architecture/lostmind-master-plan.md)** - Overall project vision and strategy
+- **[🗓️ Implementation Roadmap](./docs/architecture/implementation-roadmap.md)** - Timeline, phases, and milestones
+- **[📋 Architecture Decision Records](./docs/architecture/lostmind-adrs.md)** - Key architectural decisions and rationale
+
+### 🔧 Integration & Development Guides
+
+- **[🤖 Ask App Integration](./docs/guides/INTEGRATION_GUIDE_FOR_ASK_APP.md)** - AI query interface setup
+- **[🌐 Marketing Website](./docs/guides/MARKETING_WEBSITE_INTEGRATION_GUIDE.md)** - Public site configuration
+- **[🧠 RAG & Embeddings](./docs/guides/RAG_EMBEDDINGS_INTEGRATION_GUIDE.md)** - Vector search implementation
+- **[🕷️ Web Scraper Service](./docs/guides/WEB_SCRAPER_SERVICE_INTEGRATION_GUIDE.md)** - Crawler engine setup
+- **[📦 Dependency Management](./docs/DEPENDENCY_MANAGEMENT.md)** - Managing and updating dependencies
+- **[🔒 Environment Secrets Audit](./docs/ENVIRONMENT_SECRETS_AUDIT.md)** - Complete secrets documentation
+- **[🖥️ Auto Environment Setup](./docs/AUTO_ENVIRONMENT_SETUP.md)** - Automatic dev environment configuration
+
+### 🚨 Production & SDK Standards
+
+- **[🛡️ Security Architecture Audit Report](./docs/security/SECURITY_ARCHITECTURE_AUDIT_REPORT.md)** - **CRITICAL**: Pre-launch security review - **REQUIRED** before v1 production deployment
+- **[⚠️ Production Technical Analysis](./docs/PRODUCTION_TECHNICAL_ANALYSIS.md)** - Critical issues and remediation before deployment
+- **[🤖 Google GenAI Developer Guide](./docs/GOOGLE_GENAI_DEVELOPER_GUIDE.md)** - SDK migration and AI integration standards
+
+### 🚀 Launch & Business Planning
+
+- **[🚀 SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md)** - Complete roadmap from 65% to paying customers (6-8 weeks)
+- **[📊 TurboRepo Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)** - Backend services integration strategy with $2.3M ARR projections
+
+### 📊 Project Management
+
+- **[✅ Claude Code Tasks](./docs/project/CLAUDE_CODE_TASKS.md)** - AI assistant task tracking
+- **[🗺️ Project Map](./docs/project/PROJECT_MAP.md)** - Current file structure and organization
+- **[📈 Current Project State](./docs/project/CURRENT_PROJECT_STATE.md)** - Real-time project status
+
+### 🚀 Quick Navigation
+
+- **New Developer?** Start → [Quick Start Guide](./docs/guides/beginner/QUICK_START.md) → [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)
+- **Planning launch?** See [SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md) for complete roadmap
+- **Backend integration?** Check [Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)
+- **Setting up an app?** Go to [Integration Guides](./docs/guides/)
+- **Architecture questions?** Check [ADRs](./docs/architecture/lostmind-adrs.md)
+- **Project status?** View [Current State](./docs/project/CURRENT_PROJECT_STATE.md)
+
+## Current Status (Snapshot)
+
+**Latest Update (Sept 16, 2025):** Professional Infrastructure Restored - Development Standards Established
+
+- **✅ Completed:** Professional infrastructure restoration, task management system, TypeScript standards, file organization automation, AI development memory system
+- **✅ Operational:** Development tools (task-audit, cleanup, standards-check), automated task lifecycle management, comprehensive CLAUDE.md guidelines
+- **🔄 In Progress:** Frontend integration and user experience development
+- **📋 Next Phase:** Complete SaaS application with production-ready features
+- **📈 Current Focus:** Professional development standards and automated tooling
+
+See detailed status updates in [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md) and complete documentation in [Documentation Hub](./docs/README.md).
+
+## License
+
+Copyright © 2025 LostMind AI. All rights reserved.

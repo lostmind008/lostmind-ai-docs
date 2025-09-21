@@ -22,14 +22,14 @@ const path = require('path');
 const { execSync } = require('child_process');
 const crypto = require('crypto');
 
-// Configuration
+// Load selective project configuration
+const selectiveConfig = require('./selective-project-config.cjs');
+
+// Configuration - Updated to use selective project targeting
 const CONFIG = {
-  // Base paths to scan (can be overridden via CLI args)
-  basePaths: [
-    '/Users/sumitm1/Documents/New Ongoing Projects',
-    process.env.PROJECTS_PATH,
-  ].filter(Boolean),
-  
+  // Use selective project configuration instead of scanning everything
+  projects: selectiveConfig.PROJECT_CONFIG,
+
   // Output directory for generated docs
   outputDir: './apps/docs/projects',
   
@@ -343,34 +343,55 @@ class EnhancedProjectScanner {
   }
 
   async scan() {
-    this.logger.info('Starting enhanced project scan...');
-    
-    const allProjects = [];
-    
-    for (const basePath of this.options.basePaths) {
-      if (basePath && await this.pathExists(basePath)) {
-        this.logger.info(`Scanning base path: ${basePath}`);
-        const projects = await this.scanBasePath(basePath);
-        allProjects.push(...projects);
+    this.logger.info('Starting selective project scan for 5 target projects...');
+
+    // Use selective project configuration instead of scanning directories
+    const selectedProjects = [];
+
+    for (const projectConfig of CONFIG.projects) {
+      if (await this.pathExists(projectConfig.sourcePath)) {
+        this.logger.info(`Processing configured project: ${projectConfig.displayName}`);
+
+        // Create project object compatible with existing processing logic
+        const project = {
+          name: projectConfig.id,
+          path: projectConfig.sourcePath,
+          displayName: projectConfig.displayName,
+          category: projectConfig.category,
+          priority: projectConfig.priority,
+          documentTypes: projectConfig.documentTypes,
+          scanStrategy: projectConfig.scanStrategy,
+          outputPath: projectConfig.outputPath,
+          primaryFiles: projectConfig.primaryFiles || [],
+          skipPatterns: projectConfig.skipPatterns || []
+        };
+
+        selectedProjects.push(project);
+      } else {
+        this.logger.error(`Project path not found: ${projectConfig.sourcePath}`);
       }
     }
 
-    this.logger.info(`Found ${allProjects.length} projects`);
-    this.logger.stats.projectsFound = allProjects.length;
+    this.logger.info(`Processing ${selectedProjects.length} configured projects`);
+    this.logger.stats.projectsFound = selectedProjects.length;
 
-    // Process each project
-    for (const project of allProjects) {
-      await this.processProject(project);
+    // Process each configured project
+    for (const project of selectedProjects) {
+      await this.processSelectiveProject(project);
     }
 
     // Generate navigation
-    await this.navigationBuilder.save(path.join(this.options.outputDir, '../navigation.json'));
-    
+    if (!this.options.dryRun) {
+      await this.navigationBuilder.save(path.join(this.options.outputDir, '../navigation.json'));
+    }
+
     // Generate summary
-    await this.generateSummary(allProjects);
-    
+    if (!this.options.dryRun) {
+      await this.generateSummary(selectedProjects);
+    }
+
     this.logger.printStats();
-    return allProjects;
+    return selectedProjects;
   }
 
   async scanBasePath(basePath) {
@@ -617,6 +638,134 @@ class EnhancedProjectScanner {
     this.navigationBuilder.addProject(project.name, processedFiles);
   }
 
+  async processSelectiveProject(project) {
+    this.logger.info(`Processing selective project: ${project.displayName}`);
+
+    // Create output directory using project.outputPath
+    const outputDir = project.outputPath;
+    if (!this.options.dryRun) {
+      await fs.mkdir(outputDir, { recursive: true });
+    }
+
+    // Scan project files based on strategy
+    const files = await this.scanSelectiveProjectFiles(project);
+
+    // Process documentation files
+    const processedFiles = [];
+
+    for (const documentType of project.documentTypes) {
+      try {
+        const processed = await this.generateSelectiveDocument(project, files, documentType, outputDir);
+        if (processed) {
+          processedFiles.push(processed);
+        }
+      } catch (error) {
+        this.logger.error(`Failed to generate ${documentType} for ${project.displayName}: ${error.message}`);
+      }
+    }
+
+    // Add to navigation
+    this.navigationBuilder.addProject(project.name, processedFiles);
+
+    return processedFiles;
+  }
+
+  async scanSelectiveProjectFiles(project) {
+    this.logger.debug(`Scanning files for project: ${project.displayName}`);
+    const files = [];
+
+    // Scan files based on primaryFiles patterns
+    for (const pattern of project.primaryFiles) {
+      const globPattern = path.join(project.path, pattern);
+      try {
+        const matchedFiles = await this.glob(globPattern);
+        for (const filePath of matchedFiles) {
+          // Skip if matches skip patterns
+          if (project.skipPatterns.some(skipPattern => filePath.includes(skipPattern))) {
+            continue;
+          }
+
+          const stat = await fs.stat(filePath);
+          if (stat.isFile()) {
+            const content = await fs.readFile(filePath, 'utf-8');
+            const classification = FileClassifier.classify(filePath, content);
+
+            files.push({
+              path: filePath,
+              relativePath: path.relative(project.path, filePath),
+              content,
+              classification,
+              size: stat.size,
+              modified: stat.mtime
+            });
+          }
+        }
+      } catch (error) {
+        this.logger.debug(`Pattern ${pattern} failed: ${error.message}`);
+      }
+    }
+
+    this.logger.debug(`Found ${files.length} files for ${project.displayName}`);
+    return files;
+  }
+
+  async generateSelectiveDocument(project, files, documentType, outputDir) {
+    this.logger.debug(`Generating ${documentType} for ${project.displayName}`);
+
+    const fileName = `${documentType}.mdx`;
+    const filePath = path.join(outputDir, fileName);
+
+    let content = '';
+    let primarySource = null;
+
+    // Find relevant files for this document type
+    switch (documentType) {
+      case 'introduction':
+        content = this.generateIntroductionContent(project, files);
+        break;
+      case 'readme':
+        primarySource = files.find(f => f.relativePath.toLowerCase().includes('readme'));
+        content = primarySource ? this.sanitizeMDXContent(primarySource.content) : this.generateDefaultReadme(project);
+        break;
+      case 'architecture':
+        primarySource = files.find(f => f.classification === 'architecture' || f.relativePath.toLowerCase().includes('architecture'));
+        content = primarySource ? this.sanitizeMDXContent(primarySource.content) : this.generateDefaultArchitecture(project);
+        break;
+      case 'development':
+        primarySource = files.find(f => f.classification === 'development' || f.relativePath.toLowerCase().includes('development'));
+        content = primarySource ? this.sanitizeMDXContent(primarySource.content) : this.generateDefaultDevelopment(project);
+        break;
+      default:
+        this.logger.warn(`Unknown document type: ${documentType}`);
+        return null;
+    }
+
+    // Generate frontmatter
+    const frontmatter = this.generateCleanFrontmatter(project, documentType, primarySource);
+
+    // Combine frontmatter and content
+    const finalContent = `${frontmatter}\n\n${content}`;
+
+    // Validate MDX before writing
+    if (this.validateMDXSyntax(finalContent)) {
+      // Only write files if not in dry run mode
+      if (!this.options.dryRun) {
+        await fs.writeFile(filePath, finalContent, 'utf-8');
+      }
+      this.logger.debug(`Generated ${fileName} for ${project.displayName}`);
+
+      return {
+        type: documentType,
+        classification: documentType,
+        path: path.relative('./apps/docs', filePath),
+        relativePath: path.relative(this.options.outputDir, filePath)
+      };
+    } else {
+      this.logger.error(`MDX validation failed for ${fileName} in ${project.displayName}`);
+      return null;
+    }
+  }
+
   async processDocumentationFile(file, project, outputDir) {
     if (!file.content || file.classification === 'code') {
       return null;
@@ -808,6 +957,251 @@ ${Object.keys(project.metadata.dependencies).length > 0 ?
       await fs.access(path);
       return true;
     } catch {
+      return false;
+    }
+  }
+
+  // Utility method for glob patterns - using simple implementation for now
+  async glob(pattern) {
+    try {
+      // For now, just check if the exact file exists
+      if (await this.pathExists(pattern)) {
+        return [pattern];
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  // Sanitize content to prevent MDX parsing errors
+  sanitizeMDXContent(content) {
+    if (!content) return '';
+
+    return content
+      // Remove problematic HTML/XML patterns
+      .replace(/<!DOCTYPE[^>]*>/g, '')
+      .replace(/<br\s*\/?>/g, '<br/>')
+      .replace(/<([a-zA-Z][a-zA-Z0-9]*)\s*(?![^>]*\/>)[^>]*>/g, (match, tag) => {
+        // Ensure tags are properly closed
+        return match.includes('/') ? match : `${match}</${tag}>`;
+      })
+      // Escape problematic characters in JSX expressions
+      .replace(/\{([^}]*[0-9]+[^}]*)\}/g, (match, content) => {
+        // Replace numbered variables with safe alternatives
+        return `{/* ${content} */}`;
+      })
+      // Remove unclosed expressions
+      .replace(/\{[^}]*$/gm, '')
+      // Clean frontmatter issues
+      .replace(/^---\s*\n([\s\S]*?)\n---/m, (match, yaml) => {
+        try {
+          // Basic YAML validation - remove problematic lines
+          const cleanYaml = yaml
+            .split('\n')
+            .filter(line => !line.includes('{{') && !line.includes('}}'))
+            .join('\n');
+          return `---\n${cleanYaml}\n---`;
+        } catch {
+          return '';
+        }
+      })
+      .trim();
+  }
+
+  // Generate clean frontmatter
+  generateCleanFrontmatter(project, documentType, source) {
+    const frontmatter = {
+      title: `${project.displayName} - ${documentType.charAt(0).toUpperCase() + documentType.slice(1)}`,
+      description: `${documentType} documentation for ${project.displayName}`,
+      category: project.category,
+      lastUpdated: new Date().toISOString().split('T')[0],
+      project: project.id
+    };
+
+    if (source) {
+      frontmatter.sourceFile = source.relativePath;
+    }
+
+    return `---\n${Object.entries(frontmatter)
+      .map(([key, value]) => `${key}: "${value}"`)
+      .join('\n')}\n---`;
+  }
+
+  // Generate introduction content
+  generateIntroductionContent(project, files) {
+    const readmeFile = files.find(f => f.relativePath.toLowerCase().includes('readme'));
+    const description = readmeFile ?
+      readmeFile.content.split('\n').slice(0, 3).join('\n') :
+      `${project.displayName} is a professional project in the ${project.category} category.`;
+
+    return `# ${project.displayName}
+
+${this.sanitizeMDXContent(description)}
+
+## Overview
+
+This project is part of the LostMind AI ecosystem and represents our work in ${project.category.replace('-', ' ')}.
+
+## Navigation
+
+- [README](./readme) - Complete project documentation
+- [Architecture](./architecture) - Technical architecture details
+${project.documentTypes.includes('development') ? '- [Development](./development) - Development setup and guidelines' : ''}
+
+## Project Details
+
+- **Category**: ${project.category}
+- **Priority**: ${project.priority}
+- **Scan Strategy**: ${project.scanStrategy}
+- **Last Updated**: ${new Date().toISOString().split('T')[0]}
+
+---
+
+*This documentation was automatically generated from project sources.*`;
+  }
+
+  // Generate default content when source files aren't found
+  generateDefaultReadme(project) {
+    return `# ${project.displayName}
+
+Welcome to ${project.displayName}, a key component of the LostMind AI ecosystem.
+
+## About
+
+This project focuses on ${project.category.replace('-', ' ')} and is maintained as part of our professional development infrastructure.
+
+## Status
+
+- **Project Category**: ${project.category}
+- **Priority Level**: ${project.priority}
+- **Documentation Strategy**: ${project.scanStrategy}
+
+## Getting Started
+
+Please refer to the source project for detailed setup and usage instructions.
+
+## Support
+
+For questions and support, please contact the LostMind AI team.
+
+---
+
+*Note: This is auto-generated documentation. Source README file was not found at the expected location.*`;
+  }
+
+  generateDefaultArchitecture(project) {
+    return `# Architecture Overview
+
+## ${project.displayName} Architecture
+
+This document outlines the architectural design and technical decisions for ${project.displayName}.
+
+## System Overview
+
+${project.displayName} is designed as a ${project.category.replace('-', ' ')} solution with focus on scalability and maintainability.
+
+## Key Components
+
+- **Core Infrastructure**: Primary application logic
+- **Data Layer**: Information processing and storage
+- **Integration Layer**: External service connections
+- **Presentation Layer**: User interface and API endpoints
+
+## Technical Stack
+
+Details about the technical implementation are available in the source project documentation.
+
+## Design Decisions
+
+Architecture decisions are driven by:
+- Performance requirements
+- Scalability needs
+- Maintainability goals
+- Integration capabilities
+
+---
+
+*Note: This is auto-generated architecture documentation. Source architecture files were not found.*`;
+  }
+
+  generateDefaultDevelopment(project) {
+    return `# Development Guide
+
+## ${project.displayName} Development
+
+This guide covers development setup and workflow for ${project.displayName}.
+
+## Prerequisites
+
+Please refer to the source project for specific prerequisites and requirements.
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies
+3. Configure environment
+4. Run development server
+
+## Development Workflow
+
+Standard development practices apply:
+- Feature branch workflow
+- Code review process
+- Testing requirements
+- Documentation updates
+
+## Contributing
+
+Contributions are welcome. Please follow the established coding standards and testing procedures.
+
+---
+
+*Note: This is auto-generated development documentation. Source development files were not found.*`;
+  }
+
+  // Basic MDX syntax validation
+  validateMDXSyntax(content) {
+    try {
+      // Basic checks for common MDX issues
+      const issues = [];
+
+      // Check for unclosed JSX expressions
+      if (content.includes('{') && !content.includes('}')) {
+        issues.push('Unclosed JSX expression');
+      }
+
+      // Check for DOCTYPE declarations
+      if (content.includes('<!DOCTYPE')) {
+        issues.push('DOCTYPE declaration found');
+      }
+
+      // Check for unclosed HTML tags
+      const openTags = content.match(/<([a-zA-Z][a-zA-Z0-9]*)[^>]*>/g) || [];
+      const closeTags = content.match(/<\/([a-zA-Z][a-zA-Z0-9]*)\s*>/g) || [];
+
+      if (openTags.length !== closeTags.length) {
+        // This is a simplified check - in reality we'd need more sophisticated parsing
+        this.logger.debug('Potential unclosed HTML tags detected');
+      }
+
+      // Check frontmatter
+      const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+      if (frontmatterMatch) {
+        const yamlContent = frontmatterMatch[1];
+        if (yamlContent.includes('{{') || yamlContent.includes('}}')) {
+          issues.push('Template syntax in frontmatter');
+        }
+      }
+
+      if (issues.length > 0) {
+        this.logger.debug(`MDX validation issues: ${issues.join(', ')}`);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      this.logger.error(`MDX validation error: ${error.message}`);
       return false;
     }
   }

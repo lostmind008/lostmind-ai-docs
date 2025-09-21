@@ -28,8 +28,8 @@ This document outlines the phased approach to refactoring the framework. Each ph
 
 | Action | File(s) to be **DELETED** | Why? (What it's being replaced by) |
 | :--- | :--- | :--- |
-| **1.1 Delete Old Python Scripts** | `/.claude/lostmindai-context-framework/code_guardian.py`<br>`/.../context_guardian.py`<br>`/.../gemini_context_synthesizer.py` | Replaced by the new `project_mapper.py` and the "Skeleton-First" scaffolding workflow, which provide a more robust, real-time context. |
-| **1.2 Delete Old Claude Commands** | `/.claude/commands/ucf-analyze-repo.md`<br>`/.../ucf-context-refresh.md`<br>`/.../ucf-synthesize-context.md` | These commands trigger the old, now-deleted scripts. They will be replaced by new, protocol-aligned commands. |
+| **1.1 Delete Old Python Scripts** | `/.claude/lostmindai-context-framework/code_guardian.py`<br />`/.../context_guardian.py`<br />`/.../gemini_context_synthesizer.py` | Replaced by the new `project_mapper.py` and the "Skeleton-First" scaffolding workflow, which provide a more robust, real-time context. |
+| **1.2 Delete Old Claude Commands** | `/.claude/commands/ucf-analyze-repo.md`<br />`/.../ucf-context-refresh.md`<br />`/.../ucf-synthesize-context.md` | These commands trigger the old, now-deleted scripts. They will be replaced by new, protocol-aligned commands. |
 
 ### Phase 2: Implementing the New Protocol's Core Tools
 
@@ -37,8 +37,8 @@ This document outlines the phased approach to refactoring the framework. Each ph
 
 | Action | File(s) to be **CREATED / MODIFIED** | Why? (Which part of the protocol it implements) |
 | :--- | :--- | :--- |
-| **2.1 Create the Project Mapper** | **Create:** `/.../lostmindai-context-framework/project_mapper.py`<br>**Create:** `/.claude/commands/ucf-map-project.md` | Implements **Section 1: PROJECT CONTEXT MAPPING**. This becomes the new, mandatory entry point for all agent work, creating the `PROJECT_MAP.md` as the single source of truth. |
-| **2.2 Create the Universal Scaffolder** | **Create:** `/.claude/the_forge/scaffolder.py`<br>**Create:** `/.claude/commands/ucf-scaffold.md`<br>**Create:** New templates in `/.claude/the_forge/scaffold_templates/` | Implements **Section 2: SKELETON-FIRST DEVELOPMENT**. This is the engine for the "Plan Once, Scaffold Immediately" principle, creating the context-rich skeleton files. |
+| **2.1 Create the Project Mapper** | **Create:** `/.../lostmindai-context-framework/project_mapper.py`<br />**Create:** `/.claude/commands/ucf-map-project.md` | Implements **Section 1: PROJECT CONTEXT MAPPING**. This becomes the new, mandatory entry point for all agent work, creating the `PROJECT_MAP.md` as the single source of truth. |
+| **2.2 Create the Universal Scaffolder** | **Create:** `/.claude/the_forge/scaffolder.py`<br />**Create:** `/.claude/commands/ucf-scaffold.md`<br />**Create:** New templates in `/.claude/the_forge/scaffold_templates/` | Implements **Section 2: SKELETON-FIRST DEVELOPMENT**. This is the engine for the "Plan Once, Scaffold Immediately" principle, creating the context-rich skeleton files. |
 
 ### Phase 3: Upgrading "The Forge" and Agent Personas
 
@@ -64,7 +64,3 @@ Upon completion of this plan, the framework will be considered successfully tran
 
 ---
 *This content was automatically extracted from LostMind AI - Memory&Context Protocol. For the most up-to-date information, refer to the source project.*
-
-
----
-*This content was automatically extracted from LostMind AI - Documentation Site. For the most up-to-date information, refer to the source project.*

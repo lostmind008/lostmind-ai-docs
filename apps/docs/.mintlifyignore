@@ -1,0 +1,9 @@
+# Ignore archived project files to prevent MDX parsing errors
+_archived/
+_archived/**/*
+
+# Ignore any temp or build directories
+.next/
+node_modules/
+dist/
+build/

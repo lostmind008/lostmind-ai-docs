@@ -1,0 +1,161 @@
+---
+title: "LostMind AI - Project Analyser with RAG (Gemini) - Readme"
+description: "readme documentation for LostMind AI - Project Analyser with RAG (Gemini)"
+category: "ai-development-tools"
+lastUpdated: "2025-09-21"
+project: "undefined"
+sourceFile: "README.md"
+---
+
+# Gemini Analyzer - Advanced Project Intelligence Platform
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-009688)](https://fastapi.tiangolo.com/)
+[![Gemini](https://img.shields.io/badge/Google%20Gemini-2.5-4285F4)](https://ai.google.dev/)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+> **Enterprise-grade project analysis platform with dual-mode AI intelligence and privacy-first architecture**
+
+An advanced project intelligence platform that combines comprehensive local analysis with cutting-edge AI capabilities. Built for developers, security teams, and DevOps professionals who need deep project understanding without compromising on privacy or performance.
+
+## 🚀 Overview
+
+Gemini Analyzer is a comprehensive project intelligence platform that revolutionizes how teams understand and analyze codebases. Originally conceived to solve the challenge of rapidly understanding complex projects across different programming languages and frameworks, it has evolved into a full-featured analysis platform.
+
+### Key Features
+
+- **🔍 Comprehensive Analysis**: Multi-language code analysis, dependency mapping, and project statistics
+- **🤖 Dual-Mode AI**: Cloud-powered insights with Google Gemini 2.5 or privacy-first local processing
+- **🌐 REST API**: Production-ready FastAPI backend with comprehensive documentation
+- **🖥️ GUI Application**: Standalone Tkinter interface for desktop users
+- **🔒 Privacy-First**: Complete local processing option for sensitive codebases
+- **📊 Rich Insights**: Code metrics, dependency analysis, and AI-generated summaries
+- **🏢 Enterprise Ready**: Multi-tenant architecture, audit trails, and compliance features
+
+### Why Gemini Analyzer?
+
+**The Problem**: Modern software projects are increasingly complex, with multiple languages, frameworks, and dependencies. Understanding a new codebase or analyzing project health traditionally requires hours of manual exploration.
+
+**Our Solution**: Gemini Analyzer provides instant, comprehensive project intelligence through:
+- Automated code analysis across 20+ programming languages
+- AI-powered insights that understand project context and architecture
+- Privacy-first design that keeps sensitive code local
+- Enterprise-grade API for CI/CD integration
+
+### Architecture Modes
+
+#### 1. **Standalone GUI Application**
+Perfect for individual developers and security teams who need quick, private analysis:
+- Cross-platform desktop tool
+- Complete local processing
+- Instant analysis results
+- No external dependencies required
+
+#### 2. **REST API Service**
+Designed for enterprise integration and automated workflows:
+- Production-ready FastAPI backend
+- Scalable container deployment
+- CI/CD pipeline integration
+- Multi-tenant support
+
+| Feature | GUI Mode | API Mode | Description |
+|---------|:--------:|:--------:|-------------|
+| **Project Analysis** | ✅ | ✅ | Comprehensive codebase scanning and metrics |
+| **AI Insights** | ✅ | ✅ | Google Gemini 2.5 powered analysis |
+| **Privacy Mode** | ✅ | ✅ | Local-only processing for sensitive data |
+| **Multi-Language** | ✅ | ✅ | 20+ programming languages supported |
+| **Git Integration** | ❌ | ✅ | Direct repository analysis |
+| **File Upload** | ✅ | ✅ | ZIP/TAR archive processing |
+| **REST API** | ❌ | ✅ | Programmatic access and integration |
+| **Containerized** | ❌ | ✅ | Docker deployment ready |
+
+## 🛠️ Key Technologies
+
+This project is built with a modern, robust technology stack:
+
+*   **Backend:** [FastAPI](https://fastapi.tiangolo.com/) for high-performance, asynchronous API services.
+*   **AI Integration:** [Google Generative AI SDK](https://ai.google.dev/docs/sdk) (`google-generativeai`), the official and current library for the Gemini family of models.
+*   **Desktop GUI:** [Tkinter](https://docs.python.org/3/library/tkinter.html), Python's standard cross-platform GUI toolkit.
+*   **Data Validation:** [Pydantic](https://docs.pydantic.dev/latest/) for robust data validation and settings management in the API.
+*   **Containerization:** [Docker](https://www.docker.com/) for creating portable, production-ready containers for the backend service.
+
+## 🚀 Getting Started
+
+This project is designed for ease of use, both for local development and for deployment.
+
+### Prerequisites
+
+*   Python 3.8+
+*   Docker (for running the backend service)
+*   An optional `GOOGLE_API_KEY` environment variable for cloud-based AI features.
+
+### Local Development & Running the GUI
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-repo/gemini-magic.git
+    cd gemini-magic
+    ```
+
+2.  **Create a virtual environment and install dependencies:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    # Install base GUI dependencies + AI dependencies
+    pip install -e ".[ai,dev]"
+    ```
+
+3.  **Run the GUI application:**
+    ```bash
+    python -m gemini_analyzer.gui.main
+    ```
+
+### Running the Backend Service with Docker
+
+1.  **Build the Docker image:**
+    ```bash
+    docker build -t gemini-analyzer-service .
+    ```
+
+2.  **Run the container:**
+    ```bash
+    docker run -p 8000:8000 -e GOOGLE_API_KEY="your_api_key" gemini-analyzer-service
+    ```
+    The API will be available at `http://localhost:8000`. Interactive documentation can be found at `http://localhost:8000/docs`.
+
+## 🏗️ Project Structure
+
+This project follows the standard `src` layout for clean packaging and separation of concerns.
+
+```
+Gemini_Magic/
+├── .github/                # CI/CD workflows
+├── docs/                   # Project documentation
+├── scripts/                # Build/deploy helper scripts
+├── src/
+│   └── gemini_analyzer/    # Main application package
+│       ├── api/            # FastAPI backend service
+│       ├── core/           # Core analysis logic (shared by GUI and API)
+│       ├── gui/            # Standalone Tkinter GUI application
+│       └── config.py       # Centralized configuration
+├── tests/                  # Unit and integration tests
+├── .dockerignore           # Files to ignore in Docker builds
+├── .gitignore              # Files to ignore in Git
+├── docker-compose.yml      # For local multi-container setups
+├── Dockerfile              # Defines the container for the backend service
+├── pyproject.toml          # Project definition and dependencies
+└── README.md               # This file
+```
+
+## 🤖 For AI Agents: How to Contribute
+
+This repository is designed to be developed in parallel by multiple AI agents. Each core module contains a `README.md` and `TODO` comments to guide you.
+
+*   **If you are the GUI Agent:** Your primary focus is the `src/gemini_analyzer/gui/` directory. Start by reading its `README.md` to understand the component structure. Your goal is to build a responsive and intuitive user interface using the components and logic available.
+*   **If you are the Core Logic Agent:** Your domain is `src/gemini_analyzer/core/`. Read its `README.md`. You will implement the heavy lifting of project analysis, ensuring the code is efficient, accurate, and can be used by both the GUI and the API.
+*   **If you are the API Agent:** You will work within `src/gemini_analyzer/api/`. Your task is to create robust FastAPI endpoints that expose the functionality from the `core` modules, including proper data validation and error handling.
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
