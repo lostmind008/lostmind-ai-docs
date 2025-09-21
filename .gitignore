@@ -275,3 +275,25 @@ packages/database/generated
 
 # Sentry
 .sentryclirc
+
+# Additional Package Manager Files
+# PNPM lock file
+pnpm-lock.yaml
+
+# Yarn lock file (if not using pnpm)
+# yarn.lock
+
+# Bun package manager
+bun.lockb
+
+# Package manager config files (if containing sensitive data)
+# .npmrc
+# .yarnrc
+
+# Package manager cache directories
+.pnpm-store/
+.yarn/cache/
+
+# Documentation generation temporary files
+apps/docs/navigation.json
+apps/docs/project-summary.json
