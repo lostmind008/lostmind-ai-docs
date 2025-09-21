@@ -16,7 +16,7 @@ This guide provides step-by-step instructions for deploying the backend intellig
 
 ## Docker Deployment
 
-### 1. Build Docker Images
+### Build Docker Images
 
 Navigate to the root of the `backend-architecture` directory and run the following command to build Docker images for all services:
 
@@ -24,7 +24,7 @@ Navigate to the root of the `backend-architecture` directory and run the followi
 docker-compose build
 ```
 
-### 2. Run Services with Docker Compose
+### Run Services with Docker Compose
 
 Use Docker Compose to run all services locally:
 
@@ -36,7 +36,7 @@ This will start all services, including the API Gateway, RAG service, and analys
 
 ## Kubernetes Deployment
 
-### 1. Create Kubernetes Namespace
+### Create Kubernetes Namespace
 
 Create a dedicated namespace for the backend services:
 
@@ -44,7 +44,7 @@ Create a dedicated namespace for the backend services:
 kubectl create namespace backend-intelligence
 ```
 
-### 2. Deploy with Helm
+### Deploy with Helm
 
 We provide a Helm chart for easy deployment to Kubernetes. Navigate to the `helm` directory and run the following command:
 
@@ -54,7 +54,7 @@ helm install backend-intelligence ./helm/backend-intelligence --namespace backen
 
 This will deploy all services, create necessary resources (Deployments, Services, ConfigMaps), and expose the API Gateway through a LoadBalancer service.
 
-### 3. Accessing the API
+### Accessing the API
 
 To get the external IP address of the API Gateway, run:
 

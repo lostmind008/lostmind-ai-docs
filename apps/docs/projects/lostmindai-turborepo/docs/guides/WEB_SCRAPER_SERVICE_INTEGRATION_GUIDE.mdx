@@ -584,7 +584,7 @@ services/crawler-engine/      # ← YOUR DESTINATION
 
 ## 🛠️ Scraper-Specific CLI Tools
 
-### 1. **Web Scraping Development Tools**
+### **Web Scraping Development Tools**
 ```bash
 # Playwright browser setup
 npx playwright install chromium
@@ -600,7 +600,7 @@ curl -I https://example.com
 wget --spider --server-response https://example.com 2>&1 | grep -E "(HTTP|robots.txt)"
 ```
 
-### 2. **Queue & Job Management**
+### **Queue & Job Management**
 ```bash
 # Redis CLI for queue monitoring
 redis-cli
@@ -613,7 +613,7 @@ celery -A src.core.queue.celery_app beat --loglevel=info
 celery -A src.core.queue.celery_app flower  # Web-based monitoring
 ```
 
-### 3. **Testing & Debugging**
+### **Testing & Debugging**
 ```bash
 # Test scraping capabilities
 curl -X POST "http://localhost:8000/api/v1/scraper/scrape/immediate" \
@@ -627,7 +627,7 @@ docker logs -f crawler-engine
 
 ## 🐳 Docker & Deployment Configuration
 
-### 1. **Dockerfile**
+### **Dockerfile**
 ```dockerfile
 # services/crawler-engine/docker/Dockerfile
 FROM python:3.11-slim
@@ -663,7 +663,7 @@ EXPOSE 8000
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-### 2. **Cloud Run Deployment**
+### **Cloud Run Deployment**
 ```bash
 # Build and deploy to Google Cloud Run
 gcloud builds submit --tag gcr.io/coral-muse-469919-m0/crawler-engine

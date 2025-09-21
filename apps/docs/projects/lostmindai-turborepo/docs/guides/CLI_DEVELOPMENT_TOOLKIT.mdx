@@ -13,7 +13,7 @@ This guide provides comprehensive CLI tooling for smooth development and product
 
 ## 🔧 Core Development Tools
 
-### 1. **Google Cloud CLI** (`gcloud`)
+### **Google Cloud CLI** (`gcloud`)
 **Primary Use**: AI services, Cloud Run deployments, service authentication
 
 ```bash
@@ -48,7 +48,7 @@ gcloud run deploy document-processor \
 gcloud logs tail "projects/coral-muse-469919-m0/logs/cloudrun.googleapis.com"
 ```
 
-### 2. **Vercel CLI** (`vercel`)
+### **Vercel CLI** (`vercel`)
 **Primary Use**: Next.js app deployments, preview deployments, domain management
 
 ```bash
@@ -84,7 +84,7 @@ vercel alias set deployment.vercel.app lostmindai.com  # Set custom domain
 }
 ```
 
-### 3. **Stripe CLI** (`stripe`)
+### **Stripe CLI** (`stripe`)
 **Primary Use**: Payment testing, webhook management, payment flow validation
 
 ```bash
@@ -113,7 +113,7 @@ stripe checkout sessions create \
 stripe fixtures payment_intent.json  # Load test fixtures
 ```
 
-### 4. **Node.js Package Managers** 
+### **Node.js Package Managers** 
 
 #### **pnpm** (Primary - Monorepo Optimized)
 ```bash
@@ -147,7 +147,7 @@ turbo gen workspace                       # Generate new workspace
 
 ## 🚀 Specialized Development Tools
 
-### 5. **Database & ORM Tools**
+### **Database & ORM Tools**
 
 #### **Prisma CLI**
 ```bash
@@ -182,7 +182,7 @@ psql -h localhost -p 5432 -U postgres -d lostmind_dev
 SELECT version();                   # Check PostgreSQL version
 ```
 
-### 6. **Docker & Container Management**
+### **Docker & Container Management**
 
 #### **Docker CLI**
 ```bash
@@ -226,7 +226,7 @@ volumes:
   postgres_data:
 ```
 
-### 7. **Git & Version Control Enhanced**
+### **Git & Version Control Enhanced**
 
 #### **Git with Monorepo Workflow**
 ```bash
@@ -253,7 +253,7 @@ npx cz
 
 ## 🔍 Monitoring & Debugging Tools
 
-### 8. **Application Monitoring**
+### **Application Monitoring**
 
 #### **Vercel CLI Monitoring**
 ```bash
@@ -274,7 +274,7 @@ gcloud logging read "projects/coral-muse-469919-m0/logs/nextjs" --limit=50
 gcloud monitoring metrics list
 ```
 
-### 9. **Performance & Security Tools**
+### **Performance & Security Tools**
 
 #### **Lighthouse CI**
 ```bash
@@ -299,7 +299,7 @@ snyk monitor                       # Monitor project
 
 ## 🧪 Testing & Quality Assurance
 
-### 10. **Testing Tools**
+### **Testing Tools**
 
 #### **Playwright** (E2E Testing)
 ```bash
@@ -325,7 +325,7 @@ pnpm test --watch                  # Watch mode
 
 ## 📊 Development Workflow Automation
 
-### 11. **Task Runners & Automation**
+### **Task Runners & Automation**
 
 #### **Task** (Alternative to npm scripts)
 ```bash
@@ -351,7 +351,7 @@ make deploy                       # Deploy to production
 
 ## 🌐 Additional Productivity Tools
 
-### 12. **API Development & Testing**
+### **API Development & Testing**
 
 #### **HTTPie** (API Testing)
 ```bash
@@ -373,7 +373,7 @@ curl -X POST https://api.lostmindai.com/webhooks/stripe \
   -d '{"type":"payment_intent.succeeded"}'
 ```
 
-### 13. **File & Data Processing**
+### **File & Data Processing**
 
 #### **jq** (JSON Processing)
 ```bash
@@ -388,7 +388,7 @@ cat package.json | jq '.scripts'
 
 ## 🚀 Deployment & Production Tools
 
-### 14. **Environment Management**
+### **Environment Management**
 
 #### **direnv** (Auto Environment Loading)
 ```bash
@@ -403,7 +403,7 @@ echo 'export DATABASE_URL="postgresql://..."' > .envrc
 direnv allow
 ```
 
-### 15. **System Monitoring**
+### **System Monitoring**
 
 #### **htop** (System Resources)
 ```bash

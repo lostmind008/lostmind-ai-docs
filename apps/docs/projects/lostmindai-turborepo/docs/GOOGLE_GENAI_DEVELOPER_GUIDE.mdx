@@ -1172,7 +1172,7 @@ print(f"Net Income: ${financial_data['net_income']:,.2f}")
 
 ## Common Pitfalls & Solutions
 
-### 1. SDK Confusion - Old vs New
+### SDK Confusion - Old vs New
 
 ```python
 # ❌ COMMON MISTAKE: Using deprecated SDK patterns
@@ -1195,7 +1195,7 @@ response = client.models.generate_content(
 )
 ```
 
-### 2. Incorrect Model Names
+### Incorrect Model Names
 
 ```python
 # ❌ COMMON MISTAKE: Using outdated model names
@@ -1227,7 +1227,7 @@ def validate_model_name(model_name: str) -> bool:
         return False
 ```
 
-### 3. Content Structure Errors
+### Content Structure Errors
 
 ```python
 # ❌ COMMON MISTAKE: Incorrect content structuring
@@ -1266,7 +1266,7 @@ def correct_content_usage():
     return response1.text, response2.text, response3.text
 ```
 
-### 4. Function Calling Configuration Errors
+### Function Calling Configuration Errors
 
 ```python
 # ❌ COMMON MISTAKES: Function calling setup
@@ -1321,7 +1321,7 @@ def correct_function_calling():
     return response.text, chat_response.text
 ```
 
-### 5. File Upload and Processing Errors
+### File Upload and Processing Errors
 
 ```python
 # ❌ COMMON MISTAKES: File handling
@@ -1384,7 +1384,7 @@ def correct_file_handling():
     return process_file_smartly
 ```
 
-### 6. Authentication and Environment Errors
+### Authentication and Environment Errors
 
 ```python
 # ❌ COMMON MISTAKES: Authentication issues

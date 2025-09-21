@@ -34,7 +34,7 @@ Google has released a completely new SDK for their Generative AI services in 202
 
 ## Detailed Migration Instructions
 
-### 1. Package Installation
+### Package Installation
 
 ```bash
 # REMOVE old package
@@ -48,7 +48,7 @@ npm uninstall @google/generative-ai
 npm install @google/genai
 ```
 
-### 2. Import Pattern Changes
+### Import Pattern Changes
 
 ```python
 # ❌ OLD (DEPRECATED)
@@ -60,7 +60,7 @@ from google import genai
 from google.genai import types
 ```
 
-### 3. Client Initialization
+### Client Initialization
 
 ```python
 # ❌ OLD (DEPRECATED)
@@ -74,7 +74,7 @@ client = genai.Client(api_key="YOUR_API_KEY")  # Auto-reads GEMINI_API_KEY env v
 # Now use: client.models.generate_content()
 ```
 
-### 4. Model Names Update
+### Model Names Update
 
 ```python
 # Model mapping
@@ -87,7 +87,7 @@ MODELS_2025 = {
 }
 ```
 
-### 5. Method Call Patterns
+### Method Call Patterns
 
 #### Text Generation
 ```python
@@ -173,7 +173,7 @@ response = client.models.generate_content(
 audio_bytes = response.candidates[0].content.parts[0].inline_data.data
 ```
 
-### 6. Advanced Features
+### Advanced Features
 
 #### Google Search Grounding
 ```python

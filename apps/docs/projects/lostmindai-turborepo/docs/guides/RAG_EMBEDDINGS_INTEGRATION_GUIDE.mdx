@@ -834,7 +834,7 @@ services/ai-compute/            # ← COMPUTE SERVICE
 
 ## 🛠️ RAG-Specific CLI Tools
 
-### 1. **Vector Database Management**
+### **Vector Database Management**
 ```bash
 # PostgreSQL with pgvector
 psql $DATABASE_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"
@@ -848,7 +848,7 @@ ORDER BY embedding <=> '[0.1,0.2,...]'::vector
 LIMIT 10;"
 ```
 
-### 2. **Embedding Performance Testing**
+### **Embedding Performance Testing**
 ```bash
 # Benchmark embedding generation
 curl -X POST "http://localhost:8001/api/v1/embeddings/embed" \
@@ -861,7 +861,7 @@ curl -X POST "http://localhost:8001/api/v1/embeddings/batch" \
   -d '{"requests": [{"text": "document 1"}, {"text": "document 2"}]}'
 ```
 
-### 3. **RAG Query Testing**
+### **RAG Query Testing**
 ```bash
 # Test RAG retrieval
 curl -X POST "http://localhost:8001/api/v1/rag/query" \

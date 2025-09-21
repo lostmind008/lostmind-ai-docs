@@ -18,7 +18,7 @@ LostMind AI is transitioning to a **Next.js-first monorepo architecture** with s
 
 ## Core Architecture Decisions
 
-### 1. Framework Selection ✅
+### Framework Selection ✅
 - **Primary Stack**: Next.js 15 (App Router) 
 - **Heavy Compute**: FastAPI on Google Cloud Run
 - **Monorepo Tool**: Turborepo
@@ -26,13 +26,13 @@ LostMind AI is transitioning to a **Next.js-first monorepo architecture** with s
 - **Database**: PostgreSQL with Row Level Security (RLS)
 - **React Version**: React 19 (with Next.js 15)
 
-### 2. Deployment Strategy ✅
+### Deployment Strategy ✅
 - **Next.js Apps**: Vercel (Edge Functions + Serverless)
 - **FastAPI Services**: Google Cloud Run (60-minute execution limit)
 - **Static Assets**: Vercel CDN
 - **Database**: Supabase/Neon/Cloud SQL with pgvector
 
-### 3. Migration Philosophy ✅
+### Migration Philosophy ✅
 - **Next.js handles 95% of API endpoints** (CRUD, auth, webhooks)
 - **FastAPI retained for**:
   - Document processing (PDF, OCR)

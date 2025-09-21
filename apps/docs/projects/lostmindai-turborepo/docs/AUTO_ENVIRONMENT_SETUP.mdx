@@ -25,25 +25,25 @@ direnv allow .
 
 ## 📋 What Gets Configured
 
-### 1. **Automatic Environment Variables**
+### **Automatic Environment Variables**
 When you `cd` into the project directory:
 - Loads `.env.local` automatically
 - Sets up project-specific paths
 - Configures Node.js environment
 
-### 2. **Node.js Version Management**
+### **Node.js Version Management**
 - Automatically switches to Node.js v20
 - Uses `.nvmrc` file for version specification
 - Ensures consistent Node version across team
 
-### 3. **Project Aliases**
+### **Project Aliases**
 Shortcuts available in the project directory:
 - `dev` → `pnpm run dev`
 - `build` → `pnpm run build`
 - `safety` → `pnpm run safety`
 - `checkpoint` → `pnpm run checkpoint`
 
-### 4. **Automatic Checks**
+### **Automatic Checks**
 When entering the directory, it checks:
 - If dependencies are installed
 - If `.env.local` exists

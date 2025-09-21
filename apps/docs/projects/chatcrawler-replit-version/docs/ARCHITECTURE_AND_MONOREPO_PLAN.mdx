@@ -49,7 +49,7 @@ Security note
 
 ## Part 3: Detailed Current Architecture
 
-### 3.1 Frontend
+### Frontend
 - `client/` (Vite + React):
   - Routing: wouter
   - State: TanStack Query
@@ -64,7 +64,7 @@ Security note
 
 Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
 
-### 3.2 Backend API (Express)
+### Backend API (Express)
 - Auth: Replit OIDC via `passport` with PostgreSQL session store (`connect-pg-simple`).
 - Routes in `server/routes.ts`:
   - Auth: `GET /api/auth/user`
@@ -77,15 +77,15 @@ Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
 - Error handling/logging: `server/index.ts` avoids logging bodies in prod and avoids process crashes in prod.
 - Persistence: Absent. `server/storage.ts` keeps everything in memory.
 
-### 3.3 Worker (FastAPI)
+### Worker (FastAPI)
 - `/scrape`: Enqueues and processes scraping jobs (in-process background task). Tracks progress and results in in-memory dict.
 - `WebScraper`: robots.txt respect, link traversal with depth and page limits, extracted content and metadata.
 - Future: Upload parsing, embeddings, RAG/search integrations.
 
-### 3.4 Webhook Service
+### Webhook Service
 - Stripe webhook endpoint with signature verification, forwards to main app endpoints (`/api/webhooks/*`) that are not yet implemented in `server/`.
 
-### 3.5 Data and AI
+### Data and AI
 - Drizzle schema covers: users, jobs, docs (kb_docs with pgvector), conversations/messages, credits, plans/subscriptions/audit logs.
 - AI provider: OpenAI preferred, Gemini fallback; abstractions for chat, embeddings, summarization, and token estimation.
 

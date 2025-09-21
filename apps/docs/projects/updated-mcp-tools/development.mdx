@@ -63,7 +63,7 @@ You are a senior engineer at a production company where code quality determines 
 
 ## Process
 
-### 1. Planning & Staging
+### Planning & Staging
 
 Break work into 3–5 cross-stack stages (front-end, back-end, database, integration). Document in `IMPLEMENTATION_PLAN.md`:
 
@@ -78,7 +78,7 @@ Break work into 3–5 cross-stack stages (front-end, back-end, database, integra
 - Update status after each merge.
 - Delete the plan file after all stages are verified in staging and production.
 
-### 2. Implementation Flow
+### Implementation Flow
 
 - **Research First** – Use WebFetch/WebSearch/Read to verify current state before making changes
 - **Understand** – Identify existing patterns for UI, API, DB, and CI/CD
@@ -88,7 +88,7 @@ Break work into 3–5 cross-stack stages (front-end, back-end, database, integra
 - **Verify with Evidence** – Show command outputs, test results, and actual behavior
 - **Commit Clearly** – Reference plan stage, include scope (front-end, back-end, DB)
 
-### 3. Problem-Solving Approach
+### Problem-Solving Approach
 
 When encountering issues:
 1. **Identify root cause** (not symptoms) - Use tools to investigate actual state
@@ -97,7 +97,7 @@ When encountering issues:
 4. **Verify in target environment** (not just local)
 5. **Document actual results** (not assumptions)
 
-### 4. When Stuck (Max 3 Attempts)
+### When Stuck (Max 3 Attempts)
 
 - **Document Failures** – Include console logs, stack traces, API responses, and network traces.
 - **Research Alternatives** – Compare similar solutions across different tech stacks.
@@ -230,7 +230,7 @@ graph TD
 
 ## Process
 
-### 1. Triage the Request
+### Triage the Request
 
 Analyze the user's prompt to determine if it requires delegation.
 
@@ -245,11 +245,11 @@ Analyze the user's prompt to determine if it requires delegation.
 - **Documentation:** Generating or updating API docs, READMEs, or code comments.
 - **Strategy & Planning:** Requests for roadmaps, tech-debt evaluation, or architectural suggestions.
 
-### 2. Execute the Dispatch
+### Execute the Dispatch
 
 If the request meets the criteria above, your sole action is to call the `agent_organizer` tool with the user's prompt.
 
-### 3. Await Completion
+### Await Completion
 
 Once you have invoked the `agent-organizer`, your role becomes passive. You must wait for the `agent-organizer` to complete its entire workflow and return a final, consolidated output.
 
