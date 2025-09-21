@@ -1,55 +1,12 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "apps/docs/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "buildCommand": "npx mintlify build",
-        "distDir": "_site"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/apps/docs/$1"
-    }
-  ],
-  "buildCommand": "cd apps/docs && npx mintlify build",
-  "installCommand": "pnpm install",
+  "buildCommand": "cd apps/docs && mintlify build",
   "outputDirectory": "apps/docs/_site",
-  "functions": {
-    "apps/docs/pages/**": {
-      "maxDuration": 30
-    }
-  },
+  "installCommand": "pnpm install",
+  "framework": null,
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/apps/docs/$1"
     }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
