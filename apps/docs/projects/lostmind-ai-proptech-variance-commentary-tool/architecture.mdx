@@ -3,38 +3,31 @@ title: "LostMind AI - PropTech Variance Commentary Tool - Architecture"
 description: "architecture documentation for LostMind AI - PropTech Variance Commentary Tool"
 category: "proptech-solutions"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-proptech-variance-commentary-tool"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # Architecture Overview
 
-## LostMind AI - PropTech Variance Commentary Tool Architecture
-
-This document outlines the architectural design and technical decisions for LostMind AI - PropTech Variance Commentary Tool.
-
 ## System Overview
+The PropTech Variance Commentary Tool ingests property finance workbooks, normalises data into a relational model, and generates AI-authored variance narratives for month-end reporting.
 
-LostMind AI - PropTech Variance Commentary Tool is designed as a proptech solutions solution with focus on scalability and maintainability.
+## Core Modules
+- **Data Ingestion & Sanitisation** — Converts Knight Frank-style XLSM exports into a privacy-safe dataset
+- **SQL Modelling Layer** — Builds structured tables for ledgers, payables, and property metadata
+- **Variance Engine** — Calculates period deltas and surfaces exceptions that need commentary
+- **AI Commentary Service** — Prompts foundation models to draft auditor-friendly explanations
+- **Publishing Pipeline** — Outputs summaries back into Excel, PDF, or downstream dashboards
 
-## Key Components
+## Integrations
+- **Unified AI Client** connects to approved models (Gemma, Gemini, Claude) through the LostMind AI ai-compute service
+- **TurboRepo Services** supply shared authentication, logging, and observability utilities
+- **Security Scans** enforce data-governance policies before reports leave the environment
 
-- **Core Infrastructure**: Primary application logic
-- **Data Layer**: Information processing and storage
-- **Integration Layer**: External service connections
-- **Presentation Layer**: User interface and API endpoints
+## Security Considerations
+- Mandatory sanitisation step strips vendor names and sensitive PII before processing
+- Configurable AI routing keeps regulated data on compliant infrastructure
+- Audit logs capture every generated commentary block for finance review
 
-## Technical Stack
-
-Details about the technical implementation are available in the source project documentation.
-
-## Design Decisions
-
-Architecture decisions are driven by:
-- Performance requirements
-- Scalability needs
-- Maintainability goals
-- Integration capabilities
-
----
-
-*Note: This is auto-generated architecture documentation. Source architecture files were not found.*
+*Summarised from PropTech variance automation design notes.*

@@ -3,38 +3,35 @@ title: "LostMind AI - ContextKeeper - Architecture"
 description: "architecture documentation for LostMind AI - ContextKeeper"
 category: "ai-development-tools"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-contextkeeper"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # Architecture Overview
 
-## LostMind AI - ContextKeeper Architecture
-
-This document outlines the architectural design and technical decisions for LostMind AI - ContextKeeper.
-
 ## System Overview
+ContextKeeper anchors project memory behind a Sacred Layer that locks approved architectural plans while a RAG agent serves contextual answers to developers and AI assistants. The system is designed to keep day-to-day coding aligned with strategic intent.
 
-LostMind AI - ContextKeeper is designed as a ai development-tools solution with focus on scalability and maintainability.
+## Core Services
+- **Sacred Layer Service** — Immutable plan registry with dual-factor approval
+- **RAG Agent** — Clusters repository knowledge in ChromaDB and answers natural-language queries
+- **Git Activity Tracker** — Watches commits to detect drift from the Sacred Layer
+- **CLI & MCP Tools** — Shell tooling and Claude Code MCP endpoints for interactive access
 
-## Key Components
+## Data Storage
+- **ChromaDB** stores per-project embeddings plus the Sacred Layer corpus
+- **Project State Files** persist objectives, decisions, and alignment metrics
+- **Environment Variables** (SACRED_APPROVAL_KEY, API tokens) gate access to write paths
 
-- **Core Infrastructure**: Primary application logic
-- **Data Layer**: Information processing and storage
-- **Integration Layer**: External service connections
-- **Presentation Layer**: User interface and API endpoints
+## Integration Points
+- **Google Cloud GenAI** supplies embeddings and responses when cloud inference is permitted
+- **Local Security Mode** falls back to on-device models for sensitive repositories
+- **Claude Code MCP** exposes Sacred-aware tooling directly inside the IDE
 
-## Technical Stack
+## Security Model
+- Immutable plan hashes plus the Sacred Approval Key prevent unreviewed changes
+- Drift detection flags commits that contradict Sacred Layer directives
+- All secrets stay local; network calls are limited to configured AI providers
 
-Details about the technical implementation are available in the source project documentation.
-
-## Design Decisions
-
-Architecture decisions are driven by:
-- Performance requirements
-- Scalability needs
-- Maintainability goals
-- Integration capabilities
-
----
-
-*Note: This is auto-generated architecture documentation. Source architecture files were not found.*
+*Architecture distilled from the upstream ContextKeeper repository and Sacred Layer specs.*

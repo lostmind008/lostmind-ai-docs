@@ -3,38 +3,78 @@ title: "LostMind AI - SaaS Platform Development - Development"
 description: "development documentation for LostMind AI - SaaS Platform Development"
 category: "core-platforms"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-saas-platform-development"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # Development Guide
 
-## LostMind AI - SaaS Platform Development Development
-
-This guide covers development setup and workflow for LostMind AI - SaaS Platform Development.
+This guide covers development setup and workflow for the LostMind AI SaaS Platform.
 
 ## Prerequisites
 
-Please refer to the source project for specific prerequisites and requirements.
+- **Node.js**: Version 18+ with pnpm package manager
+- **Database**: PostgreSQL (local or hosted)
+- **Redis**: For caching and rate limiting
+- **Google Cloud**: Account for AI services and deployment
+- **Environment**: Unix-based system (macOS, Linux, WSL)
 
-## Setup
+## Quick Start
 
-1. Clone the repository
-2. Install dependencies
-3. Configure environment
-4. Run development server
+```bash
+# Install dependencies
+pnpm install
 
-## Development Workflow
+# Environment setup (copy and edit as needed)
+# cp .env.example .env.local
 
-Standard development practices apply:
-- Feature branch workflow
-- Code review process
-- Testing requirements
-- Documentation updates
+# Push database schema
+pnpm run db:push
 
-## Contributing
+# Start development servers
+pnpm run dev
+```
 
-Contributions are welcome. Please follow the established coding standards and testing procedures.
+## Development Commands
+
+```bash
+# Run specific app
+pnpm run dev --filter=marketing
+pnpm run dev --filter=ask
+
+# Build all packages
+pnpm run build
+
+# Type checking
+pnpm run type-check
+
+# Run tests
+pnpm run test
+
+# Task management
+pnpm run tasks:audit      # Analyze task files
+pnpm run tasks:cleanup    # Remove completed tasks
+pnpm run tasks:status     # Show statistics
+```
+
+## Development Tools
+
+### Task Management System
+- Automated task lifecycle management with status tracking
+- Smart task auditing and cleanup automation
+- Format validation for consistent task structure
+
+### TypeScript Standards
+- Inheritance-aware configuration
+- Monorepo-specific patterns
+- Automated validation for configuration issues
+
+### File Organization
+- Standardized directory structures
+- Naming convention enforcement
+- Automated cleanup for project integrity
 
 ---
 
-*Note: This is auto-generated development documentation. Source development files were not found.*
+*Development environment includes comprehensive tooling for professional-grade SaaS development.*

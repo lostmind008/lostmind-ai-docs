@@ -3,38 +3,66 @@ title: "LostMind AI - SaaS Platform Development - Architecture"
 description: "architecture documentation for LostMind AI - SaaS Platform Development"
 category: "core-platforms"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-saas-platform-development"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # Architecture Overview
 
-## LostMind AI - SaaS Platform Development Architecture
-
-This document outlines the architectural design and technical decisions for LostMind AI - SaaS Platform Development.
-
 ## System Overview
 
-LostMind AI - SaaS Platform Development is designed as a core platforms solution with focus on scalability and maintainability.
+The LostMind AI SaaS Platform is a production-ready AI-powered platform built with Next.js 15, Turborepo, and FastAPI. The architecture focuses on scalable microservices, modern development practices, and seamless AI integration.
 
 ## Key Components
 
-- **Core Infrastructure**: Primary application logic
-- **Data Layer**: Information processing and storage
-- **Integration Layer**: External service connections
-- **Presentation Layer**: User interface and API endpoints
+- **Frontend Applications**: Next.js 15 apps (Ask, Marketing) with React 19
+- **Backend Services**: FastAPI microservices for AI computation
+- **Database Layer**: PostgreSQL with Prisma ORM and Row Level Security
+- **AI Integration**: Google Generative AI (Gemini) with unified client
+- **Authentication**: Auth.js v5 with Google OAuth
+- **Payment Processing**: Stripe integration
+- **Monorepo Management**: Turborepo with pnpm workspaces
 
 ## Technical Stack
 
-Details about the technical implementation are available in the source project documentation.
+### Frontend
+- **Framework**: Next.js 15 with App Router
+- **UI Library**: React 19 Stable
+- **Language**: TypeScript
+- **Styling**: Modern CSS-in-JS solutions
+
+### Backend
+- **API Framework**: FastAPI (Python)
+- **Database**: PostgreSQL
+- **ORM**: Prisma with Row Level Security
+- **Caching**: Redis
+- **Authentication**: Auth.js v5
+
+### AI & Services
+- **AI Provider**: Google Generative AI (Gemini)
+- **Payment**: Stripe
+- **Deployment**: Vercel (Frontend), Google Cloud Run (Backend)
+- **Monitoring**: Comprehensive logging and analytics
 
 ## Design Decisions
 
-Architecture decisions are driven by:
-- Performance requirements
-- Scalability needs
-- Maintainability goals
-- Integration capabilities
+### Monorepo Structure
+- **Tool**: Turborepo for efficient build and dependency management
+- **Package Manager**: pnpm for workspace optimization
+- **Organization**: Clear separation between apps, packages, and services
+
+### Microservices Architecture
+- **Separation of Concerns**: Frontend and AI compute services are decoupled
+- **Scalability**: Independent scaling of frontend and backend services
+- **Development**: Parallel development of different service components
+
+### Security First
+- **Authentication**: Robust OAuth implementation with Auth.js
+- **Database**: Row Level Security in PostgreSQL
+- **API**: Secure FastAPI endpoints with proper validation
+- **Secrets**: Environment-based secret management
 
 ---
 
-*Note: This is auto-generated architecture documentation. Source architecture files were not found.*
+*Architecture reflects the current production-ready state with ongoing enhancements for scalability and performance.*

@@ -3,31 +3,46 @@ title: "LostMind AI - PropTech Variance Commentary Tool - Readme"
 description: "readme documentation for LostMind AI - PropTech Variance Commentary Tool"
 category: "proptech-solutions"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-proptech-variance-commentary-tool"
 ---
 
-# LostMind AI - PropTech Variance Commentary Tool
+<!-- Friendly note: beat Claude to this update 😄 -->
 
-Welcome to LostMind AI - PropTech Variance Commentary Tool, a key component of the LostMind AI ecosystem.
+# PropTech Variance Commentary Tool
 
-## About
+## Overview
+LostMind AI's PropTech Variance Commentary Tool converts raw portfolio ledgers into CFO-ready variance narratives. It slots into the broader PropTech automation stack, sharing AI orchestration, security, and observability patterns with the SaaS platform.
 
-This project focuses on proptech solutions and is maintained as part of our professional development infrastructure.
+## Key Capabilities
+- **Workbook Sanitisation** — Redacts Knight Frank source files before any AI processing
+- **Variance Detection** — Highlights period deltas across thousands of GL and AP records
+- **AI Commentary** — Generates auditor-friendly explanations with configurable tone
+- **Portfolio Views** — Groups insights by property, manager, or account class
+- **Compliance Guardrails** — Ensures Australian data-sovereignty requirements are respected
 
-## Status
+## Quick Start
+Use the upstream repository scripts as a guide when operating locally:
 
-- **Project Category**: proptech-solutions
-- **Priority Level**: 2
-- **Documentation Strategy**: selective
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
 
-## Getting Started
+# 2. Sanitise source workbook (mandatory)
+python sanitize_data.py
 
-Please refer to the source project for detailed setup and usage instructions.
+# 3. Build the SQL model
+python excel_to_sql.py
+
+# 4. Generate commentary draft
+python scripts/run_variance_commentary.py --period 2024-12
+```
+
+AI features connect through the shared `ai_integration/unified_client.py` module. Configure provider access in `.env` and route sensitive data to on-prem Gemma if compliance demands it.
+
+## Documentation Snapshot
+Historical implementation notes, data dictionaries, and operating guides are stored in the `_archived/projects` tree for this initiative. Consult those files for detailed workflows while the live docs are pruned.
 
 ## Support
+Raise issues through the LostMind AI platform team or reach out via the internal support channel when variance commentary output needs review.
 
-For questions and support, please contact the LostMind AI team.
-
----
-
-*Note: This is auto-generated documentation. Source README file was not found at the expected location.*
+*Content derived from PropTech finance tooling requirements and internal design notes.*

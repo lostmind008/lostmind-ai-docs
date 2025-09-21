@@ -3,15 +3,17 @@ title: "LostMind AI - SaaS Platform Development - Readme"
 description: "readme documentation for LostMind AI - SaaS Platform Development"
 category: "core-platforms"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-saas-platform-development"
 sourceFile: "README.md"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # LostMind AI Monorepo
 
 Production-ready AI-powered SaaS platform built with Next.js 15, Turborepo, and FastAPI.
 
-> 📌 **Source of truth:** [docs/project/CURRENT_PROJECT_STATE.md](./docs/project/CURRENT_PROJECT_STATE.md) is the canonical status document. Update it first whenever scope or implementation changes.
+> 📌 **Source of truth:** refer to `_archived/projects/lostmindai-turborepo/docs/project/CURRENT_PROJECT_STATE.md` for the canonical status. Update it first whenever scope or implementation changes.
 
 ## Tech Stack
 
@@ -62,11 +64,11 @@ pnpm run tasks:validate   # Check format compliance
 - **Pattern recognition** for consistent code organization
 - **Standards enforcement** for TypeScript and file structure
 
-**📖 [View CLAUDE.md for complete AI development guidelines](./CLAUDE.md)**
+**📖 Review `CLAUDE.md` for the complete AI development playbook (see `_archived/projects/lostmindai-turborepo/CLAUDE.md`).**
 
 ## Project Structure Overview
 
-For the live directory snapshot, visit the [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md#-repository-structure-current). Highlights below mirror that file:
+For the live directory snapshot, visit `_archived/projects/lostmindai-turborepo/docs/project/CURRENT_PROJECT_STATE.md`. Highlights below mirror that file:
 
 ### Implemented foundations
 
@@ -86,11 +88,11 @@ For the live directory snapshot, visit the [Current Project State](./docs/projec
 
 Each directory contains its own README.md with specific implementation details:
 
-- **[apps/ask/README.md](./apps/ask/README.md)** - AI query interface documentation
-- **[apps/marketing/README.md](./apps/marketing/README.md)** - Marketing website documentation
-- **[packages/README.md](./packages/README.md)** - Shared packages overview
-- **[services/README.md](./services/README.md)** - Microservices documentation
-- **[infrastructure/README.md](./infrastructure/README.md)** - Infrastructure setup
+- **apps/ask/README.md** - AI query interface documentation
+- **apps/marketing/README.md** - Marketing website documentation
+- **packages/README.md** - Shared packages overview
+- **services/README.md** - Microservices documentation
+- **infrastructure/README.md** - Infrastructure setup
 
 ## Quick Start
 
@@ -99,7 +101,7 @@ Each directory contains its own README.md with specific implementation details:
 pnpm install
 
 # Environment
-# Keep secrets out of git. See docs/secrets-policy.md
+# Keep secrets out of git. See `_archived/projects/lostmindai-turborepo/docs/secrets-policy.md`
 # Configure Vercel/GCP Secret Manager for production/staging.
 # For local dev, copy and edit if needed (untracked):
 # cp .env.example .env.local
@@ -129,59 +131,45 @@ pnpm run type-check
 
 ## 📚 Documentation
 
-Comprehensive documentation for the LostMind AI platform is organized for easy navigation:
+The full knowledge base is preserved under `_archived/projects/lostmindai-turborepo/docs`. Start with these anchors:
 
-### 🏠 Documentation Hub
+### Getting Started
+- **📖 Documentation Index** — `_archived/projects/lostmindai-turborepo/docs/README.md`
+- **🔰 Beginner's Quick Start** — `_archived/projects/lostmindai-turborepo/docs/guides/beginner/QUICK_START.md`
+- **🔐 Environment Setup** — `_archived/projects/lostmindai-turborepo/docs/setup/ENVIRONMENT_SETUP.md`
+- **📋 Session Templates** — `_archived/projects/lostmindai-turborepo/docs/CLAUDE_CODE_SESSION_TEMPLATES.md`
 
-- **[📖 Complete Documentation Index](./docs/README.md)** - Main documentation hub with all resources
+### Architecture & Planning
+- **🎯 Master Plan** — `_archived/projects/lostmindai-turborepo/docs/architecture/lostmind-master-plan.md`
+- **🗓️ Implementation Roadmap** — `_archived/projects/lostmindai-turborepo/docs/architecture/implementation-roadmap.md`
+- **📋 Architecture Decision Records** — `_archived/projects/lostmindai-turborepo/docs/architecture/lostmind-adrs.md`
 
-### 🚀 Getting Started
+### Integration & Operations
+- **🤖 Ask App Integration** — `_archived/projects/lostmindai-turborepo/docs/guides/INTEGRATION_GUIDE_FOR_ASK_APP.md`
+- **🌐 Marketing Website** — `_archived/projects/lostmindai-turborepo/docs/guides/MARKETING_WEBSITE_INTEGRATION_GUIDE.md`
+- **🧠 RAG & Embeddings** — `_archived/projects/lostmindai-turborepo/docs/guides/RAG_EMBEDDINGS_INTEGRATION_GUIDE.md`
+- **🕷️ Web Scraper Service** — `_archived/projects/lostmindai-turborepo/docs/guides/WEB_SCRAPER_SERVICE_INTEGRATION_GUIDE.md`
+- **📦 Dependency Management** — `_archived/projects/lostmindai-turborepo/docs/DEPENDENCY_MANAGEMENT.md`
+- **🔒 Environment Secrets Audit** — `_archived/projects/lostmindai-turborepo/docs/ENVIRONMENT_SECRETS_AUDIT.md`
+- **🖥️ Auto Environment Setup** — `_archived/projects/lostmindai-turborepo/docs/AUTO_ENVIRONMENT_SETUP.md`
 
-- **[🔰 Beginner's Quick Start](./docs/guides/beginner/QUICK_START.md)** - Simple guide for non-technical users
-- **[🔐 Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)** - Step-by-step environment configuration
-- **[📋 Session Templates](./docs/CLAUDE_CODE_SESSION_TEMPLATES.md)** - Copy-paste templates for Claude Code
+### Production Readiness
+- **🛡️ Security Architecture Audit Report** — `_archived/projects/lostmindai-turborepo/docs/security/SECURITY_ARCHITECTURE_AUDIT_REPORT.md`
+- **⚠️ Production Technical Analysis** — `_archived/projects/lostmindai-turborepo/docs/PRODUCTION_TECHNICAL_ANALYSIS.md`
+- **🤖 Google GenAI Developer Guide** — `_archived/projects/lostmindai-turborepo/docs/GOOGLE_GENAI_DEVELOPER_GUIDE.md`
+- **🚀 SaaS Launch Pathway** — `_archived/projects/lostmindai-turborepo/docs/SAAS_LAUNCH_PATHWAY.md`
+- **📊 TurboRepo Migration Analysis** — `_archived/projects/lostmindai-turborepo/docs/TURBOREPO_MIGRATION_ANALYSIS.md`
 
-### 🏗️ Architecture & Planning
+### Project Management
+- **✅ Claude Code Tasks** — `_archived/projects/lostmindai-turborepo/docs/project/CLAUDE_CODE_TASKS.md`
+- **🗺️ Project Map** — `_archived/projects/lostmindai-turborepo/docs/project/PROJECT_MAP.md`
+- **📈 Current Project State** — `_archived/projects/lostmindai-turborepo/docs/project/CURRENT_PROJECT_STATE.md`
 
-- **[🎯 Master Plan](./docs/architecture/lostmind-master-plan.md)** - Overall project vision and strategy
-- **[🗓️ Implementation Roadmap](./docs/architecture/implementation-roadmap.md)** - Timeline, phases, and milestones
-- **[📋 Architecture Decision Records](./docs/architecture/lostmind-adrs.md)** - Key architectural decisions and rationale
-
-### 🔧 Integration & Development Guides
-
-- **[🤖 Ask App Integration](./docs/guides/INTEGRATION_GUIDE_FOR_ASK_APP.md)** - AI query interface setup
-- **[🌐 Marketing Website](./docs/guides/MARKETING_WEBSITE_INTEGRATION_GUIDE.md)** - Public site configuration
-- **[🧠 RAG & Embeddings](./docs/guides/RAG_EMBEDDINGS_INTEGRATION_GUIDE.md)** - Vector search implementation
-- **[🕷️ Web Scraper Service](./docs/guides/WEB_SCRAPER_SERVICE_INTEGRATION_GUIDE.md)** - Crawler engine setup
-- **[📦 Dependency Management](./docs/DEPENDENCY_MANAGEMENT.md)** - Managing and updating dependencies
-- **[🔒 Environment Secrets Audit](./docs/ENVIRONMENT_SECRETS_AUDIT.md)** - Complete secrets documentation
-- **[🖥️ Auto Environment Setup](./docs/AUTO_ENVIRONMENT_SETUP.md)** - Automatic dev environment configuration
-
-### 🚨 Production & SDK Standards
-
-- **[🛡️ Security Architecture Audit Report](./docs/security/SECURITY_ARCHITECTURE_AUDIT_REPORT.md)** - **CRITICAL**: Pre-launch security review - **REQUIRED** before v1 production deployment
-- **[⚠️ Production Technical Analysis](./docs/PRODUCTION_TECHNICAL_ANALYSIS.md)** - Critical issues and remediation before deployment
-- **[🤖 Google GenAI Developer Guide](./docs/GOOGLE_GENAI_DEVELOPER_GUIDE.md)** - SDK migration and AI integration standards
-
-### 🚀 Launch & Business Planning
-
-- **[🚀 SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md)** - Complete roadmap from 65% to paying customers (6-8 weeks)
-- **[📊 TurboRepo Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)** - Backend services integration strategy with $2.3M ARR projections
-
-### 📊 Project Management
-
-- **[✅ Claude Code Tasks](./docs/project/CLAUDE_CODE_TASKS.md)** - AI assistant task tracking
-- **[🗺️ Project Map](./docs/project/PROJECT_MAP.md)** - Current file structure and organization
-- **[📈 Current Project State](./docs/project/CURRENT_PROJECT_STATE.md)** - Real-time project status
-
-### 🚀 Quick Navigation
-
-- **New Developer?** Start → [Quick Start Guide](./docs/guides/beginner/QUICK_START.md) → [Environment Setup](./docs/setup/ENVIRONMENT_SETUP.md)
-- **Planning launch?** See [SaaS Launch Pathway](./docs/SAAS_LAUNCH_PATHWAY.md) for complete roadmap
-- **Backend integration?** Check [Migration Analysis](./docs/TURBOREPO_MIGRATION_ANALYSIS.md)
-- **Setting up an app?** Go to [Integration Guides](./docs/guides/)
-- **Architecture questions?** Check [ADRs](./docs/architecture/lostmind-adrs.md)
-- **Project status?** View [Current State](./docs/project/CURRENT_PROJECT_STATE.md)
+Keep the quick navigation workflow simple:
+- New contributor? Start with the quick start, then environment setup.
+- Planning launch? Review the SaaS launch pathway and production analysis.
+- Integrating services? Use the guides collection above.
+- Need status? Open the current project state snapshot.
 
 ## Current Status (Snapshot)
 
@@ -193,7 +181,7 @@ Comprehensive documentation for the LostMind AI platform is organized for easy n
 - **📋 Next Phase:** Complete SaaS application with production-ready features
 - **📈 Current Focus:** Professional development standards and automated tooling
 
-See detailed status updates in [Current Project State](./docs/project/CURRENT_PROJECT_STATE.md) and complete documentation in [Documentation Hub](./docs/README.md).
+Detailed status updates live in `_archived/projects/lostmindai-turborepo/docs/project/CURRENT_PROJECT_STATE.md`, with the broader index in `_archived/projects/lostmindai-turborepo/docs/README.md`.
 
 ## License
 

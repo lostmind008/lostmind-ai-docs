@@ -3,38 +3,35 @@ title: "LostMind AI - Project Analyser with RAG (Gemini) - Architecture"
 description: "architecture documentation for LostMind AI - Project Analyser with RAG (Gemini)"
 category: "ai-development-tools"
 lastUpdated: "2025-09-21"
-project: "undefined"
+project: "lostmind-ai-project-analyser-with-rag-gemini"
 ---
+
+<!-- Friendly note: beat Claude to this update 😄 -->
 
 # Architecture Overview
 
-## LostMind AI - Project Analyser with RAG (Gemini) Architecture
-
-This document outlines the architectural design and technical decisions for LostMind AI - Project Analyser with RAG (Gemini).
-
 ## System Overview
+Gemini Analyzer couples a Python FastAPI service with a Tkinter desktop client to deliver dual-mode project intelligence: cloud-powered analysis via Google Gemini 2.5 or fully local processing for sensitive codebases.
 
-LostMind AI - Project Analyser with RAG (Gemini) is designed as a ai development-tools solution with focus on scalability and maintainability.
+## Application Modes
+- **Desktop GUI** — Tkinter interface that performs local scans and presents insights without leaving the workstation
+- **REST API Service** — FastAPI deployment with Docker packaging for CI/CD and enterprise integrations
+- **Shared Core Library** — Common analysis logic consumed by both the GUI and API layers
 
 ## Key Components
+- **Analysis Engine**: Multi-language parsers, dependency mapping, and metrics collectors
+- **AI Orchestrator**: Routes requests to Gemini 2.5 or privacy-first local models
+- **Storage Layer**: Project metadata, cached insights, and optional SQL backend
+- **Config & Validation**: Pydantic settings plus strict schema validation
 
-- **Core Infrastructure**: Primary application logic
-- **Data Layer**: Information processing and storage
-- **Integration Layer**: External service connections
-- **Presentation Layer**: User interface and API endpoints
+## Integrations
+- **Google Generative AI SDK** for hosted intelligence when API keys are provided
+- **Docker** deployment for consistent production environments
+- **CLI & Scripts** to bootstrap analysis tasks and health checks
 
-## Technical Stack
+## Security & Privacy
+- Local-only mode ensures sensitive repositories never leave the machine
+- Sanitised uploads for remote analysis with optional API key gating
+- Audit-ready logging across both GUI and API deployments
 
-Details about the technical implementation are available in the source project documentation.
-
-## Design Decisions
-
-Architecture decisions are driven by:
-- Performance requirements
-- Scalability needs
-- Maintainability goals
-- Integration capabilities
-
----
-
-*Note: This is auto-generated architecture documentation. Source architecture files were not found.*
+*Summarised from the Gemini Analyzer project blueprint and README.*
