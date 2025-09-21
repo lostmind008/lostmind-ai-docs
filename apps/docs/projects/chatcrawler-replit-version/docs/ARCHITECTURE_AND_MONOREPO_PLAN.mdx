@@ -7,7 +7,7 @@ For the most up-to-date information, refer to the source project.
 
 Status: Development prototype (approximately 40% complete). This document describes the current system, reconciles documentation with reality, and proposes a path to a Next.js 15 Turborepo monorepo with a marketing site and additional apps.
 
-## 1) Current System Overview
+## Part 1: Current System Overview
 
 - Frontend: Two UIs exist
   - `client/`: Vite + React app with shadcn/ui.
@@ -30,7 +30,7 @@ Status: Development prototype (approximately 40% complete). This document descri
 - Payments: Stripe subscription creation implemented; lifecycle webhooks not integrated into main server.
 - Observability: Console logging with safer API response logging in dev; no metrics or tracing.
 
-## 2) Reality Check vs Documentation
+## Part 2: Reality Check vs Documentation
 
 Accurate
 - `DEVELOPMENT_STATUS.md`: Reflects prototype state (40% complete) and key gaps.
@@ -47,7 +47,7 @@ Actions taken in this commit
 Security note
 - The repository currently contains secrets in `.env`. Rotate immediately and remove from VCS. Reference `.env.example` for placeholders only.
 
-## 3) Detailed Current Architecture
+## Part 3: Detailed Current Architecture
 
 ### 3.1 Frontend
 - `client/` (Vite + React):
@@ -89,7 +89,7 @@ Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
 - Drizzle schema covers: users, jobs, docs (kb_docs with pgvector), conversations/messages, credits, plans/subscriptions/audit logs.
 - AI provider: OpenAI preferred, Gemini fallback; abstractions for chat, embeddings, summarization, and token estimation.
 
-## 4) Gaps and Risks (Priority)
+## Part 4: Gaps and Risks (Priority)
 
 1. Persistence: Replace `MemStorage` with DB-backed storage using `drizzle-orm`.
 2. Validation/Security: Add Zod validation for all endpoints; rate limiting (express-rate-limit), CSRF where applicable, sanitize inputs.
@@ -99,7 +99,7 @@ Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
 6. Package Hygiene: Fix broken `packages/*` stubs or remove until implemented.
 7. CI Alignment: Update CI to match npm usage and current test reality, or add tests to satisfy CI.
 
-## 5) Monorepo (Turborepo) Blueprint for Next.js 15
+## Part 5: Monorepo (Turborepo) Blueprint for Next.js 15
 
 Target goals
 - Single repo with clear boundaries: apps, services, packages, shared types/schema.
@@ -145,7 +145,7 @@ Build and tooling
 - Configure per-package `tsconfig.json` and shared `@chatcrawler/config` presets.
 - Set up environment variable contracts via `.env.example` and per-app `.env.local`.
 
-## 6) Migration Plan (Phased)
+## Part 6: Migration Plan (Phased)
 
 Phase 0: Safety (Immediate)
 - Rotate and remove committed secrets from `.env`; rely on `.env.example` and secrets manager.
@@ -174,7 +174,7 @@ Phase 4: Worker Integration (2–3 weeks)
 Phase 5: Observability and Hardening (1–2 weeks)
 - Logging, metrics, tracing; add error tracking (Sentry). Security reviews, rate limits, and monitoring.
 
-## 7) Use This Repo vs Greenfield
+## Part 7: Use This Repo vs Greenfield
 
 Reasons to keep and evolve this repo
 - Drizzle schema and types are complete and usable.
@@ -188,7 +188,7 @@ Reasons to consider greenfield
 Recommendation
 - Keep this repo and evolve it under Turborepo. Perform Phase 0–2 to reduce debt quickly, then consolidate apps. Greenfield is only recommended if timelines are extremely tight and you want to avoid untangling Express + duplicate frontends.
 
-## 8) Immediate Next Steps
+## Part 8: Immediate Next Steps
 
 1. Approve removal of secrets from repo and rotate credentials.
 2. Approve `DbStorage` implementation to replace `MemStorage`.

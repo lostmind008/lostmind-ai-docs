@@ -7,7 +7,7 @@ For the most up-to-date information, refer to the source project.
 
 Due to GitHub OAuth permission restrictions, these workflow files need to be added manually through the GitHub web interface or by someone with workflow permissions.
 
-## 1. Dependency Updates Workflow
+## Part 1: Dependency Updates Workflow
 
 Create `.github/workflows/dependency-updates.yml`:
 
@@ -86,7 +86,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
 
-## 2. Safety Net Workflow
+## Part 2: Safety Net Workflow
 
 Create `.github/workflows/safety-net.yml`:
 

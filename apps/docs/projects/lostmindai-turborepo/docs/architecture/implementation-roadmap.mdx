@@ -44,11 +44,11 @@ task deploy:prod          # Deploy production
 
 #### Day 1-2: Monorepo Initialization
 ```bash
-# 1. Initialize monorepo structure
+# Step 1: Initialize monorepo structure
 mkdir -p apps packages services infra docs
 touch pnpm-workspace.yaml turbo.json Taskfile.yml
 
-# 2. Configure pnpm workspaces
+# Step 2: Configure pnpm workspaces
 cat > pnpm-workspace.yaml << 'EOF'
 packages:
   - "apps/*"
@@ -56,7 +56,7 @@ packages:
   - "services/*"
 EOF
 
-# 3. Setup Turborepo
+# Step 3: Setup Turborepo
 cat > turbo.json << 'EOF'
 {
   "$schema": "https://turbo.build/schema.json",
@@ -472,12 +472,12 @@ describe("UserService", () => {
 
 ### Production Deployment
 ```bash
-# 1. Merge to main
-# 2. CI runs tests
-# 3. Database migrations applied
-# 4. Next.js apps deploy to Vercel
-# 5. FastAPI services deploy to Cloud Run
-# 6. Monitor for issues
+# Step 1: Merge to main
+# Step 2: CI runs tests
+# Step 3: Database migrations applied
+# Step 4: Next.js apps deploy to Vercel
+# Step 5: FastAPI services deploy to Cloud Run
+# Step 6: Monitor for issues
 ```
 
 ### Rollback Procedure

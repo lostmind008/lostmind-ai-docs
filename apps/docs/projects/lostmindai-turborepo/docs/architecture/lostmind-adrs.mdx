@@ -7,7 +7,7 @@ For the most up-to-date information, refer to the source project.
 
 > **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🎯 Master Plan](lostmind-master-plan.md)** | **[🗓️ Implementation Roadmap](implementation-roadmap.md)**
 
-## ADR-001: Next.js 15 with App Router
+## ADR 001: Next.js 15 with App Router
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -40,7 +40,7 @@ Adopt Next.js 15 with App Router as the primary framework for all user-facing ap
 
 ---
 
-## ADR-002: Turborepo for Monorepo Management
+## ADR 002: Turborepo for Monorepo Management
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -75,7 +75,7 @@ Use Turborepo for monorepo management with pnpm workspaces.
 
 ---
 
-## ADR-003: PostgreSQL with RLS for Multi-tenancy
+## ADR 003: PostgreSQL with RLS for Multi-tenancy
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -117,7 +117,7 @@ CREATE POLICY tenant_isolation ON documents
 
 ---
 
-## ADR-004: Google Generative AI with Provider Abstraction
+## ADR 004: Google Generative AI with Provider Abstraction
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -160,7 +160,7 @@ class OpenAIProvider implements AIProvider { }
 
 ---
 
-## ADR-005: Hybrid Deployment Strategy
+## ADR 005: Hybrid Deployment Strategy
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -197,7 +197,7 @@ Different workload types require different execution environments for optimal co
 
 ---
 
-## ADR-006: Stripe for Unified Billing
+## ADR 006: Stripe for Unified Billing
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -234,7 +234,7 @@ Stripe Billing with shared `@lostmind/billing` package across all apps.
 
 ---
 
-## ADR-007: Event-Driven Background Processing
+## ADR 007: Event-Driven Background Processing
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -272,7 +272,7 @@ Google Cloud Pub/Sub for event messaging with Cloud Run subscribers.
 
 ---
 
-## ADR-008: Observability Stack
+## ADR 008: Observability Stack
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -309,7 +309,7 @@ logger.info({ traceId, message: 'Processing request' })
 
 ---
 
-## ADR-009: Database Migration Strategy
+## ADR 009: Database Migration Strategy
 
 **Date**: 2025-09-02  
 **Status**: Accepted  
@@ -335,7 +335,7 @@ Run Prisma migrations in CI/CD pipeline before deployment.
 
 ---
 
-## ADR-010: Testing Strategy
+## ADR 010: Testing Strategy
 
 **Date**: 2025-09-02  
 **Status**: Accepted  

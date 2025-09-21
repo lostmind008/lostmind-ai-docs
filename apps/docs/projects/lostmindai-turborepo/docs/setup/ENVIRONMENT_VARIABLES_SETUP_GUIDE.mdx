@@ -29,7 +29,7 @@ Follow this order to minimize dependencies and setup time:
 
 ---
 
-## 1. Database Setup
+## Part 1: Database Setup
 
 ### PostgreSQL with Row Level Security (RLS)
 
@@ -92,7 +92,7 @@ pnpm run db:push
 
 ---
 
-## 2. Authentication Setup
+## Part 2: Authentication Setup
 
 ### Auth.js v5 + Google OAuth
 
@@ -157,7 +157,7 @@ GOOGLE_CLIENT_SECRET="[client-secret]"
 
 ---
 
-## 3. AI Services Setup
+## Part 3: AI Services Setup
 
 ### Google Gemini API
 
@@ -225,7 +225,7 @@ curl -X POST http://localhost:3001/api/chat \
 
 ---
 
-## 4. Payment Processing Setup
+## Part 4: Payment Processing Setup
 
 ### Stripe Configuration
 
@@ -333,7 +333,7 @@ pnpm run dev
 
 ---
 
-## 5. Infrastructure Services
+## Part 5: Infrastructure Services
 
 ### Google Cloud Services
 
@@ -426,7 +426,7 @@ PUBSUB_TOPIC_AI_JOBS="projects/coral-muse-469919-m0/topics/ai-jobs-dev"
 
 ---
 
-## 5.5. Microservices Configuration
+## Part 5.5: Microservices Configuration
 
 ### Service Discovery & Communication
 
@@ -564,7 +564,7 @@ curl -X GET http://localhost:8000/health
 
 ---
 
-## 6. Monitoring & Analytics
+## Part 6: Monitoring & Analytics
 
 ### PostHog Analytics
 
@@ -611,7 +611,7 @@ SENTRY_PROJECT="lostmind-web"
 
 ---
 
-## 7. Email Service Setup
+## Part 7: Email Service Setup
 
 ### Resend (Recommended)
 
@@ -651,7 +651,7 @@ curl -X POST http://localhost:3000/api/test-email \
 
 ---
 
-## 8. Optional Services
+## Part 8: Optional Services
 
 ### Redis (⚠️ Required for Microservices Architecture)
 

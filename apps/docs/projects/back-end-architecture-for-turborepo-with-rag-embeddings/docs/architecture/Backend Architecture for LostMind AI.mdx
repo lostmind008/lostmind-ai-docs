@@ -7,7 +7,7 @@ For the most up-to-date information, refer to the source project.
 
 This document outlines the proposed backend architecture for the LostMind AI application. The architecture is designed to be modular, scalable, and easy to integrate into a Turborepo structure. It leverages modern technologies like FastAPI, Gemma embeddings, and a microservices-based approach to provide a robust and flexible backend.
 
-## 1. Overall Architecture
+## Part 1: Overall Architecture
 
 The backend will be composed of several independent microservices, each responsible for a specific set of functionalities. These services will communicate with each other through a combination of synchronous REST APIs and an asynchronous message queue for long-running tasks. A central API Gateway will act as a single entry point for all client requests, routing them to the appropriate service.
 
@@ -22,7 +22,7 @@ This modular design offers several advantages:
 
 
 
-## 2. Module Structure (Turborepo-Compatible)
+## Part 2: Module Structure (Turborepo-Compatible)
 
 The backend will be organized into the following packages within the Turborepo monorepo:
 
@@ -78,7 +78,7 @@ This package will contain shared utilities and helper functions that are used ac
 
 
 
-## 3. API Layer and Data Flow
+## Part 3: API Layer and Data Flow
 
 The API Gateway will expose a RESTful API for clients to interact with the backend. The API will be documented using the OpenAPI specification. The data flow will be as follows:
 
@@ -90,7 +90,7 @@ The API Gateway will expose a RESTful API for clients to interact with the backe
 
 For long-running tasks, such as document processing or web scraping, the services will use a message queue (e.g., RabbitMQ, Kafka) to communicate asynchronously. This will prevent blocking the main request thread and improve the overall responsiveness of the application.
 
-## 4. Technology Stack
+## Part 4: Technology Stack
 
 *   **Backend Framework:** FastAPI
 *   **Language:** Python 3.11+
