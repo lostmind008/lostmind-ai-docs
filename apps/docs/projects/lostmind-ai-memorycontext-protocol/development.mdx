@@ -1,0 +1,146 @@
+---
+title: "Development Guide - LostMind AI - Memory&Context Protocol"
+description: "AI-assisted development instructions and project guidelines"
+---
+
+<Info>
+This content was automatically extracted from LostMind AI - Memory&Context Protocol.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## 🎯 Core Mission
+
+This repository contains the LostMind AI Engine, a protocol-driven framework that enhances Claude Code with unlimited context memory and prevents AI goal drift. The framework is designed as a system-level enhancement that integrates seamlessly with the Claude Code ecosystem.
+
+## 🏗️ Architecture Overview
+
+The codebase follows a portable engine architecture where:
+
+- **`lostmind_ai_engine/`** - The core portable engine containing all Python logic, agent templates, and execution scripts
+- **`.claude/commands/`** - Source templates for UCF commands that get installed globally to `~/.claude/commands/`
+- **`install_lostmind_ai_framework.sh`** - Master installer that sets up the framework as a system-level enhancement
+- **`.lostmind_ai_context/`** - Project-specific context files created during onboarding (not included in this repo)
+
+## 🔧 Development Commands
+
+### Framework Installation
+- `./install_lostmind_ai_framework.sh` - Install the complete framework system-wide
+- `./lostmind_ai_engine/setup_environment.sh` - Set up engine's Python environment
+- `./verify_installation.sh` - Validate framework installation
+
+### Testing
+- `./test_fresh_installation.sh` - Test complete installation process
+- `./test_end_to_end.sh` - Full end-to-end functionality test
+- `./test_user_experience_validation.sh` - Validate user experience flows
+- `./test_cross_system_portability.sh` - Test portability across systems
+
+### Engine Operations
+- `bash lostmind_ai_engine/run_engine.sh <command>` - Direct engine execution
+- `bash lostmind_ai_engine/guardian_toolkit.sh` - Guardian system utilities
+
+## 🛡️ Framework Architecture Principles
+
+### System-Level Integration
+The framework operates as a native Claude Code enhancement:
+- Engine resides globally at `~/.claude/lostmind_ai_engine/` (not in project directories)
+- Commands auto-detect engine location without user-provided paths
+- Projects remain clean with only context files, no framework code pollution
+- All UCF commands work from any directory without configuration
+
+### Core Components
+- **The Guardian** - Context synthesis system preserving conversation history and decision reasoning
+- **The Forge** - Dynamic agent generator creating specialist agents based on project needs
+- **Universal Context Resolver** - Cross-session context preservation and retrieval
+- **Protocol-Driven Workflow** - Structured development methodology with task briefs and delegation
+
+### Python Environment
+The engine uses isolated Python environment at `lostmind_ai_engine/.venv/` with dependencies:
+- `google-generativeai` - Gemini API integration for context synthesis
+- `python-dotenv` - Environment variable management
+- `pathlib` and `os` - File system operations
+
+## 📋 Command Architecture
+
+### Global UCF Commands (Installed to ~/.claude/commands/)
+- `/ucf-onboard-project` - Initialize project with framework (no path arguments needed)
+- `/ucf-create-task-brief "description"` - Generate structured task documentation
+- `/ucf-agent-create "specialist-type"` - Create specialist agents via The Forge
+- `/ucf-guardian-status` - Check context synthesis health
+- `/ucf-guardian-refresh` - Update context with latest conversations
+- `/ucf-export-chat` - Export current session for analysis
+
+### Command Pattern
+All commands follow the pattern:
+```bash
+ENGINE_PATH="$HOME/.claude/lostmind_ai_engine"
+if [ ! -f "$ENGINE_PATH/run_engine.sh" ]; then
+    echo "❌ LostMind AI engine not found. Please run the framework installer."
+    exit 1
+fi
+bash "$ENGINE_PATH/run_engine.sh" <operation>
+```
+
+## 🧠 Context Management System
+
+### The Guardian (context_guardian.py)
+- Synthesizes conversation history preserving WHY behind decisions
+- Prevents AI goal drift across long development sessions
+- Auto-exports conversations with intelligent activity detection
+- Maintains unlimited context memory via reasoning chain preservation
+
+### Project Context Structure
+When projects are onboarded, they receive:
+```
+project-root/
+├── CLAUDE.md                     # Project memory (framework creates this)
+├── .claude/                      # Project-specific Claude Code config
+│   ├── agents/                  # Generated specialist agents
+│   └── settings.json            # Project settings
+├── .lostmind_ai_context/        # Framework context files
+│   ├── PROJECT_MAP.md           # Project structure and file purposes
+│   ├── chat_history.md          # Preserved conversation history
+│   └── guardian_logs/           # Context synthesis logs
+└── [actual project files]       # Clean project structure
+```
+
+## ⚠️ Architectural Compliance
+
+This framework must maintain strict compliance with Claude Code integration standards:
+
+### Installation Requirements
+- Single `install_lostmind_ai_framework.sh` execution installs system-wide
+- Engine lives at `~/.claude/lostmind_ai_engine/` (never in project directories)
+- Commands auto-detect engine location (no user path management)
+- Projects remain clean with only context files
+
+### Command Interface Standards
+- Commands work from any directory without configuration
+- No user-provided engine paths required
+- Standard error handling with clear guidance messages
+- Backwards compatibility with existing project contexts
+
+### File Placement Standards
+- CLAUDE.md files created in project root (not inside `.claude/`)
+- Framework code stays in global system location
+- Project directories only contain context files and actual project code
+- Clean separation between framework logic and project data
+
+## 🔬 Testing Strategy
+
+### Installation Testing
+Use the provided test scripts to validate framework behaviour:
+- Fresh installation on clean systems
+- Cross-platform portability validation
+- User experience flow verification
+- End-to-end functionality validation
+
+### Integration Testing
+The framework includes comprehensive integration tests that verify:
+- Proper engine detection and execution
+- Context preservation across sessions
+- Agent creation and delegation workflows
+- Project onboarding and structure creation

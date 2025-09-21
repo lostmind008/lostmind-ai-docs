@@ -1,0 +1,157 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🔐 Environment Setup Instructions
+
+## Quick Start
+
+1. **Copy the template**:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Generate secrets**:
+   ```bash
+   pnpm run env:generate-secret  # For NEXTAUTH_SECRET
+   ```
+
+3. **Fill in your values** (see guides below)
+
+4. **Validate your setup**:
+   ```bash
+   pnpm run env:check            # Basic validation
+   pnpm run env:validate         # Strict validation (all important vars)
+   pnpm run env:validate:ci      # CI mode (for deployment checks)
+   ```
+
+## Priority Guide
+
+### 🔴 CRITICAL (Must have to start)
+1. **Database**: PostgreSQL connection strings
+2. **Auth**: NextAuth secret + Google OAuth
+3. **AI**: Gemini API key
+4. **Payments**: Stripe keys
+5. **URLs**: Application URLs
+
+### 🟡 IMPORTANT (Need for full features)  
+1. **Stripe Webhooks**: For payment events
+2. **Cloud Services**: For document processing
+3. **Redis**: For caching and queues
+4. **Email**: For notifications
+5. **Analytics**: PostHog, Sentry
+
+### 🟢 OPTIONAL (Add as needed)
+- Alternative AI providers
+- Additional OAuth providers
+- Advanced monitoring
+- Third-party integrations
+
+## Service Setup Guides
+
+### Database (PostgreSQL)
+- **Supabase**: https://supabase.com/dashboard
+- **Neon**: https://console.neon.tech
+- **Vercel Postgres**: https://vercel.com/storage/postgres
+
+### Authentication (Google OAuth)
+1. Go to https://console.cloud.google.com
+2. Create OAuth 2.0 credentials
+3. Add callback URLs:
+   - Dev: `http://localhost:3000/api/auth/callback/google`
+   - Prod: `https://yourdomain.com/api/auth/callback/google`
+
+### AI Services (Gemini)
+1. Visit https://makersuite.google.com/app/apikey
+2. Create an API key
+3. Use for both `GOOGLE_GENERATIVE_AI_API_KEY` and `GEMINI_API_KEY`
+
+### Payments (Stripe)
+1. Go to https://dashboard.stripe.com/apikeys
+2. Copy test keys (sk_test_... and pk_test_...)
+3. Set up webhook at `/api/webhooks/stripe`
+
+### Email (Resend - Recommended)
+1. Sign up at https://resend.com
+2. Verify your domain
+3. Create API key
+
+## Files That Should NEVER Be Committed
+
+```
+❌ NEVER COMMIT:
+- .env.local (your actual secrets)
+- .env.production (production secrets)  
+- .env.*.local (any local env file)
+- *.key, *.pem, *.p12 (certificates)
+- service-account.json (GCP credentials)
+- Any file with real API keys or passwords
+
+✅ SAFE TO COMMIT:
+- .env.example (template only)
+- .env.example.comprehensive (documentation)
+- This instructions file
+```
+
+## Validation Commands
+
+```bash
+# Check if environment is valid
+pnpm run env:check
+
+# Validate with strict mode (fails on missing IMPORTANT vars)
+pnpm run env:validate
+
+# CI validation (no colors, proper exit codes)
+pnpm run env:validate:ci
+
+# Test actual connections (database, Redis, etc.)
+pnpm run env:test
+```
+
+## Deployment Checklist
+
+### Before Deployment
+1. ✅ All CRITICAL variables set
+2. ✅ All IMPORTANT variables set (for production)
+3. ✅ No placeholder values (no brackets like `[your-key]`)
+4. ✅ Different secrets for dev/staging/prod
+5. ✅ Secrets stored in Vercel/GCP Secret Manager
+
+### Vercel Environment Variables
+Set these in Vercel Dashboard > Settings > Environment Variables:
+- Set different values for Development, Preview, and Production
+- Use the same variable names as in `.env.example`
+
+### Google Cloud Run
+Use Secret Manager for sensitive values:
+```bash
+gcloud secrets create MY_SECRET --data-file=secret.txt
+gcloud run services update SERVICE --set-secrets=MY_SECRET=MY_SECRET:latest
+```
+
+## Troubleshooting
+
+### "Missing required value"
+- Variable is empty or not set
+- Check spelling matches exactly
+
+### "Invalid format"
+- Value doesn't match expected pattern
+- Check for typos or wrong key type
+
+### "Contains placeholder brackets"
+- You left `[your-key]` instead of actual value
+- Replace with real API key
+
+### "Too short"
+- Secret doesn't meet minimum length
+- Generate longer secret with `openssl rand -base64 32`
+
+## Need Help?
+
+1. Run `pnpm run env:check` to see what's missing
+2. Check the `.env.example` file for documentation
+3. Each variable has inline help with setup links
+4. Use `--ci` flag for automated deployments

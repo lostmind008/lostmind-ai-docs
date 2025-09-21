@@ -1,0 +1,282 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 📦 Dependency Management Guide
+
+## Overview
+
+This guide explains how to safely manage and update dependencies in the LostMind AI monorepo.
+
+## 🚀 Quick Commands
+
+```bash
+# Check for outdated packages
+pnpm run update:check
+
+# Safe interactive update (recommended for beginners)
+pnpm run update:safe
+
+# Fix security vulnerabilities
+pnpm run update:security
+
+# Advanced: Interactive update
+pnpm run update:interactive
+
+# Dangerous: Update all to latest (including major versions)
+pnpm run update:major
+```
+
+## 🎯 Update Strategy
+
+### Weekly Routine (Automated)
+
+Every Monday at 9am UTC:
+1. **Dependabot** creates PRs for outdated dependencies
+2. **GitHub Actions** runs security audit
+3. **Auto-merge** for patch and minor updates (after tests pass)
+4. **Manual review** required for major updates
+
+### Manual Updates (When Needed)
+
+#### For Beginners: Use the Safe Update Script
+
+```bash
+pnpm run update:safe
+```
+
+This will:
+1. Check git is clean
+2. Create backup branch
+3. Run security audit
+4. Show outdated packages by risk level:
+   - 🟢 Patch updates (safe)
+   - 🟡 Minor updates (usually safe)
+   - 🔴 Major updates (may break things)
+5. Let you choose what to update
+6. Run tests after updates
+7. Create checkpoints for rollback
+
+#### For Specific Packages
+
+Ask Claude Code:
+```
+Please update [package-name] to the latest version safely:
+1. Check what version we're currently using
+2. Check what the latest version is
+3. Explain what changed between versions
+4. Update if safe
+5. Test everything still works
+```
+
+## 📊 Dependency Categories
+
+### Critical Dependencies (Update Carefully)
+These can break your app if updated incorrectly:
+
+| Package | Current | Update Strategy |
+|---------|---------|-----------------|
+| `next` | 15.0.0-rc | Wait for stable release |
+| `react` | ^19.0.0 | Stable - update safely |
+| `@prisma/client` | Latest | Test database after updates |
+| `next-auth` | v5 | Check migration guides |
+
+### Development Dependencies (Safer to Update)
+These only affect development:
+
+| Package | Update Strategy |
+|---------|-----------------|
+| `typescript` | Minor updates OK |
+| `eslint` | Auto-update OK |
+| `prettier` | Auto-update OK |
+| `@types/*` | Auto-update OK |
+
+### Security Updates (Update ASAP)
+When you see security warnings:
+
+```bash
+# Check for vulnerabilities
+pnpm audit
+
+# Auto-fix if possible
+pnpm audit fix
+
+# Or use the safe script
+pnpm run update:security
+```
+
+## 🔄 Automated Updates via Dependabot
+
+### What Gets Auto-Updated
+- ✅ Patch versions (1.0.0 → 1.0.1)
+- ✅ Minor versions (1.0.0 → 1.1.0) 
+- ✅ Dev dependencies
+- ✅ GitHub Actions
+
+### What Requires Review
+- ⚠️ Major versions (1.0.0 → 2.0.0)
+- ⚠️ React/Next.js updates
+- ⚠️ Database packages (Prisma)
+- ⚠️ Authentication packages
+
+### How to Handle Dependabot PRs
+
+1. **Check the PR description** - Dependabot explains what changed
+2. **Review CI checks** - Ensure tests pass
+3. **For patch/minor updates** - Merge if tests pass
+4. **For major updates** - Test locally first:
+
+```bash
+# Check out the PR branch
+git fetch
+git checkout dependabot/npm_and_yarn/[branch-name]
+
+# Test locally
+pnpm install
+pnpm run dev
+pnpm run test
+pnpm run build
+
+# If OK, merge the PR
+```
+
+## 🚨 Emergency Procedures
+
+### If Update Breaks Something
+
+```bash
+# Option 1: Rollback last commit
+pnpm run rollback
+
+# Option 2: Restore from backup branch
+git checkout backup/pre-update-[date]
+
+# Option 3: Nuclear reset
+pnpm run emergency-reset
+```
+
+### If Build Fails After Update
+
+```bash
+# Clear all caches
+rm -rf .next .turbo node_modules
+pnpm install
+pnpm run build
+```
+
+### If Type Errors After Update
+
+```bash
+# Regenerate types
+pnpm run db:generate
+pnpm run type-check
+```
+
+## 📅 Maintenance Schedule
+
+### Daily
+- Security alerts (GitHub will email you)
+
+### Weekly (Automated)
+- Dependabot checks (Monday 9am)
+- Security audit in CI
+
+### Monthly (Manual)
+- Run `pnpm run update:safe`
+- Review and merge Dependabot PRs
+- Check for React/Next.js stable releases
+
+### Quarterly
+- Major version updates review
+- Dependency cleanup (remove unused)
+- Performance audit
+
+## 🎯 Best Practices
+
+### DO ✅
+- Always create checkpoint before updates
+- Update dev dependencies frequently
+- Fix security vulnerabilities immediately
+- Test after every update
+- Read changelog for major updates
+- Update one package at a time for major versions
+
+### DON'T ❌
+- Update everything at once
+- Skip testing after updates
+- Ignore security warnings
+- Update to RC/beta versions in production
+- Update right before deployment
+- Update without git backup
+
+## 📊 Monitoring Tools
+
+### GitHub Security Tab
+- Shows vulnerability alerts
+- Dependabot security updates
+- Secret scanning results
+
+### Package Health Check
+```bash
+# Check package health
+npx npm-check-updates
+
+# Check bundle size impact
+npx bundle-phobia-cli [package-name]
+
+# Check package popularity/maintenance
+npx packagequality [package-name]
+```
+
+## 🤖 Claude Code Templates
+
+### Safe Update Request
+```
+Please help me update dependencies:
+1. Run pnpm run update:check to see what's outdated
+2. Identify which updates are safe (patch/minor)
+3. Update safe ones first
+4. Test everything still works
+5. Create checkpoint after successful updates
+```
+
+### Security Fix Request
+```
+Please fix security vulnerabilities:
+1. Run pnpm audit to check issues
+2. Explain what the vulnerabilities are
+3. Run pnpm audit fix
+4. Test the application
+5. If audit fix doesn't work, update packages manually
+```
+
+### Major Version Update
+```
+I want to update [package] to the next major version:
+1. Check the migration guide
+2. Explain breaking changes
+3. Create backup branch
+4. Update the package
+5. Fix any breaking changes
+6. Test thoroughly
+```
+
+## 📚 Resources
+
+- [Semantic Versioning](https://semver.org/) - Understanding version numbers
+- [Dependabot Docs](https://docs.github.com/en/code-security/dependabot)
+- [PNPM Update Docs](https://pnpm.io/cli/update)
+- [Security Best Practices](https://snyk.io/blog/nodejs-security-best-practices/)
+
+## 🆘 Getting Help
+
+If you're unsure about an update:
+
+1. Ask Claude Code: "Is it safe to update [package]?"
+2. Check the package's GitHub for breaking changes
+3. Create a backup branch first
+4. Test in development before production
+5. Ask in the PR comments if using Dependabot
+
+Remember: **It's always safer to be cautious with updates!**

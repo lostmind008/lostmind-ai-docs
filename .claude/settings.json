@@ -1,0 +1,203 @@
+{
+  "model": "claude-4-sonnet-20250514",
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(pnpm:*)",
+      "Bash(bun:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(make:*)",
+      "Bash(cargo:*)",
+      "Bash(go:*)",
+      "Bash(python:*)",
+      "Bash(pip:*)",
+      "Bash(poetry:*)",
+      "Bash(node:*)",
+      "Bash(deno:*)",
+      "Bash(pytest:*)",
+      "Bash(jest:*)",
+      "Bash(vitest:*)",
+      "Bash(eslint:*)",
+      "Bash(prettier:*)",
+      "Bash(black:*)",
+      "Bash(flake8:*)",
+      "Bash(mypy:*)",
+      "Bash(tsc:*)",
+      "Bash(webpack:*)",
+      "Bash(vite:*)",
+      "Bash(turbo:*)",
+      "Bash(nx:*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "MultiEdit",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(awk:*)",
+      "Bash(sed:*)",
+      "Bash(code:*)",
+      "Bash(nvim:*)",
+      "Bash(vim:*)",
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(redis-cli:*)",
+      "Bash(mongo:*)",
+      "Bash(kubectl:*)",
+      "Bash(helm:*)",
+      "Bash(aws:*)",
+      "Bash(gcloud:*)",
+      "Bash(terraform:*)",
+      "Bash(brew:*)",
+      "Bash(apt:*)",
+      "Bash(yum:*)",
+      "Bash(htop:*)",
+      "Bash(ps:*)",
+      "Bash(netstat:*)",
+      "Bash(lsof:*)",
+      "WebFetch",
+      "WebSearch",
+      "mcp__github__*",
+      "mcp__filesystem__*",
+      "mcp__puppeteer__*",
+      "mcp__postgresql__*",
+      "mcp__memory__*"
+    ],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(sudo:*)",
+      "Bash(chmod +x:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(ssh:*)",
+      "Bash(scp:*)",
+      "Bash(rsync:*)",
+      "Bash(systemctl:*)",
+      "Bash(service:*)",
+      "Bash(kill:*)",
+      "Bash(killall:*)",
+      "Bash(nc:*)",
+      "Bash(nmap:*)"
+    ],
+    "deny": [
+      "Read(./.env*)",
+      "Read(./secrets/**)",
+      "Read(./.aws/**)",
+      "Read(./.ssh/**)",
+      "Read(./node_modules/**)",
+      "Read(./.git/config)",
+      "Read(./build/**)",
+      "Read(./dist/**)",
+      "Read(./.next/**)",
+      "Read(./coverage/**)",
+      "Read(./.turbo/**)",
+      "Read(./logs/**)",
+      "Read(./.cache/**)",
+      "Read(./tmp/**)",
+      "Read(./temp/**)",
+      "Read(./config/database.yml)",
+      "Read(./database.json)",
+      "Read(./**/credentials.json)",
+      "Read(./**/config.json)",
+      "Read(/etc/passwd)",
+      "Read(/etc/shadow)",
+      "Read(/etc/hosts)",
+      "Bash(format:*)",
+      "Bash(fdisk:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd:*)"
+    ],
+    "additionalDirectories": [
+      "./apps/",
+      "./packages/",
+      "./docs/",
+      "./scripts/",
+      "./.github/",
+      "./turbo/",
+      "./.vscode/"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "80000",
+    "MAX_MCP_OUTPUT_TOKENS": "65000",
+    "MAX_THINKING_TOKENS": "50000",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "BASH_MAX_TIMEOUT_MS": "900000",
+    "BASH_MAX_OUTPUT_LENGTH": "500000",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_COST_WARNINGS": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "MCP_TIMEOUT": "120000",
+    "MCP_TOOL_TIMEOUT": "300000",
+    "USE_BUILTIN_RIPGREP": "1"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Editing file: $CLAUDE_TOOL_FILE'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Creating file: $CLAUDE_TOOL_FILE'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Running: $CLAUDE_TOOL_COMMAND'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'File edited: $CLAUDE_TOOL_FILE'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'File created: $CLAUDE_TOOL_FILE'"
+          }
+        ]
+      }
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 30,
+  "outputStyle": "Concise"
+}
+

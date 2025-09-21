@@ -1,0 +1,164 @@
+---
+title: "Development Guide - New Website Template - Claude Code Engineering"
+description: "AI-assisted development instructions and project guidelines"
+---
+
+<Info>
+This content was automatically extracted from New Website Template - Claude Code Engineering.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md - AI SaaS Template Project Instructions
+
+## Project Context
+This project recreates a modern AI SaaS landing page based on the Aceternity UI template at https://ai-saas-template-aceternity.vercel.app/
+
+## Development Approach
+
+### Code Style Guidelines
+- Use TypeScript for all components
+- Follow functional component patterns with hooks
+- Implement proper error boundaries
+- Use semantic HTML elements
+- Maintain consistent naming conventions (kebab-case for files, PascalCase for components)
+
+### Component Development Rules
+1. **Always check existing patterns** before creating new components
+2. **Use the `cn()` utility** for className merging
+3. **Implement responsive design** with mobile-first approach
+4. **Add proper TypeScript types** for all props and functions
+5. **Use Framer Motion** for animations consistently
+
+### File Organization
+```
+components/
+├── ui/           # Reusable UI components
+├── sections/     # Page sections (Hero, Features, etc.)
+├── animations/   # Animation wrapper components
+└── layouts/      # Layout components
+```
+
+### Animation Guidelines
+- Use Framer Motion for complex animations
+- Implement CSS transitions for simple hover effects
+- Always respect `prefers-reduced-motion`
+- Keep animations under 60fps target
+- Use GPU-accelerated properties (transform, opacity)
+
+### Performance Standards
+- Lazy load components below the fold
+- Use next/image for all images
+- Implement proper loading states
+- Keep bundle size under control
+- Monitor Core Web Vitals
+
+### Testing Requirements
+- Write tests for interactive components
+- Test responsive breakpoints
+- Verify accessibility standards
+- Cross-browser testing (Chrome, Firefox, Safari)
+
+## Aceternity UI Components Implementation
+
+When implementing Aceternity-style components:
+1. Start with the basic structure
+2. Add glassmorphism effects
+3. Implement animations progressively
+4. Ensure dark mode compatibility
+5. Test on multiple devices
+
+## Key Features to Implement
+
+### Priority 1 (Core)
+- Navigation with theme toggle
+- Hero section with animations
+- Feature grid with cards
+- Footer with links
+
+### Priority 2 (Enhanced)
+- Moving cards carousel
+- Gradient animations
+- Chat interface demo
+- Interactive hover effects
+
+### Priority 3 (Polish)
+- Parallax scrolling
+- Background effects
+- Loading animations
+- Page transitions
+
+## Command Shortcuts
+
+```bash
+# Quick commands for development
+dev:        npm run dev
+build:      npm run build
+lint:       npm run lint:fix
+format:     npm run format
+check:      npm run type-check
+```
+
+## Environment Variables
+
+Required variables (create .env.local):
+```
+NEXT_PUBLIC_SITE_URL=
+NEXT_PUBLIC_SITE_NAME=
+NEXT_PUBLIC_SITE_DESCRIPTION=
+```
+
+## Deployment Checklist
+
+Before deployment:
+- [ ] All tests passing
+- [ ] Lighthouse score > 90
+- [ ] No console errors
+- [ ] Responsive on all devices
+- [ ] SEO meta tags configured
+- [ ] Accessibility audit passed
+- [ ] Environment variables set
+- [ ] Images optimized
+- [ ] Bundle size acceptable
+
+## Common Issues & Solutions
+
+### Issue: Animations janky on mobile
+**Solution**: Reduce animation complexity, use CSS transforms
+
+### Issue: Dark mode flash on load
+**Solution**: Implement proper theme detection in _document
+
+### Issue: Slow initial load
+**Solution**: Implement code splitting and lazy loading
+
+### Issue: TypeScript errors
+**Solution**: Run `npm run type-check` and fix all errors
+
+## AI Assistant Instructions
+
+When working on this project:
+1. **Always run the setup script first** if project isn't initialized
+2. **Check existing components** before creating new ones
+3. **Follow the implementation plan** phases in order
+4. **Test on multiple screen sizes** during development
+5. **Commit frequently** with clear messages
+6. **Document complex logic** with comments
+
+## Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Aceternity UI](https://ui.aceternity.com/)
+- [Radix UI](https://www.radix-ui.com/)
+
+## Project Status Tracking
+
+Use the IMPLEMENTATION_PLAN.md to track progress through phases. Update status after completing each phase.
+
+Current Phase: **Not Started**
+Next Action: **Run .claude-setup-package script**
+
+---
+
+*This file should be referenced by Claude Code when working on the project to ensure consistency and best practices.*

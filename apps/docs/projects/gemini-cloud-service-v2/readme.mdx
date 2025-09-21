@@ -1,0 +1,105 @@
+---
+title: "README - gemini-cloud-service-v2"
+description: "Complete project README and setup instructions"
+---
+
+<Info>
+This content was automatically extracted from gemini-cloud-service-v2.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Gemini Cloud Service V2
+
+Advanced multimodal processing service with YouTube support, Google Search grounding, code execution, and more!
+
+## Features
+
+- 🎥 **YouTube Processing**: Analyze videos directly from URLs
+- 🔍 **Google Search Grounding**: Real-time fact-checking and current information
+- 💻 **Code Analysis**: Review and improve code in multiple languages
+- 📄 **Universal File Support**: 50+ file formats including RTF, DOCX, CSV, JSON
+- 🚀 **High Performance**: Caching, streaming, and optimized processing
+- 🔐 **Secure**: API key authentication and rate limiting ready
+
+## Deployment
+
+```bash
+# Set your API key
+export GEMINI_API_KEY='your-api-key'
+
+# Deploy to Cloud Run
+./deploy_v2.sh
+```
+
+## API Endpoints
+
+### Universal Processing
+```bash
+POST /process
+{
+    "file_source": "file.pdf",
+    "prompt": "Summarize this document",
+    "features": {
+        "grounding": true,
+        "temperature": 0.7
+    }
+}
+```
+
+### YouTube Analysis
+```bash
+POST /youtube
+{
+    "url": "https://youtube.com/watch?v=...",
+    "prompt": "Extract key points"
+}
+```
+
+### Code Review
+```bash
+POST /code
+{
+    "code": "def hello(): print('world')",
+    "language": "python",
+    "prompt": "Optimize this function"
+}
+```
+
+### Research Assistant
+```bash
+POST /research
+{
+    "topic": "quantum computing",
+    "depth": "comprehensive"
+}
+```
+
+## Supported File Types
+
+**Documents**: PDF, TXT, RTF, DOCX, HTML, XML, JSON, CSV, MD  
+**Images**: PNG, JPG, WEBP, HEIC, HEIF  
+**Video**: MP4, AVI, MOV, MKV, WEBM  
+**Audio**: MP3, WAV, M4A, AAC, OGG, FLAC  
+**Code**: Python, JavaScript, Java, C++, Go, Rust, and more!
+
+## Model Used
+
+- **Gemini 2.5 Flash**: Fast, efficient, and powerful for most tasks
+- **Gemini 1.5 Pro**: Enhanced multimodal capabilities for complex media
+
+## Environment Variables
+
+- `GEMINI_API_KEY`: Your Google AI Studio API key (required)
+- `SERVICE_API_KEY`: Optional API key for service authentication
+
+## Local Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run locally
+python app.py
+```
+
+Service will be available at http://localhost:8080

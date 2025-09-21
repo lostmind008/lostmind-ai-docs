@@ -1,0 +1,428 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🚀 LostMind AI TurboRepo Integration Guide for Ask App
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🧠 RAG Guide](RAG_EMBEDDINGS_INTEGRATION_GUIDE.md)**
+
+**TARGET PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/ask.lostmindai.com/LostMind-AI---Orb-2.0-1`
+
+## 📋 Mission Overview
+
+You are tasked with preparing the **Ask App** (LostMind AI Orb 2.0) for seamless integration into our new **LostMind AI TurboRepo** monorepo architecture. This integration will transform a standalone Next.js application into a modern monorepo package while maintaining all existing functionality.
+
+## 🎯 Integration Objectives
+
+### Primary Goals
+1. **Migrate** the Ask App into `apps/ask/` within the TurboRepo structure
+2. **Refactor** to use shared packages (UI components, auth, database, etc.)  
+3. **Maintain** existing functionality and user experience
+4. **Optimize** for monorepo development workflow
+5. **Prepare** for production deployment on Vercel
+
+### Success Criteria
+- ✅ App runs successfully within TurboRepo structure
+- ✅ Uses shared @lostmind/* packages instead of duplicated code
+- ✅ Maintains existing AI functionality and UI/UX
+- ✅ Integrates with shared authentication and database
+- ✅ Follows monorepo conventions and best practices
+
+## 🏗️ Target Architecture Analysis
+
+### Current TurboRepo Structure
+```
+LostMindAI-TurboRepo/
+├── apps/
+│   ├── marketing/          # Main landing site
+│   ├── ask/               # ← YOUR TARGET LOCATION
+│   ├── chatcrawler/       # Web crawling chat
+│   ├── justdropit/        # Document processing
+│   └── admin/             # Internal admin
+├── packages/
+│   ├── ui/                # Shared shadcn/ui components
+│   ├── config/            # ESLint, TypeScript, Tailwind configs
+│   ├── auth/              # Auth.js v5 implementation
+│   ├── db/                # Prisma schema + client
+│   ├── billing/           # Stripe integration
+│   ├── ai-clients/        # Google Generative AI abstraction
+│   ├── rag/               # RAG utilities with pgvector
+│   └── utils/             # Shared utilities
+└── services/
+    ├── document-processor/ # FastAPI PDF processing
+    ├── crawler-engine/     # FastAPI web scraping
+    └── ai-compute/         # FastAPI ML operations
+```
+
+### Tech Stack Alignment
+- **Frontend**: Next.js 15 (App Router) + React 19 + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui components from `@lostmind/ui`
+- **Authentication**: Auth.js v5 via `@lostmind/auth` 
+- **Database**: PostgreSQL + Prisma via `@lostmind/db`
+- **AI**: Google Generative AI via `@lostmind/ai-clients`
+- **Payments**: Stripe via `@lostmind/billing`
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Project Preparation & Analysis
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New Ongoing Projects/ask.lostmindai.com/LostMind-AI---Orb-2.0-1
+   git checkout -b integration/turbo-repo-migration
+   ```
+
+2. **Analyze Current Dependencies**
+   - Identify all npm packages currently used
+   - Map dependencies to shared packages in TurboRepo
+   - Document custom components that need migration
+   - List API routes and their functionality
+
+3. **Document Current Features**
+   - AI query interface functionality
+   - Authentication system (if any)
+   - Database models and operations
+   - UI components and styling approach
+   - Environment variables and configuration
+
+### Phase 2: Code Analysis & Mapping
+1. **Component Inventory**
+   - List all React components
+   - Identify components that can use `@lostmind/ui`
+   - Note custom components that need to be created/migrated
+
+2. **API Route Analysis**
+   - Document all API endpoints
+   - Identify database operations
+   - Note AI integration patterns
+   - Map authentication requirements
+
+3. **Dependency Mapping**
+   ```typescript
+   // Current Ask App → TurboRepo Package Mapping
+   // UI Components → @lostmind/ui
+   // Auth Logic → @lostmind/auth  
+   // Database → @lostmind/db
+   // AI Clients → @lostmind/ai-clients
+   // Utils → @lostmind/utils
+   ```
+
+### Phase 3: Migration Execution
+1. **Setup App Structure**
+   ```bash
+   # Copy app to TurboRepo (will be done by main Claude instance)
+   # Create: /Users/sumitm1/Documents/New Ongoing Projects/LostMindAI-TurboRepo/apps/ask/
+   ```
+
+2. **Package.json Configuration**
+   ```json
+   {
+     "name": "@lostmind/ask",
+     "version": "0.0.0",
+     "private": true,
+     "scripts": {
+       "dev": "next dev --port 3001",
+       "build": "next build",
+       "start": "next start",
+       "lint": "next lint",
+       "type-check": "tsc --noEmit"
+     },
+     "dependencies": {
+       "@lostmind/ui": "workspace:*",
+       "@lostmind/auth": "workspace:*",
+       "@lostmind/db": "workspace:*",
+       "@lostmind/ai-clients": "workspace:*",
+       "@lostmind/utils": "workspace:*",
+       "next": "15.0.0",
+       "react": "^19.0.0",
+       "react-dom": "^19.0.0"
+     }
+   }
+   ```
+
+3. **Configuration Updates**
+   - `next.config.js`: Enable transpilation of workspace packages
+   - `tailwind.config.js`: Extend from `@lostmind/config/tailwind`
+   - `tsconfig.json`: Extend from `@lostmind/config/typescript`
+   - `.eslintrc.js`: Use `@lostmind/config/eslint`
+
+### Phase 4: Code Refactoring
+1. **Import Path Updates**
+   ```typescript
+   // Replace standalone imports with workspace packages
+   import { Button } from "@/components/ui/button"        // OLD
+   import { Button } from "@lostmind/ui/components/button" // NEW
+   
+   import { auth } from "@/lib/auth"          // OLD  
+   import { auth } from "@lostmind/auth"      // NEW
+   
+   import { db } from "@/lib/db"             // OLD
+   import { db } from "@lostmind/db"         // NEW
+   ```
+
+2. **Component Migration**
+   - Replace local UI components with `@lostmind/ui` equivalents
+   - Move custom components to appropriate shared packages
+   - Update styling to use shared Tailwind configuration
+
+3. **API Route Updates**  
+   - Update database imports to use `@lostmind/db`
+   - Replace AI client imports with `@lostmind/ai-clients`
+   - Integrate authentication with `@lostmind/auth`
+
+### Phase 5: Environment & Configuration
+1. **Environment Variables Alignment**
+   ```bash
+   # Ensure compatibility with TurboRepo .env structure
+   # Database
+   DATABASE_URL="postgresql+asyncpg://..."
+   DIRECT_URL="postgresql://..."
+   
+   # Authentication  
+   NEXTAUTH_URL="http://localhost:3001"  # Note port 3001 for ask app
+   NEXTAUTH_SECRET="[shared-secret]"
+   GOOGLE_CLIENT_ID="[oauth-client-id]"
+   GOOGLE_CLIENT_SECRET="[oauth-secret]"
+   
+   # AI Services - CORAL MUSE PROJECT
+   GOOGLE_GENERATIVE_AI_API_KEY="[coral-muse-gemini-key]"
+   GEMINI_API_KEY="[coral-muse-gemini-key]"
+   GCP_PROJECT_ID="coral-muse-469919-m0"
+   ```
+
+2. **Database Integration**
+   - Ensure Ask App uses shared Prisma schema from `@lostmind/db`
+   - Update any custom database models
+   - Verify Row Level Security (RLS) compatibility for multi-tenancy
+
+## 🛠️ Technical Integration Details
+
+### Next.js Configuration
+```javascript
+// apps/ask/next.config.js
+const { withContentlayer } = require('next-contentlayer');
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: [
+    '@lostmind/ui',
+    '@lostmind/auth', 
+    '@lostmind/db',
+    '@lostmind/ai-clients',
+    '@lostmind/utils'
+  ],
+  experimental: {
+    appDir: true,
+    serverComponentsExternalPackages: ['@prisma/client']
+  }
+};
+
+module.exports = withContentlayer(nextConfig);
+```
+
+### TypeScript Configuration
+```json
+{
+  "extends": "@lostmind/config/typescript/nextjs.json",
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts", 
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@lostmind/ui": ["../../packages/ui/src"],
+      "@lostmind/auth": ["../../packages/auth/src"],
+      "@lostmind/db": ["../../packages/db/src"]
+    }
+  }
+}
+```
+
+### Tailwind Configuration
+```javascript
+// apps/ask/tailwind.config.js
+const { createTailwindConfig } = require('@lostmind/config/tailwind');
+
+module.exports = createTailwindConfig({
+  content: [
+    './src/**/*.{ts,tsx}',
+    '../../packages/ui/src/**/*.{ts,tsx}'
+  ]
+});
+```
+
+## 📦 Shared Package Integration
+
+### UI Components (@lostmind/ui)
+```typescript
+// Replace local components with shared ones
+import { 
+  Button, 
+  Input, 
+  Card, 
+  Avatar, 
+  Badge 
+} from '@lostmind/ui';
+
+// For components not yet in shared package, 
+// consider contributing them back to @lostmind/ui
+```
+
+### AI Client Integration (@lostmind/ai-clients)
+```typescript
+// Use shared AI abstraction
+import { createAIClient } from '@lostmind/ai-clients';
+
+const aiClient = createAIClient('google'); // Uses Gemini from coral-muse project
+const response = await aiClient.generateText(prompt);
+```
+
+### Authentication (@lostmind/auth)
+```typescript
+// Use shared Auth.js configuration
+import { auth } from '@lostmind/auth';
+import { NextRequest } from 'next/server';
+
+export async function middleware(request: NextRequest) {
+  const session = await auth();
+  // Shared authentication logic
+}
+```
+
+## 🚀 Development Workflow Integration
+
+### CLI Tools Required
+Based on your request for CLI recommendations, ensure these tools are available:
+
+1. **Google Cloud CLI (`gcloud`)**
+   ```bash
+   # For AI services, Cloud Run deployments
+   gcloud auth login
+   gcloud config set project coral-muse-469919-m0
+   ```
+
+2. **Vercel CLI (`vercel`)**
+   ```bash
+   # For Next.js app deployments
+   vercel login
+   vercel link --project ask-lostmindai
+   ```
+
+3. **Stripe CLI (`stripe`)**
+   ```bash
+   # For payment integration testing
+   stripe login
+   stripe listen --forward-to localhost:3001/api/webhooks/stripe
+   ```
+
+4. **Prisma CLI** (via TurboRepo)
+   ```bash
+   # Database operations
+   pnpm db:generate
+   pnpm db:push
+   pnpm db:migrate
+   ```
+
+### Development Commands
+```bash
+# From TurboRepo root
+pnpm dev                    # Start all apps
+pnpm dev --filter=ask       # Start only ask app
+pnpm build --filter=ask     # Build ask app
+pnpm test --filter=ask      # Test ask app
+pnpm lint --filter=ask      # Lint ask app
+```
+
+## 🔧 Migration Checklist
+
+### Pre-Migration
+- [ ] Analyze current Ask App structure and dependencies
+- [ ] Document all existing features and functionality  
+- [ ] Create integration branch in Ask App repository
+- [ ] Backup current working version
+
+### Migration Execution  
+- [ ] Copy app structure to `apps/ask/`
+- [ ] Update package.json with workspace dependencies
+- [ ] Configure Next.js for monorepo compatibility
+- [ ] Update import paths to use shared packages
+- [ ] Migrate UI components to use @lostmind/ui
+- [ ] Integrate shared authentication system
+- [ ] Update database operations to use @lostmind/db
+- [ ] Integrate AI client abstraction
+- [ ] Update environment variable configuration
+
+### Testing & Validation
+- [ ] Verify app starts successfully in monorepo
+- [ ] Test all existing functionality works
+- [ ] Verify shared package integrations
+- [ ] Test authentication flow
+- [ ] Validate AI query functionality
+- [ ] Check responsive design and styling
+- [ ] Run type checking and linting
+- [ ] Execute test suite
+
+### Production Readiness
+- [ ] Configure Vercel deployment
+- [ ] Set up environment variables
+- [ ] Test build process
+- [ ] Verify performance metrics
+- [ ] Update documentation
+
+## ⚠️ Critical Considerations
+
+### Environment Configuration
+- **IMPORTANT**: The project now uses **coral-muse-469919-m0** Google Cloud project
+- Update all Google AI API keys to use coral-muse credentials  
+- Ensure service account credentials point to coral-muse project
+- Update ~/.zshrc on development machine if needed
+
+### Authentication Integration
+- The shared auth system may require updates to accommodate Ask App's specific needs
+- Ensure user session management works across multiple apps
+- Consider tenant isolation for multi-tenant SaaS features
+
+### Database Schema Compatibility
+- Ask App's current database schema must align with shared Prisma schema
+- Plan for database migrations if schema changes are needed
+- Test Row Level Security (RLS) policies for multi-tenant support
+
+### AI Provider Integration
+- Migrate from direct Gemini API calls to shared AI client abstraction
+- Ensure compatibility with provider abstraction layer
+- Test different AI providers if needed for redundancy
+
+## 📈 Next Steps After Migration
+
+1. **Integration Testing**: Comprehensive testing within TurboRepo environment
+2. **Performance Optimization**: Optimize for monorepo build performance  
+3. **Documentation Updates**: Update internal documentation
+4. **Deployment Configuration**: Set up Vercel deployment for integrated app
+5. **Feature Enhancements**: Leverage shared packages for new features
+
+## 🤝 Communication Protocol
+
+### When Ready for Integration
+1. **Commit all changes** to the integration branch
+2. **Run comprehensive tests** to ensure functionality
+3. **Document any issues** encountered during migration
+4. **Create detailed pull request** with migration summary
+5. **Notify main TurboRepo team** that Ask App is ready for integration
+
+### Integration Handoff Information Required
+- **Branch name**: `integration/turbo-repo-migration`
+- **Migration status**: Complete/Partial/Issues encountered
+- **Dependencies changed**: List of package changes
+- **Configuration updates**: Environment and config changes  
+- **Testing status**: What has been tested and verified
+- **Known issues**: Any problems that need resolution
+
+---
+
+**🎯 Your Mission**: Transform the standalone Ask App into a fully integrated TurboRepo package while maintaining all existing functionality and following modern monorepo best practices. The main TurboRepo team is ready to receive your integration when you signal completion.
+
+**📞 Communication**: Signal completion by creating a pull request on the integration branch and notifying that the app is ready for final integration into the main TurboRepo structure.

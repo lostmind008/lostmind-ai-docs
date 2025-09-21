@@ -1,0 +1,98 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+Title: Emergency Professionalization for External Collaboration
+
+Goal
+
+Make repository ready for professional development teams (OpenAI, Devin AI, external developers) by establishing minimal professional standards and fixing documentation that misrepresents project state.
+
+Background
+
+Current state analysis reveals significant gaps between documentation claims and reality:
+
+DOCUMENTATION CLAIMS vs REALITY:
+
+- Claims "9 services worth $2.3M ARR" → Services exist in external directories, NOT migrated
+- Claims "production-ready" → Missing Docker, environments, deployment pipeline
+- Claims "enterprise-grade" → No test files, no staging/prod separation
+- Claims "investor-ready" → Missing basic professional development setup
+
+CRITICAL COLLABORATION BLOCKERS:
+
+- 8 failing Dependabot PRs causing CI failures
+- No Docker/containerization for consistent development
+- No environment separation (only .env.example exists)
+- No test infrastructure (zero test files)
+- No deployment pipeline (CI only builds)
+- No onboarding documentation
+- No API documentation
+
+Any professional development team attempting to contribute would face immediate blockers preventing effective collaboration.
+
+Tasks
+
+1. Fix CI/CD Pipeline and Dependabot Issues
+   - Close risky major version bump PRs: #33, #34, #36, #37, #38
+   - Auto-merge safe type definition updates: #51, #53
+   - Create .github/dependabot.yml with weekly schedule and PR limits
+   - Verify CI pipeline is green after cleanup
+
+2. Create Professional Environment Structure
+   - Set up .env.development with proper development configurations
+   - Create .env.test for test environment
+   - Create .env.staging for staging environment
+   - Document environment variables in environments/README.md
+   - Add .env.\* to .gitignore if not already present
+
+3. Establish Docker Infrastructure
+   - Create infrastructure/docker/Dockerfile.node for Next.js applications
+   - Create infrastructure/docker/Dockerfile.python for FastAPI services
+   - Create docker-compose.yml for local development stack
+   - Add .dockerignore file with appropriate exclusions
+   - Test full stack starts with single command: docker-compose up
+
+4. Set Up Basic Test Infrastructure
+   - Create tests/ directory structure (unit/, integration/, e2e/, fixtures/)
+   - Add test scripts to root package.json
+   - Configure test environment variables
+   - Create sample test file to verify testing framework works
+
+5. Create Professional Onboarding Documentation
+   - Write CONTRIBUTING.md with clear setup instructions
+   - Create infrastructure/README.md explaining Docker setup
+   - Update root README.md with accurate quick start guide
+   - Remove aspirational claims, mark planned features as "PLANNED"
+
+6. Document Reality vs Plans
+   - Create docs/reality/ACTUAL_PROJECT_STATE.md with honest assessment
+   - Mark all unimplemented features as "PLANNED" in existing docs
+   - Remove revenue projections not backed by implemented code
+   - Create ROADMAP.md showing actual next steps
+
+7. Verify Professional Setup
+   - Test that new developer can clone and run project in < 10 minutes
+   - Verify all environments work correctly
+   - Confirm CI/CD pipeline passes
+   - Ensure Docker development environment is functional
+
+Acceptance Criteria
+
+- CI/CD pipeline shows GREEN status (no failing builds)
+- Any developer can clone repository and run `docker-compose up` to get working environment
+- All environment configurations (.env.development, .env.test, .env.staging) exist and are documented
+- CONTRIBUTING.md provides clear, accurate setup instructions
+- Documentation honestly represents current state vs future plans
+- Test infrastructure is established and functional
+- Repository is ready for external professional development team collaboration
+- Dependabot PRs are manageable (< 5 open, weekly schedule)
+
+Constraints
+
+- Minimal diffs: Focus only on professional infrastructure, avoid repo-wide refactors
+- Do not add new dependencies unless explicitly required for professional setup
+- Follow existing project patterns and configurations where possible
+- Maintain all existing functionality while improving infrastructure
+- Keep changes focused on collaboration enablement, not feature development

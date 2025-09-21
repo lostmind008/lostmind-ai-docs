@@ -1,0 +1,184 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+---
+
+"""
+# **TASK ID:** JUSTDROPIT-MVP-001
+
+## **BRANCH:** `feature/intelligence-hub-mvp`
+
+## **ESTIMATED TIME:** 6-8 hours
+
+## **COMPLEXITY:** High
+
+---
+
+## **CRITICAL INSTRUCTIONS - READ BEFORE EVERY ACTION**
+
+### **CONTEXT WINDOW MANAGEMENT**
+
+*   **AFTER EVERY 3 ACTIONS:** Re-read this complete task description.
+*   **BEFORE EACH PHASE:** Re-read the task objectives and the specific phase requirements.
+*   **IF CONTEXT COMPRESSED:** Re-read this task file, the project's root `CLAUDE.md`, and the `ARCHITECTURE.md` from the `LostmindAI-PropTech-Backend-v1-master` context.
+*   **WHEN UNCERTAIN:** Stop, re-read the task, and validate your current action against the objectives.
+
+### **WORKFLOW INSTRUCTIONS**
+
+1.  **Create Branch:** Start by creating a new branch from `main`: `git checkout -b feature/intelligence-hub-mvp`.
+2.  **Incremental Commits:** Make small, focused commits after completing each major step within a phase. Use Conventional Commit messages (e.g., `feat(db): create initial schema for intelligence hub`).
+3.  **Final Deliverable:** After completing all phases, create a single, comprehensive Pull Request from `feature/intelligence-hub-mvp` to `main`. A detailed template for the PR description is provided in Phase 4.
+
+---
+
+## **TASK OBJECTIVE**
+
+To build the Minimum Viable Product (MVP) for the **LostMind AI Intelligence Hub** (codenamed `justdropit`). This involves creating a new, production-ready Next.js application within the existing Turborepo structure that allows users to upload documents and run sophisticated analyses powered by a new, integrated Python microservice.
+
+## **CONTEXT TO PROVIDE TO CLAUDE**
+
+*You will need to provide me with the full contents of the following projects and files so I have the necessary context to build this application correctly:*
+
+1.  **The Entire `LostmindAI-PropTech-Backend-v1-master` Project:** This is the most critical context. I need all the Python scripts (`sanitize_data.py`, `excel_to_sql.py`, `microservices/accrual_calculator/main.py`, etc.) and the architecture documents (`ARCHITECTURE.md`, `DATA_PRIVACY.md`). This contains the business logic for the analysis engine.
+2.  **The Entire `LostMind-AI---Markdown-to-PDF-Converter--main` Project:** This will serve as the UI/UX inspiration for the new `justdropit` application's file upload and management interface. I will adapt its components and user flow.
+3.  **The `CLAUDE.md` file from the root of the Turborepo:** This contains global rules and conventions I must follow.
+
+## **SUCCESS CRITERIA**
+
+*   [ ] A new Next.js application (`apps/justdropit`) is created and runs within the Turborepo.
+*   [ ] A new FastAPI microservice (`services/document-processor`) is created, containerized, and integrates the logic from the `PropTech-Backend` project.
+*   [ ] The database schema (`packages/db`) is updated to support users, documents, analysis jobs, and subscriptions.
+*   [ ] The authentication package (`packages/auth`) is configured to work with the new database schema.
+*   [ ] The `justdropit` app allows users to upload files, which are stored securely (e.g., GCS path in DB).
+*   [ ] Users can trigger an analysis, which calls the `document-processor` service.
+*   [ ] The app can poll for and display the results of the analysis.
+*   [ ] A basic billing foundation is in place with a Stripe webhook to manage subscriptions.
+*   [ ] A comprehensive Pull Request is created for review.
+
+## **SCOPE BOUNDARIES**
+
+### **INCLUDED IN SCOPE:**
+
+*   Creating the new `apps/justdropit` and `services/document-processor`.
+*   Updating `packages/db` and `packages/auth`.
+*   Refactoring Python code from the `PropTech-Backend` project into the new FastAPI service.
+*   Building the frontend workflow: Upload -> Analyze -> View Results.
+
+### **EXPLICITLY EXCLUDED:**
+
+*   Modifying the `apps/ask` or `apps/marketing` applications.
+*   Implementing every single analysis from the Python scripts. We will start with one (e.g., Accrual Analysis) as the proof-of-concept.
+*   Building a full-featured payment UI. A simple webhook is sufficient for the MVP.
+*   Deploying to production (this will be a separate task).
+
+---
+
+## **EXECUTION PHASES**
+
+### **PHASE 1: Foundational Setup (Database & Authentication)**
+
+**Objective:** Establish the data and user management backbone for the application.
+
+1.  **Update Database Schema:**
+    *   **Action:** Modify the file `packages/db/prisma/schema.prisma`.
+    *   **Details:** Add the `User`, `Document`, `AnalysisJob`, and `Subscription` models as defined in the architectural plan. Ensure relations are correctly defined.
+    *   **Validation:** Run `pnpm db:push` to apply the changes to your local development database.
+    *   **Commit:** `feat(db): add schema for intelligence hub documents and jobs`
+
+2.  **Configure Authentication:**
+    *   **Action:** Update `packages/auth/src/index.ts`.
+    *   **Details:** Ensure the `PrismaAdapter` is correctly configured and that the `session` callback populates the user object with necessary IDs from the new schema.
+    *   **Commit:** `feat(auth): align auth package with new user and subscription schema`
+
+### **PHASE 2: The Analysis Engine (Python Microservice)**
+
+**Objective:** Containerize your powerful Python analysis logic into a scalable, callable microservice.
+
+1.  **Scaffold the Service:**
+    *   **Action:** Create the directory `services/document-processor`.
+    *   **Details:** Inside, create `main.py`, `requirements.txt`, `Dockerfile`, and a `core/` subdirectory.
+    *   **`requirements.txt`:** Populate this with dependencies from the `PropTech-Backend` project (e.g., `fastapi`, `uvicorn`, `pandas`, `openpyxl`, `sqlalchemy`).
+    *   **`Dockerfile`:** Create a standard Python Dockerfile to containerize the FastAPI application.
+
+2.  **Refactor Python Logic into API Endpoints:**
+    *   **Action:** Implement the FastAPI application in `services/document-processor/main.py`.
+    *   **Details:**
+        *   Copy the core logic from your `PropTech-Backend` scripts (like `AccrualCalculator`) into the `core/` directory.
+        *   Create a `/api/v1/analyze` POST endpoint that takes a file reference (e.g., a GCS path) and an analysis type. This endpoint should start the analysis asynchronously and return a `job_id`.
+        *   Create a `/api/v1/analysis/{job_id}` GET endpoint to check the status and retrieve the results of a job.
+        *   Secure these endpoints; they should require a validated JWT from an authenticated user.
+    *   **Commit:** `feat(service): create document-processor service with analysis endpoints`
+
+### **PHASE 3: The User Interface (`justdropit` App)**
+
+**Objective:** Build a polished, professional frontend for users to interact with the analysis engine.
+
+1.  **Scaffold the Next.js App:**
+    *   **Action:** Create the directory `apps/justdropit` with a standard Next.js 15 App Router structure.
+    *   **Details:** Configure `tailwind.config.js` and `tsconfig.json` to extend from the shared `@lostmind/config` package.
+
+2.  **Implement the User Workflow:**
+    *   **File Upload Component:** Create a component inspired by your `Markdown-to-PDF-Converter` prototype. On upload, it should send the file to a Next.js API route that uploads it to a secure location (like GCS) and creates the `Document` record in the database.
+    *   **Analysis Dashboard Component:** After a document is uploaded, display a view with available analyses. A button click should trigger a call to a Next.js API route.
+    *   **Next.js API Route (`apps/justdropit/app/api/analyze/route.ts`):** This server-side route will be responsible for securely calling the Python `document-processor` service, passing the user's token and the document details.
+    *   **Results Display Component:** This component will poll the `document-processor`'s results endpoint using the `job_id` and render the JSON results in a user-friendly way (tables, charts, etc.).
+    *   **Commit:** `feat(app): build justdropit MVP with upload and analysis workflow`
+
+### **PHASE 4: Monetization & Final Pull Request**
+
+**Objective:** Implement the billing foundation and prepare the work for review.
+
+1.  **Implement Stripe Webhook:**
+    *   **Action:** Create the file `apps/justdropit/app/api/stripe/webhook/route.ts`.
+    *   **Details:** Implement a webhook handler that listens for `checkout.session.completed` and `customer.subscription.updated` events. On a successful event, it should update the `Subscription` table in the database for the corresponding user.
+    *   **Commit:** `feat(billing): add stripe webhook for subscription management`
+
+2.  **Create the Pull Request:**
+    *   **Action:** From your `feature/intelligence-hub-mvp` branch, create a new Pull Request to merge into `main`.
+    *   **Details:** Use the following template for the PR description.
+
+    ```markdown
+    # ✨ Feature: LostMind AI Intelligence Hub MVP
+
+    ## 📝 Summary
+
+    This pull request introduces the Minimum Viable Product for the **LostMind AI Intelligence Hub** (`apps/justdropit`). It establishes a new, monetizable application that leverages our powerful backend Python analysis engines within the Turborepo architecture.
+
+    This PR solves the core challenge of connecting our sophisticated, standalone Python scripts to a professional, user-facing web application, complete with authentication, data persistence, and a clear path to monetization.
+
+    ## 🏗️ Key Architectural Changes
+
+    1.  **New Next.js App (`apps/justdropit`):** A production-ready frontend for document upload, analysis, and results visualization.
+    2.  **New FastAPI Service (`services/document-processor`):** A containerized microservice that wraps the core logic from the `PropTech-Backend` project, exposing it via a secure API.
+    3.  **Updated Database Schema (`packages/db`):** Extended the Prisma schema to include `User`, `Document`, `AnalysisJob`, and `Subscription` models, creating the data foundation for the application.
+    4.  **Updated Auth (`packages/auth`):** Aligned the authentication package with the new database schema.
+
+    ## 🚀 Features Implemented
+
+    *   **Secure File Upload:** Users can upload documents, which are stored securely and tracked in the database.
+    *   **Asynchronous Analysis:** Analysis jobs are processed in the background by the Python service, allowing the UI to remain responsive.
+    *   **Job Status Polling:** The frontend can check the status of analysis jobs and retrieve results upon completion.
+    *   **Results Visualization:** A dedicated component to display the JSON output from the analysis engine.
+    *   **Billing Foundation:** A Stripe webhook is in place to manage user subscriptions, laying the groundwork for monetization.
+
+    ## 🔧 How to Test
+
+    1.  Ensure your `.env` files are configured correctly for the database, auth, and Stripe.
+    2.  Run `docker-compose up` in the `services/document-processor` directory to start the analysis engine.
+    3.  Run `pnpm dev` from the root to start the Next.js application.
+    4.  Navigate to the `justdropit` application (e.g., `http://localhost:3002`).
+    5.  Sign up/log in.
+    6.  Upload an Excel file.
+    7.  Trigger an analysis and observe the job status.
+    8.  View the results once the job is complete.
+
+    ## ✅ Checklist
+
+    - [ ] All new code is typed with TypeScript/Python type hints.
+    - [ ] The new service is fully containerized with a `Dockerfile`.
+    - [ ] All new application logic is built using shared packages (`@lostmind/ui`, `@lostmind/db`, etc.).
+    - [ ] No secrets are hardcoded.
+    - [ ] The application follows the established security and authentication patterns.
+    ```

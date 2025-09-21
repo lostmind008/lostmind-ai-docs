@@ -1,0 +1,502 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🛠️ LostMind AI TurboRepo - Complete CLI Development Toolkit
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🌐 Marketing Guide](MARKETING_WEBSITE_INTEGRATION_GUIDE.md)**
+
+## 🎯 Essential CLI Tools for Production Development
+
+This guide provides comprehensive CLI tooling for smooth development and production deployment of the LostMind AI TurboRepo monorepo.
+
+## 🔧 Core Development Tools
+
+### 1. **Google Cloud CLI** (`gcloud`)
+**Primary Use**: AI services, Cloud Run deployments, service authentication
+
+```bash
+# Installation (macOS)
+brew install google-cloud-sdk
+
+# Authentication & Project Setup
+gcloud auth login
+gcloud config set project coral-muse-469919-m0
+
+# Service Account Authentication
+gcloud auth activate-service-account --key-file=/Users/sumitm1/.config/gcloud/coral-muse-service-account-key.json
+
+# Useful Commands for Development
+gcloud services list --enabled                    # List enabled APIs
+gcloud functions list                              # List Cloud Functions
+gcloud run services list                          # List Cloud Run services
+gcloud ai-platform models list                    # List AI models
+gcloud logging tail "projects/coral-muse-469919-m0"  # Live log monitoring
+```
+
+**Development Workflow Integration**:
+```bash
+# Deploy FastAPI services to Cloud Run
+gcloud run deploy document-processor \
+  --source ./services/document-processor \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+
+# Monitor service logs
+gcloud logs tail "projects/coral-muse-469919-m0/logs/cloudrun.googleapis.com"
+```
+
+### 2. **Vercel CLI** (`vercel`)
+**Primary Use**: Next.js app deployments, preview deployments, domain management
+
+```bash
+# Installation
+npm i -g vercel
+
+# Authentication & Project Linking
+vercel login
+vercel link
+
+# Development & Deployment Commands
+vercel dev                          # Local development with Vercel functions
+vercel --prod                       # Deploy to production
+vercel --prebuilt                   # Deploy pre-built static files
+vercel env ls                       # List environment variables
+vercel env add NEXTAUTH_SECRET      # Add environment variable
+vercel domains ls                   # List domains
+vercel certs ls                     # List SSL certificates
+
+# Advanced Deployment
+vercel deploy --archive=tgz         # Deploy with archive
+vercel alias set deployment.vercel.app lostmindai.com  # Set custom domain
+```
+
+**Monorepo Integration**:
+```json
+// vercel.json for apps/marketing
+{
+  "buildCommand": "cd ../.. && pnpm build --filter=marketing",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install"
+}
+```
+
+### 3. **Stripe CLI** (`stripe`)
+**Primary Use**: Payment testing, webhook management, payment flow validation
+
+```bash
+# Installation (macOS)
+brew install stripe/stripe-cli/stripe
+
+# Authentication
+stripe login
+
+# Development Workflow
+stripe listen --forward-to localhost:3000/api/webhooks/stripe  # Forward webhooks locally
+stripe trigger payment_intent.succeeded                        # Test webhook events
+stripe products list                                            # List products
+stripe prices list                                             # List prices
+stripe customers list                                          # List customers
+stripe invoices list                                           # List invoices
+
+# Testing Payment Flows
+stripe checkout sessions create \
+  --success-url="https://example.com/success" \
+  --cancel-url="https://example.com/cancel" \
+  --line-items='[{"price": "price_1234", "quantity": 1}]' \
+  --mode=payment
+
+# Webhook Testing
+stripe fixtures payment_intent.json  # Load test fixtures
+```
+
+### 4. **Node.js Package Managers** 
+
+#### **pnpm** (Primary - Monorepo Optimized)
+```bash
+# Installation
+npm install -g pnpm
+
+# Monorepo Commands
+pnpm install                        # Install all dependencies
+pnpm add package --filter=marketing # Add package to specific app
+pnpm dev                           # Run all dev scripts
+pnpm dev --filter=ask             # Run specific app
+pnpm build                        # Build all apps
+pnpm test --filter=packages/ui    # Test specific package
+pnpm lint                         # Lint all packages
+
+# Workspace Management
+pnpm -r exec npm audit            # Run command in all workspaces  
+pnpm why package-name             # Why is package installed
+pnpm ls --depth=0                 # List top-level dependencies
+```
+
+#### **Turborepo CLI** (`turbo`)
+```bash
+# Comes with pnpm install, advanced usage:
+turbo run build --filter=./packages/*     # Build all packages
+turbo run test --cache-dir=.turbo/cache   # Custom cache directory
+turbo run lint --force                    # Force run ignoring cache
+turbo prune --scope=marketing             # Prune for specific app
+turbo gen workspace                       # Generate new workspace
+```
+
+## 🚀 Specialized Development Tools
+
+### 5. **Database & ORM Tools**
+
+#### **Prisma CLI**
+```bash
+# Through pnpm workspaces
+pnpm db:generate                    # Generate Prisma client
+pnpm db:push                        # Push schema changes
+pnpm db:migrate                     # Run migrations
+pnpm db:studio                      # Open Prisma Studio
+pnpm db:seed                        # Seed database
+
+# Direct Prisma commands (from packages/db)
+npx prisma generate
+npx prisma db push
+npx prisma migrate dev --name init
+npx prisma migrate deploy
+npx prisma studio
+```
+
+#### **PostgreSQL CLI** (`psql`)
+```bash
+# Installation (macOS)  
+brew install postgresql
+
+# Connection & Management
+psql $DATABASE_URL                  # Connect to database
+psql -h localhost -p 5432 -U postgres -d lostmind_dev
+
+# Useful Commands
+\dt                                 # List tables
+\d table_name                       # Describe table
+\q                                  # Quit
+SELECT version();                   # Check PostgreSQL version
+```
+
+### 6. **Docker & Container Management**
+
+#### **Docker CLI**
+```bash
+# Installation (macOS)
+brew install docker
+# Or install Docker Desktop
+
+# Development Workflow
+docker-compose up -d                # Start development services
+docker-compose down                 # Stop services  
+docker-compose logs -f service-name # Follow logs
+docker ps                          # List running containers
+docker exec -it container-name sh  # Execute shell in container
+
+# Build & Push
+docker build -t lostmind/service-name:latest ./services/document-processor
+docker push lostmind/service-name:latest
+```
+
+**Docker Compose for Development**:
+```yaml
+# docker-compose.dev.yml
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: lostmind_dev
+      POSTGRES_PASSWORD: development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+```
+
+### 7. **Git & Version Control Enhanced**
+
+#### **Git with Monorepo Workflow**
+```bash
+# Monorepo-specific git workflows
+git log --oneline --graph --all            # Visual commit history
+git log --grep="feat(ui)"                  # Search commits by message
+git blame -- packages/ui/src/button.tsx   # Blame for specific file
+git diff HEAD~1 packages/ui/               # Diff specific package
+
+# Advanced git hooks (via husky)
+npx husky add .husky/pre-commit "pnpm lint && pnpm type-check"
+npx husky add .husky/pre-push "pnpm test && pnpm build"
+```
+
+#### **Conventional Commits with commitizen**
+```bash
+npm install -g commitizen cz-conventional-changelog
+
+# Interactive commit creation
+git cz
+# or  
+npx cz
+```
+
+## 🔍 Monitoring & Debugging Tools
+
+### 8. **Application Monitoring**
+
+#### **Vercel CLI Monitoring**
+```bash
+vercel logs                         # Get deployment logs
+vercel inspect deployment-url       # Inspect deployment
+vercel env pull                     # Sync environment variables locally
+```
+
+#### **Google Cloud Monitoring**
+```bash
+# Real-time log streaming
+gcloud logging tail "projects/coral-muse-469919-m0" --format="value(textPayload)"
+
+# Query specific logs
+gcloud logging read "projects/coral-muse-469919-m0/logs/nextjs" --limit=50
+
+# Monitor resource usage
+gcloud monitoring metrics list
+```
+
+### 9. **Performance & Security Tools**
+
+#### **Lighthouse CI**
+```bash
+npm install -g @lhci/cli
+
+# Run performance audits
+lhci autorun                        # Full CI audit
+lighthouse https://lostmindai.com --output json --output html
+```
+
+#### **Security Scanning**
+```bash
+# npm audit for all workspaces
+pnpm audit                          # Security audit
+pnpm audit fix                      # Fix security issues
+
+# Advanced security scanning
+npm install -g snyk
+snyk test                          # Test for vulnerabilities
+snyk monitor                       # Monitor project
+```
+
+## 🧪 Testing & Quality Assurance
+
+### 10. **Testing Tools**
+
+#### **Playwright** (E2E Testing)
+```bash
+# Installation & Setup
+pnpm create playwright              # Initialize Playwright
+npx playwright install             # Install browsers
+
+# Running Tests
+npx playwright test                 # Run all tests
+npx playwright test --headed       # Run with browser UI
+npx playwright test --debug        # Debug mode
+npx playwright show-report         # Show test report
+```
+
+#### **Vitest** (Unit Testing)
+```bash
+# Run through workspace
+pnpm test                          # All tests
+pnpm test --coverage               # With coverage
+pnpm test --ui                     # Interactive UI
+pnpm test --watch                  # Watch mode
+```
+
+## 📊 Development Workflow Automation
+
+### 11. **Task Runners & Automation**
+
+#### **Task** (Alternative to npm scripts)
+```bash
+# Installation (macOS)
+brew install go-task/tap/go-task
+
+# Usage (if Taskfile.yml exists)
+task dev                           # Run dev tasks
+task build                         # Build all
+task deploy:preview                # Deploy to preview
+task clean                         # Clean artifacts
+```
+
+#### **Make** (Traditional Build Tool)
+```bash
+# If Makefile exists
+make install                       # Install dependencies
+make dev                          # Start development
+make build                        # Build for production
+make test                         # Run tests
+make deploy                       # Deploy to production
+```
+
+## 🌐 Additional Productivity Tools
+
+### 12. **API Development & Testing**
+
+#### **HTTPie** (API Testing)
+```bash
+# Installation
+brew install httpie
+
+# Usage Examples
+http GET https://api.lostmindai.com/health
+http POST https://api.lostmindai.com/ai/query query="Hello AI"
+http PUT https://api.lostmindai.com/user/profile Authorization:"Bearer token"
+```
+
+#### **curl** (System Default)
+```bash
+# Health checks
+curl -I https://lostmindai.com
+curl -X POST https://api.lostmindai.com/webhooks/stripe \
+  -H "Content-Type: application/json" \
+  -d '{"type":"payment_intent.succeeded"}'
+```
+
+### 13. **File & Data Processing**
+
+#### **jq** (JSON Processing)
+```bash
+# Installation (macOS)
+brew install jq
+
+# Usage Examples
+pnpm list --json | jq '.dependencies'
+curl -s https://api.lostmindai.com/status | jq '.uptime'
+cat package.json | jq '.scripts'
+```
+
+## 🚀 Deployment & Production Tools
+
+### 14. **Environment Management**
+
+#### **direnv** (Auto Environment Loading)
+```bash
+# Installation (macOS)
+brew install direnv
+
+# Setup in shell (.zshrc)
+eval "$(direnv hook zsh)"
+
+# Create .envrc in project root
+echo 'export DATABASE_URL="postgresql://..."' > .envrc
+direnv allow
+```
+
+### 15. **System Monitoring**
+
+#### **htop** (System Resources)
+```bash
+# Installation (macOS)
+brew install htop
+
+# Usage
+htop                               # Interactive process viewer
+```
+
+#### **netstat** (Network Monitoring)
+```bash
+# Check port usage
+netstat -tulpn | grep :3000
+lsof -i :3000                     # What's using port 3000
+```
+
+## 🔄 Complete Development Workflow Commands
+
+### Daily Development Routine
+```bash
+# Morning startup
+cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/LostMindAI-TurboRepo
+git pull origin feature/week1-foundation-implementation
+pnpm install                       # Update dependencies
+pnpm dev                          # Start all services
+
+# Development cycle
+git checkout -b feature/new-feature
+# ... make changes ...
+pnpm lint && pnpm type-check      # Quality checks
+pnpm test                         # Run tests  
+git add . && git cz               # Conventional commit
+git push origin feature/new-feature
+
+# Pre-production
+pnpm build                        # Ensure all apps build
+vercel --prod --dry-run           # Test deployment
+```
+
+### Production Deployment Workflow
+```bash
+# Production deployment
+git checkout main
+git pull origin main
+pnpm install --frozen-lockfile
+pnpm build
+pnpm test
+vercel --prod                     # Deploy to production
+
+# Monitor deployment  
+vercel logs
+gcloud logging tail "projects/coral-muse-469919-m0"
+```
+
+## ⚡ Performance Optimization Commands
+
+```bash
+# Bundle analysis
+npm install -g webpack-bundle-analyzer
+npx webpack-bundle-analyzer .next/static/chunks/*.js
+
+# Performance monitoring
+lighthouse https://lostmindai.com --view
+npx web-vitals https://lostmindai.com
+
+# Cache management
+turbo prune                       # Clean turbo cache
+pnpm store prune                  # Clean pnpm cache
+docker system prune -a           # Clean docker cache
+```
+
+---
+
+## 📋 Quick Reference Commands
+
+### Most Used Daily Commands
+```bash
+# Development
+pnpm dev --filter=ask             # Start specific app
+pnpm build --filter=marketing     # Build specific app
+vercel dev                        # Local Vercel development
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+
+# Database
+pnpm db:push                      # Push schema changes
+pnpm db:studio                    # Open database GUI
+psql $DATABASE_URL                # Connect to database
+
+# Deployment
+vercel --prod                     # Deploy to production
+gcloud run deploy service-name    # Deploy to Cloud Run
+git cz                           # Conventional commit
+```
+
+This comprehensive CLI toolkit ensures smooth development and production operations for the entire LostMind AI TurboRepo ecosystem. Each tool serves a specific purpose in the modern full-stack development workflow.

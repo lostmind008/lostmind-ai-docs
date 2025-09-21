@@ -1,0 +1,78 @@
+name: Update Documentation
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    # Allow manual trigger
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'apps/docs/**'
+      - 'package.json'
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: latest
+        
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Scan for projects
+      run: |
+        echo "🔍 Scanning for projects..."
+        node scripts/docs-automation/scan-projects.mjs
+        
+    - name: Extract content
+      run: |
+        echo "📄 Extracting content..."
+        node scripts/docs-automation/extract-content.mjs
+        
+    - name: Check for changes
+      id: changes
+      run: |
+        git add -A
+        if git diff --staged --quiet; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "No changes detected"
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "Changes detected"
+        fi
+        
+    - name: Commit and push changes
+      if: steps.changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action - LostMind AI Docs"
+        git commit -m "🤖 Auto-update documentation from projects
+
+        - Updated project discovery
+        - Regenerated documentation content
+        - Last scan: $(date)
+        
+        [skip ci]"
+        git push
+        
+    - name: Deploy preview (if changes)
+      if: steps.changes.outputs.changes == 'true'
+      run: |
+        echo "🚀 Documentation updated and will be deployed by Vercel"

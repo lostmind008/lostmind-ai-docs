@@ -1,0 +1,287 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+Note: For the agent‑neutral task format and PR/CI policy, see the “Delegation & Task Workflow” and “PR/CI Protocol & Lockfile Policy” sections in the root CLAUDE.md (../CLAUDE.md).
+
+# Claude Code Task Delegation - LostMindAI Monorepo
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[📊 All Project Docs](../README.md#project-management)** | **[📈 Current State](CURRENT_PROJECT_STATE.md)**
+
+**Project**: LostMind AI Monorepo Implementation
+**Phase**: Week 1 Foundation Setup  
+**Claude Code CLI**: For heavy coding tasks requiring detailed implementation
+
+## 🎯 PRIORITY TASK QUEUE (Week 1)
+
+### TASK 1: @lostmind/config Package Implementation
+
+**Complexity**: HIGH - Foundation for entire monorepo  
+**Estimated Time**: 2-3 hours  
+**Dependencies**: None (foundation package)
+
+**Directory**: `packages/config/`  
+**Status**: 🔄 Ready for Claude Code implementation
+
+#### Deliverables:
+
+- [ ] **Base TypeScript Configuration**
+  - Strict mode enabled for all packages
+  - Path mappings for monorepo structure
+  - Next.js 15 and React 19 Stable compatibility
+- [ ] **ESLint Configuration Suite**
+  - Base rules for TypeScript strict mode
+  - Next.js 15 specific rules and best practices
+  - React 19 Stable hook and component rules
+  - Prettier integration without conflicts
+- [ ] **Tailwind CSS Configuration**
+  - Base design system tokens
+  - shadcn/ui integration setup
+  - Dark mode configuration
+  - Responsive breakpoint system
+
+**Implementation Notes for Claude Code**:
+
+```bash
+# Navigate to config package
+cd packages/config
+
+# Task: Create complete shared configuration system
+# Focus: TypeScript strict mode, ESLint for Next.js 15, Tailwind with shadcn/ui
+# Priority: This blocks all other package development
+```
+
+**Success Criteria**:
+
+- Other packages can import and extend configurations
+- TypeScript compilation works across monorepo
+- ESLint rules enforce Next.js 15 best practices
+- Tailwind CSS supports shadcn/ui component system
+
+---
+
+### TASK 2: @lostmind/ui Components Library
+
+**Complexity**: HIGH - Core component system
+**Estimated Time**: 4-5 hours
+**Dependencies**: @lostmind/config must be complete
+
+**Directory**: `packages/ui/`
+**Status**: ⏳ Waiting for config package completion
+
+#### Deliverables:
+
+- [ ] **shadcn/ui Foundation Setup**
+  - Proper Tailwind configuration with design tokens
+  - Component composition patterns
+  - TypeScript strict mode compliance
+- [ ] **Core UI Components (Priority Order)**
+  1. **Button Component**: All variants (primary, secondary, destructive, ghost)
+  2. **Input Component**: Text inputs with validation states and focus management
+  3. **Card Component**: Content containers with proper spacing
+  4. **Badge Component**: Status indicators with colour variants
+  5. **Avatar Component**: User profile images with fallbacks
+  6. **Loading Components**: Spinner and skeleton loading states
+
+- [ ] **Component Architecture**
+  - Consistent variant patterns using class-variance-authority
+  - Proper TypeScript prop interfaces
+  - Accessibility compliance (ARIA attributes)
+  - Dark mode support built-in
+
+**Implementation Notes for Claude Code**:
+
+```bash
+# Navigate to UI package
+cd packages/ui
+
+# Task: Build production-ready shadcn/ui component library
+# Focus: Button, Input, Card, Badge, Avatar, Loading states
+# Pattern: Use class-variance-authority for variants
+# Testing: Each component should have proper TypeScript types
+```
+
+**Success Criteria**:
+
+- All apps can import components: `import { Button } from "@lostmind/ui"`
+- Components work in both light and dark mode
+- Proper TypeScript autocomplete and error checking
+- Consistent design system implementation
+
+---
+
+### TASK 3: Database Schema with Multi-Tenant RLS
+
+**Complexity**: VERY HIGH - Security-critical implementation
+**Estimated Time**: 3-4 hours  
+**Dependencies**: None (can work in parallel)
+
+**Directory**: `packages/db/`
+**Status**: 🔄 Ready for Claude Code implementation
+
+#### Deliverables:
+
+- [ ] **Complete Prisma Schema**
+  - Multi-tenant User and Tenant models
+  - Proper foreign key relationships
+  - Enum types for subscription plans
+  - Database indexes for performance
+- [ ] **Row Level Security Policies**
+  - Tenant isolation at database level
+  - Security policies for all multi-tenant tables
+  - Audit logging capabilities
+- [ ] **Prisma Client Configuration**
+  - Tenant-aware middleware
+  - Type-safe database operations
+  - Connection pooling configuration
+
+**Implementation Notes for Claude Code**:
+
+```bash
+# Navigate to database package
+cd packages/db
+
+# Task: Implement secure multi-tenant database with RLS
+# Critical: Row Level Security MUST isolate tenant data
+# Security: Every query must include tenant validation
+# Database: Use coral-muse-469919-m0 GCP project
+```
+
+**Security Requirements**:
+
+- Database-level tenant isolation (RLS policies)
+- Application-level validation as backup
+- Comprehensive audit logging
+- JWT tokens contain tenant claims
+
+---
+
+### TASK 4: Marketing App (Next.js 15)
+
+**Complexity**: MEDIUM-HIGH - First application implementation  
+**Estimated Time**: 3-4 hours
+**Dependencies**: @lostmind/config, @lostmind/ui
+
+**Directory**: `apps/marketing/`
+**Status**: ⏳ Waiting for config and ui packages
+
+#### Deliverables:
+
+- [ ] **Next.js 15 App Router Setup**
+  - Proper TypeScript configuration
+  - App router file structure
+  - Layout components with navigation
+- [ ] **Marketing Pages**
+  - Homepage with hero section
+  - Features page showcasing AI capabilities
+  - Pricing page with subscription tiers
+  - About page with company information
+- [ ] **Shared Package Integration**
+  - Use @lostmind/ui components throughout
+  - Follow @lostmind/config TypeScript patterns
+  - Implement proper SEO and meta tags
+
+**Implementation Notes for Claude Code**:
+
+```bash
+# Navigate to marketing app
+cd apps/marketing
+
+# Task: Create professional marketing site for lostmindai.com
+# Framework: Next.js 15 with App Router and React 19 Stable
+# Components: Use @lostmind/ui for all UI elements
+# Design: Modern, professional AI/tech company aesthetic
+```
+
+**Success Criteria**:
+
+- Responsive design works on all device sizes
+- Fast loading performance (Web Vitals)
+- Professional appearance suitable for AI company
+- Proper integration with shared packages
+
+---
+
+## 🛠 IMPLEMENTATION WORKFLOW
+
+### Step 1: Claude Code Environment Setup
+
+```bash
+# Ensure Claude Code has proper access to project
+cd "/Users/sumitm1/Documents/New Ongoing Projects/LostMindAI-TurboRepo"
+
+# Verify monorepo structure
+pnpm install
+task --list
+
+# Confirm environment variables
+cp .env.example .env.local
+# Edit .env.local with actual credentials
+```
+
+### Step 2: Task Execution Order
+
+1. **FIRST**: Complete config package (blocks everything else)
+2. **SECOND**: Implement UI package (needed by all apps)
+3. **THIRD**: Database package (can work in parallel with UI)
+4. **FOURTH**: Marketing app (validates shared package integration)
+
+### Step 3: Testing Strategy
+
+After each task completion:
+
+```bash
+# Test the package builds
+pnpm run build
+
+# Verify TypeScript compilation
+pnpm run type-check
+
+# Test package importing
+pnpm run dev
+```
+
+### Step 4: Git Commit Strategy
+
+Small, focused commits after each major component:
+
+```bash
+# Example commit messages
+git commit -m "feat(config): implement TypeScript and ESLint configurations
+
+- Add strict TypeScript config with monorepo path mappings
+- Configure ESLint for Next.js 15 and React 19 Stable
+- Set up Tailwind CSS with shadcn/ui integration
+- Export all configurations for package consumption"
+
+git commit -m "feat(ui): implement core shadcn/ui components
+
+- Add Button component with all variants and proper TypeScript
+- Implement Input component with validation states
+- Create Card and Badge components for content display
+- Set up component composition patterns and dark mode support"
+```
+
+## 🚨 CRITICAL SUCCESS FACTORS
+
+1. **TypeScript Strict Mode**: All code must pass strict TypeScript compilation
+2. **Package Integration**: Shared packages must import cleanly across apps
+3. **Security First**: Database operations MUST include tenant isolation
+4. **Performance**: Build times should remain under 2 minutes
+5. **Documentation**: Update CLAUDE.md files after implementation
+
+## 📋 COMPLETION CHECKLIST
+
+### Week 1 Foundation Complete When:
+
+- [ ] All packages build successfully with `pnpm run build`
+- [ ] TypeScript compilation passes with zero errors
+- [ ] Marketing app can import and use UI components
+- [ ] Database schema deploys with RLS policies active
+- [ ] All tests pass and coverage target is 80% (current: minimal)
+- [ ] Documentation updated in each package's CLAUDE.md
+
+---
+
+**Next Phase**: Week 2 will focus on Ask app, Authentication system, and AI client integration.

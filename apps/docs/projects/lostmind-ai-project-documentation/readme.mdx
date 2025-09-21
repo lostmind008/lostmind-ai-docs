@@ -1,0 +1,83 @@
+---
+title: "README - LostMind AI - Project Documentation"
+description: "Complete project README and setup instructions"
+---
+
+<Info>
+This content was automatically extracted from LostMind AI - Project Documentation.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# LostMind AI - Project Documentation Hub
+
+Centralized documentation system for all LostMind AI projects.
+
+## Purpose
+
+This documentation hub provides:
+- **Unified Documentation**: Single source for all project documentation
+- **Automated Content**: Auto-generated from internal project docs
+- **Scalable Architecture**: Supports unlimited project additions
+- **Multiple Outputs**: Web sites, PDFs, and shareable formats
+
+## Directory Structure
+
+```
+/
+├── config/          # Documentation framework configuration
+├── content/         # Auto-generated content from projects
+│   ├── lostmindai-turborepo/   # Main SaaS platform
+│   ├── rag-embeddings/        # RAG backend architecture
+│   ├── xlsm-core-app/         # Excel-based finance tools
+│   └── _shared/               # Common content across projects
+├── templates/       # Reusable documentation templates
+├── scripts/         # Automation for content extraction
+├── public/          # Generated static documentation sites
+└── deploy/          # CI/CD and deployment configurations
+```
+
+## Supported Projects
+
+- **LostMindAI TurboRepo**: Main AI-powered SaaS platform
+- **RAG Embeddings**: Backend architecture with embeddings
+- **XLSM Core App**: Excel-based financial tools
+- **Future Projects**: Automatically discovered and added
+
+## Quick Start
+
+1. **Install Dependencies**
+   ```bash
+   cd "/Users/sumitm1/Documents/New Ongoing Projects/LostMind AI - Project Documentation"
+   npm install
+   ```
+
+2. **Scan Projects**
+   ```bash
+   npm run scan:projects
+   ```
+
+3. **Generate Documentation**
+   ```bash
+   npm run build:docs
+   ```
+
+4. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
+
+## Automation Features
+
+- **Project Discovery**: Automatically finds new projects
+- **Content Extraction**: Pulls from internal project documentation
+- **Template Application**: Consistent formatting across all docs
+- **Multi-Site Deployment**: Separate sites for each SaaS product
+
+## Source of Truth
+
+Each project maintains its own internal documentation as the source of truth:
+- `docs/project/CURRENT_PROJECT_STATE.md` - Canonical project status
+- `docs/architecture/` - System design documentation
+- `docs/decisions/` - Architectural Decision Records (ADRs)
+
+This hub aggregates and presents that information in a unified, shareable format.

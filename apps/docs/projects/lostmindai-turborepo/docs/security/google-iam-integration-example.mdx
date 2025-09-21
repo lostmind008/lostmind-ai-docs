@@ -1,0 +1,316 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Google IAM Integration Example
+
+This document shows how to use the Google IAM authentication system for service-to-service communication between Next.js apps and FastAPI services.
+
+## FastAPI Service Configuration
+
+The FastAPI service automatically supports Google IAM authentication through the updated middleware.
+
+### Environment Variables
+```bash
+# Google Cloud Configuration
+GOOGLE_CLOUD_PROJECT=coral-muse-469919-m0
+GCP_PROJECT_ID=coral-muse-469919-m0
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+
+# Authentication Configuration
+REQUIRE_AUTH=true
+JWT_SECRET=your-jwt-secret
+```
+
+### Service Account Setup
+1. Create a service account in Google Cloud Console
+2. Download the service account key file
+3. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable
+
+## Next.js Client Usage
+
+### Basic Usage in API Routes
+
+```typescript
+// app/api/ai/generate/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { withGoogleIAMAuth } from '@lostmind/auth'
+
+export async function POST(request: NextRequest) {
+  try {
+    const { prompt } = await request.json()
+    
+    // Use Google IAM authentication to call FastAPI service
+    const result = await withGoogleIAMAuth(
+      process.env.AI_COMPUTE_SERVICE_URL!,
+      async (client) => {
+        return client.post('/generate/text', {
+          prompt,
+          temperature: 0.7,
+          max_tokens: 1000
+        })
+      }
+    )
+
+    return NextResponse.json(result)
+    
+  } catch (error) {
+    console.error('AI generation failed:', error)
+    return NextResponse.json(
+      { error: 'AI generation failed' },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### Advanced Usage with Custom Client
+
+```typescript
+// lib/ai-service-client.ts
+import { createGoogleIAMClient } from '@lostmind/auth'
+
+class AIServiceClient {
+  private iamClient = createGoogleIAMClient({
+    projectId: process.env.GOOGLE_CLOUD_PROJECT!,
+    targetAudience: process.env.AI_COMPUTE_SERVICE_URL,
+  })
+
+  async generateText(prompt: string, options = {}) {
+    const client = await this.iamClient.createAuthenticatedClient(
+      process.env.AI_COMPUTE_SERVICE_URL!
+    )
+
+    return client.post('/generate/text', {
+      prompt,
+      ...options
+    })
+  }
+
+  async processDocument(file: File) {
+    const client = await this.iamClient.createAuthenticatedClient(
+      process.env.AI_COMPUTE_SERVICE_URL!
+    )
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    return client.fetch('/process/file', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        // Don't set Content-Type for FormData, let browser handle it
+      }
+    })
+  }
+
+  async verifyConnection() {
+    const isValid = await this.iamClient.verifyToken()
+    console.log('IAM token valid:', isValid)
+    return isValid
+  }
+}
+
+export const aiServiceClient = new AIServiceClient()
+```
+
+### Usage in App Components (Server Components)
+
+```typescript
+// app/ai-chat/page.tsx
+import { aiServiceClient } from '@/lib/ai-service-client'
+
+export default async function AIChatPage() {
+  // Verify connection on page load
+  const connectionValid = await aiServiceClient.verifyConnection()
+  
+  if (!connectionValid) {
+    return <div>Service authentication failed</div>
+  }
+
+  return (
+    <div>
+      <h1>AI Chat</h1>
+      {/* Your chat component */}
+    </div>
+  )
+}
+```
+
+### Client-Side Usage (Client Components)
+
+```typescript
+// components/AIChat.tsx
+'use client'
+import { useState } from 'react'
+
+export default function AIChat() {
+  const [response, setResponse] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (prompt: string) => {
+    setLoading(true)
+    try {
+      // Call your API route which handles IAM authentication
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      })
+
+      if (!res.ok) throw new Error('Generation failed')
+      
+      const result = await res.json()
+      setResponse(result.message)
+      
+    } catch (error) {
+      console.error('Error:', error)
+      setResponse('Error generating response')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Your component JSX...
+}
+```
+
+## Security Features
+
+### Automatic Token Management
+- Tokens are cached and automatically refreshed before expiration
+- Built-in retry logic for expired tokens
+- Secure storage in memory (not localStorage)
+
+### Service Account Validation
+- FastAPI service validates Google IAM tokens
+- Service accounts get "enterprise" tier access
+- User accounts get "professional" tier access
+- Proper audience validation
+
+### Error Handling
+```typescript
+try {
+  const result = await withGoogleIAMAuth(serviceUrl, async (client) => {
+    return client.post('/api/endpoint', data)
+  })
+} catch (error) {
+  if (error.message.includes('401')) {
+    // Authentication failed
+    console.error('IAM authentication failed:', error)
+  } else if (error.message.includes('403')) {
+    // Authorization failed (insufficient permissions)
+    console.error('IAM authorization failed:', error)
+  } else {
+    // Other error
+    console.error('Request failed:', error)
+  }
+}
+```
+
+## Environment Configuration
+
+### Next.js (.env.local)
+```bash
+# Google Cloud Project
+GOOGLE_CLOUD_PROJECT=coral-muse-469919-m0
+GCP_PROJECT_ID=coral-muse-469919-m0
+
+# Service Account (for server-side)
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+
+# FastAPI Service URLs
+AI_COMPUTE_SERVICE_URL=https://ai-compute-service-url.com
+CRAWLER_SERVICE_URL=https://crawler-service-url.com
+DOCUMENT_SERVICE_URL=https://document-service-url.com
+```
+
+### FastAPI (.env)
+```bash
+# Google Cloud Project
+GOOGLE_CLOUD_PROJECT=coral-muse-469919-m0
+GCP_PROJECT_ID=coral-muse-469919-m0
+
+# Service Account
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+
+# Authentication
+REQUIRE_AUTH=true
+JWT_SECRET=your-jwt-secret-here
+
+# Expected audience (this service URL)
+SERVICE_URL=https://ai-compute-service-url.com
+```
+
+## Testing
+
+### Local Development
+1. Set up Google Cloud service account
+2. Download service account key
+3. Set environment variables
+4. Test with curl:
+
+```bash
+# Get IAM token (using gcloud)
+TOKEN=$(gcloud auth print-identity-token --audiences=https://your-service-url.com)
+
+# Test FastAPI endpoint
+curl -X POST \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Hello world"}' \
+  https://your-service-url.com/generate/text
+```
+
+### Production Deployment
+- Use Google Cloud IAM roles and service accounts
+- Configure Workload Identity for GKE/Cloud Run
+- Set proper audience validation
+- Monitor authentication logs
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Invalid Token Audience**
+   - Ensure `SERVICE_URL` matches the audience in the token
+   - Check `GOOGLE_CLOUD_PROJECT` configuration
+
+2. **Service Account Not Found**
+   - Verify `GOOGLE_APPLICATION_CREDENTIALS` path
+   - Check service account permissions
+
+3. **Token Expiration**
+   - Tokens are automatically refreshed
+   - Check system clock synchronization
+
+### Debug Logging
+Enable debug logging in FastAPI:
+```python
+# Set log level to DEBUG
+LOG_LEVEL=DEBUG
+```
+
+Check logs for authentication details:
+```bash
+# FastAPI logs
+tail -f /var/log/fastapi/auth.log
+
+# Next.js logs
+npm run dev # Check console output
+```
+
+## Migration from Mock Authentication
+
+If migrating from the previous mock authentication system:
+
+1. Update environment variables
+2. Install new dependencies: `pnpm install`
+3. Update API calls to use Google IAM
+4. Test service-to-service communication
+5. Deploy with proper service account configuration
+
+This completes the Google IAM integration for secure service-to-service authentication.

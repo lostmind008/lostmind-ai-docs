@@ -1,0 +1,230 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Claude Code Session Templates for Beginners
+
+## 🚀 Starting a New Session
+
+Always begin your Claude Code session with this template:
+
+```
+Please start by:
+1. Running `git status` to check the current state
+2. Creating a checkpoint commit with `pnpm run checkpoint`
+3. Running `pnpm run safety` to check for issues
+4. Using TodoWrite to list all tasks for this session
+
+Then proceed with: [YOUR ACTUAL REQUEST]
+```
+
+## 🔧 Common Task Templates
+
+### Adding a New Feature
+```
+I need to add [FEATURE NAME]. Please:
+1. Break this into small, reversible steps
+2. Create a git commit after each major step
+3. Explain what you're doing in simple terms
+4. Test that the app still works after each change
+5. Let me know if there are any risks
+
+The feature should: [DESCRIBE REQUIREMENTS]
+```
+
+### Fixing a Bug
+```
+There's a bug where [DESCRIBE THE ISSUE]. Please:
+1. First investigate the cause without making changes
+2. Explain what's wrong in simple terms
+3. Propose a fix and explain potential side effects
+4. Make the minimal change needed to fix it
+5. Test that the fix works and doesn't break anything else
+```
+
+### Updating Dependencies
+```
+Please update the project dependencies:
+1. First check which packages are outdated
+2. Identify any with security vulnerabilities
+3. Update only patch and minor versions (not major)
+4. Test that everything still works after updates
+5. Create a checkpoint before and after updates
+```
+
+## 🚨 Before Major Changes
+
+Use this template before database changes, authentication updates, or payment integration:
+
+```
+I need to [DESCRIBE MAJOR CHANGE]. Before proceeding:
+1. Explain the risks and what could go wrong
+2. Create a detailed backup plan
+3. List all files that will be changed
+4. Create a checkpoint with tag for easy rollback
+5. Proceed only after I confirm
+
+Requirements: [DETAILED REQUIREMENTS]
+```
+
+## 🌐 Before Deployment
+
+```
+Please prepare for deployment:
+1. Run `pnpm run pre-deploy` to validate everything
+2. Check for any exposed secrets or API keys
+3. Verify all tests pass
+4. Create a deployment checkpoint
+5. List any manual steps I need to do
+6. Deploy to staging/preview first
+
+Target environment: [staging/production]
+```
+
+## 📊 Daily Progress Review
+
+At the end of each day:
+
+```
+Please provide a daily summary:
+1. What was accomplished today (list all changes)
+2. Any issues or blockers encountered
+3. Current state of the application
+4. What still needs to be done
+5. Update docs/project/CURRENT_PROJECT_STATE.md
+6. Create an end-of-day checkpoint
+```
+
+## 🔍 Code Review Request
+
+```
+Please review the recent changes:
+1. Check for security issues
+2. Identify any code that could be improved
+3. Look for potential bugs
+4. Verify best practices are followed
+5. Suggest improvements (but don't implement yet)
+```
+
+## 🆘 Emergency Recovery
+
+If something is broken:
+
+```
+EMERGENCY: The app is broken. Please:
+1. Don't make any changes yet
+2. Run `git status` and `git log -5` to see recent changes
+3. Identify what's broken and what caused it
+4. Propose the safest way to fix or rollback
+5. Wait for my confirmation before proceeding
+
+The issue is: [DESCRIBE WHAT'S BROKEN]
+```
+
+## 💡 Learning Mode
+
+When you want to understand something:
+
+```
+Please explain [CONCEPT/CODE] to me:
+1. Use simple, non-technical language
+2. Provide a practical example from our codebase
+3. Explain why it's done this way
+4. Show me where it's used in our project
+5. Suggest resources if I want to learn more
+```
+
+## 📝 Documentation Request
+
+```
+Please document [FEATURE/COMPONENT]:
+1. Explain what it does in simple terms
+2. Show example usage
+3. List any important configuration
+4. Note any limitations or gotchas
+5. Add to appropriate docs file
+```
+
+## 🔄 Refactoring Code
+
+```
+Please refactor [FILE/COMPONENT]:
+1. First explain what needs improvement and why
+2. Make incremental changes with commits
+3. Ensure functionality stays exactly the same
+4. Run tests after each change
+5. Keep the old code commented until verified
+```
+
+## 🧪 Testing Template
+
+```
+Please add tests for [FEATURE/COMPONENT]:
+1. Explain what should be tested and why
+2. Write simple, clear test cases
+3. Test both success and failure cases
+4. Ensure tests actually run and pass
+5. Document what the tests verify
+```
+
+## ⚙️ Configuration Changes
+
+```
+I need to change [CONFIGURATION]. Please:
+1. Explain what this configuration does
+2. Show current vs proposed settings
+3. Identify what might break
+4. Make the change incrementally
+5. Test that everything still works
+```
+
+## 📦 Adding a New Package
+
+```
+I want to add [PACKAGE NAME] to the project. Please:
+1. Verify it's necessary and no existing solution exists
+2. Check the package's security and maintenance status
+3. Explain what it does and why we need it
+4. Add it to the correct workspace
+5. Provide a simple usage example
+```
+
+## 🎯 Quick Commands Reference
+
+Include these in your requests when appropriate:
+
+- `"Run safety checks first"` - Runs `pnpm run safety`
+- `"Create a checkpoint"` - Runs `pnpm run checkpoint`
+- `"Validate before continuing"` - Runs `pnpm run validate`
+- `"Show me the current status"` - Runs `git status`
+- `"What changed recently?"` - Shows recent git commits
+- `"Is it safe to deploy?"` - Runs pre-deployment checks
+
+## 🚦 Status Check Questions
+
+Ask these regularly:
+
+1. "Are there any uncommitted changes?"
+2. "Do all tests still pass?"
+3. "Are there any security warnings?"
+4. "Is the build size reasonable?"
+5. "Are there any TypeScript errors?"
+
+## 📌 Important Reminders
+
+- Always work in small, testable increments
+- Commit frequently with clear messages
+- Test after every change
+- Ask Claude Code to explain before making complex changes
+- Use checkpoints before anything risky
+- Never skip the safety checks
+- Keep your `.env.local` file secure
+- Review changes before deploying
+
+## 🔗 Related Documentation
+
+- [Project README](../README.md)
+- [CLAUDE.md](../CLAUDE.md)
+- [Current Project State](./project/CURRENT_PROJECT_STATE.md)
+- [Implementation Roadmap](./architecture/implementation-roadmap.md)

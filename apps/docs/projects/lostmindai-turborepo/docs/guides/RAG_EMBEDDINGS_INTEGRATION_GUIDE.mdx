@@ -1,0 +1,1042 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🧠 LostMind AI RAG Embeddings System Integration Guide
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[🤖 Ask App Guide](INTEGRATION_GUIDE_FOR_ASK_APP.md)**
+
+**SOURCE PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/Back End Architecture for Turborepo with RAG Embeddings`
+
+**TARGET LOCATIONS**: 
+- `packages/rag/` - RAG utilities and interfaces
+- `services/ai-compute/` - Heavy compute operations
+
+## 🎯 Mission Overview
+
+You are tasked with migrating the **RAG Embeddings Backend Architecture** into the TurboRepo monorepo structure as both a shared package and compute service. This will serve as the foundational AI intelligence layer powering document understanding, semantic search, and contextual AI responses across all applications.
+
+## 🏆 Integration Objectives
+
+### Primary Goals
+1. **Migrate** RAG architecture into `packages/rag/` as shared utilities
+2. **Deploy** compute-intensive operations to `services/ai-compute/`
+3. **Implement** pgvector-powered similarity search with PostgreSQL
+4. **Integrate** with Google Generative AI for embeddings and RAG processing
+5. **Provide** scalable RAG infrastructure for all TurboRepo applications
+
+### Success Criteria
+- ✅ RAG package provides reusable utilities across all apps
+- ✅ AI compute service handles embedding generation at scale
+- ✅ pgvector integration enables fast similarity search
+- ✅ Supports multiple document types (PDF, text, images, web pages)
+- ✅ Sub-second query response times for most operations
+- ✅ Horizontally scalable for enterprise document volumes
+
+## 🏗️ Target Architecture Integration
+
+### Dual Integration Strategy
+```
+packages/rag/                    # ← SHARED UTILITIES
+├── src/
+│   ├── index.ts                # Main exports
+│   ├── embedding/
+│   │   ├── embedder.ts         # Embedding interfaces
+│   │   ├── chunking.ts         # Document chunking
+│   │   └── similarity.ts       # Similarity calculations
+│   ├── retrieval/
+│   │   ├── retriever.ts        # Document retrieval
+│   │   ├── ranking.ts          # Result ranking
+│   │   └── filtering.ts        # Content filtering
+│   ├── types/
+│   │   ├── document.ts         # Document models
+│   │   ├── embedding.ts        # Embedding models
+│   │   └── query.ts           # Query models
+│   └── utils/
+│       ├── preprocessing.ts    # Text preprocessing
+│       ├── postprocessing.ts   # Result processing
+│       └── validation.ts       # Input validation
+
+services/ai-compute/            # ← COMPUTE SERVICE
+├── src/
+│   ├── main.py                # FastAPI application
+│   ├── api/
+│   │   ├── v1/
+│   │   │   ├── embeddings.py   # Embedding endpoints
+│   │   │   ├── rag.py         # RAG endpoints
+│   │   │   └── search.py      # Search endpoints
+│   ├── core/
+│   │   ├── embedder.py        # Embedding engine
+│   │   ├── vectordb.py        # Vector database
+│   │   ├── retriever.py       # RAG retrieval
+│   │   └── generator.py       # Response generation
+│   ├── models/
+│   │   ├── document.py        # Document models
+│   │   ├── embedding.py       # Embedding models
+│   │   └── response.py        # Response models
+│   └── services/
+│       ├── embedding_service.py
+│       ├── retrieval_service.py
+│       └── generation_service.py
+```
+
+### RAG Tech Stack
+- **Vector Database**: PostgreSQL with pgvector extension
+- **Embeddings**: Google Generative AI (text-embedding-004 model)
+- **Document Processing**: LangChain, PyPDF2, python-docx
+- **Chunking Strategy**: Semantic and recursive text splitting
+- **Search**: Hybrid vector + keyword search with BM25
+- **Generation**: Google Gemini for RAG response synthesis
+- **Caching**: Redis for embedding and query result caching
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Architecture Analysis & Planning
+
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/Back\ End\ Architecture\ for\ Turborepo\ with\ RAG\ Embeddings
+   git checkout -b integration/turbo-repo-rag-system
+   ```
+
+2. **Analyze Current RAG Implementation**
+   - **Document Processing**: How documents are currently parsed and chunked
+   - **Embedding Strategy**: Current embedding models and vector dimensions
+   - **Storage System**: How embeddings and metadata are stored
+   - **Retrieval Logic**: Search and ranking algorithms implemented
+   - **Generation Pipeline**: How contextual responses are generated
+   - **Performance Characteristics**: Current latency and throughput metrics
+
+3. **Define Integration Requirements**
+   ```python
+   # Document current RAG capabilities
+   from dataclasses import dataclass
+   from typing import List, Dict, Any, Optional
+   from enum import Enum
+
+   class DocumentType(Enum):
+       PDF = "pdf"
+       TEXT = "text"
+       HTML = "html"
+       MARKDOWN = "markdown"
+       IMAGE = "image"
+       AUDIO = "audio"
+
+   @dataclass
+   class RAGCapabilities:
+       supported_document_types: List[DocumentType]
+       max_document_size: int              # Maximum file size in MB
+       embedding_dimensions: int           # Vector dimensions
+       max_chunk_size: int                 # Maximum tokens per chunk
+       supported_languages: List[str]      # Language support
+       retrieval_methods: List[str]        # Vector, keyword, hybrid
+       generation_models: List[str]        # Available LLM models
+       concurrent_processing: int          # Max parallel operations
+       vector_similarity_threshold: float  # Minimum similarity score
+       cache_ttl: int                     # Cache time-to-live in seconds
+   ```
+
+### Phase 2: Shared RAG Package (`packages/rag/`)
+
+1. **Package Configuration**
+   ```json
+   {
+     "name": "@lostmind/rag",
+     "version": "0.0.0",
+     "description": "RAG utilities and interfaces for LostMind AI",
+     "main": "dist/index.js",
+     "types": "dist/index.d.ts",
+     "scripts": {
+       "build": "tsc",
+       "dev": "tsc --watch",
+       "test": "vitest",
+       "type-check": "tsc --noEmit"
+     },
+     "dependencies": {
+       "@lostmind/ai-clients": "workspace:*",
+       "@lostmind/db": "workspace:*",
+       "@lostmind/utils": "workspace:*",
+       "langchain": "^0.1.0",
+       "pdf-parse": "^1.1.1",
+       "mammoth": "^1.6.0",
+       "cheerio": "^1.0.0-rc.12",
+       "tiktoken": "^1.0.0"
+     },
+     "devDependencies": {
+       "typescript": "^5.4.0",
+       "vitest": "^1.0.0"
+     }
+   }
+   ```
+
+2. **Core RAG Interfaces**
+   ```typescript
+   // packages/rag/src/types/document.ts
+   export interface Document {
+     id: string;
+     content: string;
+     metadata: DocumentMetadata;
+     chunks?: DocumentChunk[];
+     embeddings?: number[][];
+     createdAt: Date;
+     updatedAt: Date;
+   }
+
+   export interface DocumentMetadata {
+     title?: string;
+     author?: string;
+     source: string;
+     type: DocumentType;
+     language?: string;
+     size: number;
+     pageCount?: number;
+     tags?: string[];
+     customFields?: Record<string, any>;
+   }
+
+   export interface DocumentChunk {
+     id: string;
+     documentId: string;
+     content: string;
+     startIndex: number;
+     endIndex: number;
+     chunkIndex: number;
+     embedding?: number[];
+     metadata?: ChunkMetadata;
+   }
+
+   export interface ChunkMetadata {
+     pageNumber?: number;
+     section?: string;
+     heading?: string;
+     importance?: number;
+   }
+   ```
+
+   ```typescript
+   // packages/rag/src/types/query.ts
+   export interface RAGQuery {
+     text: string;
+     filters?: QueryFilters;
+     options?: QueryOptions;
+   }
+
+   export interface QueryFilters {
+     documentTypes?: DocumentType[];
+     dateRange?: {
+       start: Date;
+       end: Date;
+     };
+     authors?: string[];
+     tags?: string[];
+     customFilters?: Record<string, any>;
+   }
+
+   export interface QueryOptions {
+     maxResults?: number;
+     similarityThreshold?: number;
+     includeMetadata?: boolean;
+     rerank?: boolean;
+     hybridSearch?: boolean;
+   }
+
+   export interface RAGResponse {
+     answer: string;
+     sources: DocumentChunk[];
+     confidence: number;
+     processingTime: number;
+     metadata?: {
+       retrievedChunks: number;
+       generationTokens: number;
+       cacheHit: boolean;
+     };
+   }
+   ```
+
+3. **Document Chunking Utilities**
+   ```typescript
+   // packages/rag/src/embedding/chunking.ts
+   import { Document, DocumentChunk, ChunkMetadata } from '../types/document';
+   import { encode } from 'tiktoken/encoders/cl100k_base';
+
+   export interface ChunkingStrategy {
+     maxTokens: number;
+     overlap: number;
+     separators: string[];
+     preserveFormatting: boolean;
+   }
+
+   export class DocumentChunker {
+     constructor(private strategy: ChunkingStrategy) {}
+
+     async chunkDocument(document: Document): Promise<DocumentChunk[]> {
+       const chunks: DocumentChunk[] = [];
+       const content = this.preprocessContent(document.content);
+       
+       if (document.metadata.type === 'pdf') {
+         return this.chunkPDF(document, content);
+       } else if (document.metadata.type === 'html') {
+         return this.chunkHTML(document, content);
+       } else {
+         return this.chunkText(document, content);
+       }
+     }
+
+     private chunkText(document: Document, content: string): DocumentChunk[] {
+       const chunks: DocumentChunk[] = [];
+       const sentences = this.splitIntoSentences(content);
+       
+       let currentChunk = '';
+       let currentTokens = 0;
+       let chunkIndex = 0;
+       let startIndex = 0;
+
+       for (const sentence of sentences) {
+         const sentenceTokens = this.countTokens(sentence);
+         
+         if (currentTokens + sentenceTokens > this.strategy.maxTokens && currentChunk) {
+           // Save current chunk
+           chunks.push({
+             id: `${document.id}-chunk-${chunkIndex}`,
+             documentId: document.id,
+             content: currentChunk.trim(),
+             startIndex,
+             endIndex: startIndex + currentChunk.length,
+             chunkIndex,
+             metadata: {
+               importance: this.calculateImportance(currentChunk)
+             }
+           });
+
+           // Start new chunk with overlap
+           const overlapText = this.getOverlapText(currentChunk, this.strategy.overlap);
+           currentChunk = overlapText + sentence;
+           currentTokens = this.countTokens(currentChunk);
+           chunkIndex++;
+           startIndex += currentChunk.length - overlapText.length;
+         } else {
+           currentChunk += (currentChunk ? ' ' : '') + sentence;
+           currentTokens += sentenceTokens;
+         }
+       }
+
+       // Add final chunk
+       if (currentChunk.trim()) {
+         chunks.push({
+           id: `${document.id}-chunk-${chunkIndex}`,
+           documentId: document.id,
+           content: currentChunk.trim(),
+           startIndex,
+           endIndex: startIndex + currentChunk.length,
+           chunkIndex,
+           metadata: {
+             importance: this.calculateImportance(currentChunk)
+           }
+         });
+       }
+
+       return chunks;
+     }
+
+     private countTokens(text: string): number {
+       return encode(text).length;
+     }
+
+     private calculateImportance(text: string): number {
+       // Simple heuristic - can be enhanced with AI
+       const hasNumbers = /\d/.test(text);
+       const hasCapitals = /[A-Z]{2,}/.test(text);
+       const hasQuestions = /\?/.test(text);
+       const length = text.length;
+
+       let importance = 0.5;
+       if (hasNumbers) importance += 0.1;
+       if (hasCapitals) importance += 0.1;
+       if (hasQuestions) importance += 0.2;
+       if (length > 200) importance += 0.1;
+
+       return Math.min(importance, 1.0);
+     }
+
+     private splitIntoSentences(text: string): string[] {
+       // Enhanced sentence splitting
+       return text
+         .split(/[.!?]+/)
+         .map(s => s.trim())
+         .filter(s => s.length > 0);
+     }
+
+     private preprocessContent(content: string): string {
+       // Clean and normalize content
+       return content
+         .replace(/\s+/g, ' ')
+         .replace(/\n{3,}/g, '\n\n')
+         .trim();
+     }
+
+     private getOverlapText(chunk: string, overlapTokens: number): string {
+       if (overlapTokens === 0) return '';
+       
+       const words = chunk.split(' ');
+       const overlapWords = words.slice(-overlapTokens);
+       return overlapWords.join(' ') + ' ';
+     }
+   }
+   ```
+
+### Phase 3: AI Compute Service (`services/ai-compute/`)
+
+1. **FastAPI Service Setup**
+   ```python
+   # services/ai-compute/src/main.py
+   from fastapi import FastAPI, HTTPException, BackgroundTasks
+   from fastapi.middleware.cors import CORSMiddleware
+   from contextlib import asynccontextmanager
+   import uvicorn
+   from typing import List, Dict, Any
+
+   from src.core.config import get_settings
+   from src.api.v1 import embeddings, rag, search
+   from src.core.vectordb import initialize_vectordb
+   from src.services.embedding_service import EmbeddingService
+
+   @asynccontextmanager
+   async def lifespan(app: FastAPI):
+       # Startup
+       await initialize_vectordb()
+       await EmbeddingService.initialize()
+       yield
+       # Shutdown
+       await EmbeddingService.cleanup()
+
+   def create_app() -> FastAPI:
+       settings = get_settings()
+       
+       app = FastAPI(
+           title="LostMind AI Compute Service",
+           description="RAG Embeddings and AI Compute Operations",
+           version="1.0.0",
+           lifespan=lifespan
+       )
+
+       app.add_middleware(
+           CORSMiddleware,
+           allow_origins=["http://localhost:3000", "http://localhost:3001", "https://*.lostmindai.com"],
+           allow_credentials=True,
+           allow_methods=["*"],
+           allow_headers=["*"],
+       )
+
+       app.include_router(embeddings.router, prefix="/api/v1/embeddings", tags=["embeddings"])
+       app.include_router(rag.router, prefix="/api/v1/rag", tags=["rag"])
+       app.include_router(search.router, prefix="/api/v1/search", tags=["search"])
+
+       return app
+
+   app = create_app()
+   ```
+
+2. **Vector Database Integration**
+   ```python
+   # services/ai-compute/src/core/vectordb.py
+   import asyncpg
+   import numpy as np
+   from typing import List, Dict, Any, Optional, Tuple
+   import json
+   from dataclasses import dataclass
+   import asyncio
+
+   @dataclass
+   class VectorSearchResult:
+       chunk_id: str
+       content: str
+       similarity: float
+       metadata: Dict[str, Any]
+       document_id: str
+
+   class PgVectorDB:
+       def __init__(self, database_url: str):
+           self.database_url = database_url
+           self.pool: Optional[asyncpg.Pool] = None
+
+       async def initialize(self):
+           """Initialize connection pool and create vector extension"""
+           self.pool = await asyncpg.create_pool(
+               self.database_url,
+               min_size=5,
+               max_size=20
+           )
+           
+           async with self.pool.acquire() as conn:
+               # Create vector extension if not exists
+               await conn.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+               
+               # Create embeddings table with proper vector column
+               await conn.execute("""
+                   CREATE TABLE IF NOT EXISTS document_embeddings (
+                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                       document_id TEXT NOT NULL,
+                       chunk_id TEXT NOT NULL UNIQUE,
+                       content TEXT NOT NULL,
+                       embedding vector(1536), -- Google text-embedding-004 dimensions
+                       metadata JSONB DEFAULT '{}',
+                       created_at TIMESTAMP DEFAULT NOW(),
+                       updated_at TIMESTAMP DEFAULT NOW()
+                   );
+               """)
+
+               # Create indexes for performance
+               await conn.execute("""
+                   CREATE INDEX IF NOT EXISTS idx_embeddings_vector 
+                   ON document_embeddings USING ivfflat (embedding vector_cosine_ops);
+               """)
+
+               await conn.execute("""
+                   CREATE INDEX IF NOT EXISTS idx_embeddings_document 
+                   ON document_embeddings (document_id);
+               """)
+
+               await conn.execute("""
+                   CREATE INDEX IF NOT EXISTS idx_embeddings_metadata 
+                   ON document_embeddings USING GIN (metadata);
+               """)
+
+       async def store_embeddings(
+           self, 
+           embeddings: List[Dict[str, Any]]
+       ) -> List[str]:
+           """Store multiple embeddings in batch"""
+           if not self.pool:
+               raise RuntimeError("Database not initialized")
+
+           chunk_ids = []
+           async with self.pool.acquire() as conn:
+               async with conn.transaction():
+                   for emb in embeddings:
+                       chunk_id = await conn.fetchval("""
+                           INSERT INTO document_embeddings 
+                           (document_id, chunk_id, content, embedding, metadata)
+                           VALUES ($1, $2, $3, $4, $5)
+                           ON CONFLICT (chunk_id) DO UPDATE SET
+                               content = EXCLUDED.content,
+                               embedding = EXCLUDED.embedding,
+                               metadata = EXCLUDED.metadata,
+                               updated_at = NOW()
+                           RETURNING chunk_id
+                       """, 
+                       emb['document_id'],
+                       emb['chunk_id'], 
+                       emb['content'],
+                       emb['embedding'],
+                       json.dumps(emb.get('metadata', {}))
+                       )
+                       chunk_ids.append(chunk_id)
+           
+           return chunk_ids
+
+       async def similarity_search(
+           self,
+           query_embedding: List[float],
+           limit: int = 10,
+           similarity_threshold: float = 0.7,
+           filters: Optional[Dict[str, Any]] = None
+       ) -> List[VectorSearchResult]:
+           """Perform similarity search using cosine similarity"""
+           if not self.pool:
+               raise RuntimeError("Database not initialized")
+
+           # Build filter conditions
+           filter_conditions = []
+           filter_params = [query_embedding, similarity_threshold, limit]
+           param_count = 3
+
+           if filters:
+               if 'document_ids' in filters:
+                   param_count += 1
+                   filter_conditions.append(f"document_id = ANY(${param_count})")
+                   filter_params.append(filters['document_ids'])
+
+               if 'metadata_filters' in filters:
+                   for key, value in filters['metadata_filters'].items():
+                       param_count += 1
+                       filter_conditions.append(f"metadata->>'{key}' = ${param_count}")
+                       filter_params.append(str(value))
+
+           where_clause = f"AND {' AND '.join(filter_conditions)}" if filter_conditions else ""
+
+           query = f"""
+               SELECT 
+                   chunk_id,
+                   content,
+                   1 - (embedding <=> $1) as similarity,
+                   metadata,
+                   document_id
+               FROM document_embeddings 
+               WHERE 1 - (embedding <=> $1) > $2
+               {where_clause}
+               ORDER BY embedding <=> $1
+               LIMIT $3
+           """
+
+           async with self.pool.acquire() as conn:
+               rows = await conn.fetch(query, *filter_params)
+
+           results = []
+           for row in rows:
+               results.append(VectorSearchResult(
+                   chunk_id=row['chunk_id'],
+                   content=row['content'],
+                   similarity=float(row['similarity']),
+                   metadata=row['metadata'] or {},
+                   document_id=row['document_id']
+               ))
+
+           return results
+
+       async def hybrid_search(
+           self,
+           query_embedding: List[float],
+           query_text: str,
+           limit: int = 10,
+           vector_weight: float = 0.7,
+           text_weight: float = 0.3
+       ) -> List[VectorSearchResult]:
+           """Combine vector similarity with text search"""
+           if not self.pool:
+               raise RuntimeError("Database not initialized")
+
+           query = """
+               WITH vector_search AS (
+                   SELECT 
+                       chunk_id,
+                       content,
+                       1 - (embedding <=> $1) as vector_similarity,
+                       metadata,
+                       document_id
+                   FROM document_embeddings 
+                   WHERE 1 - (embedding <=> $1) > 0.5
+               ),
+               text_search AS (
+                   SELECT 
+                       chunk_id,
+                       content,
+                       ts_rank(to_tsvector('english', content), plainto_tsquery('english', $2)) as text_similarity,
+                       metadata,
+                       document_id
+                   FROM document_embeddings 
+                   WHERE to_tsvector('english', content) @@ plainto_tsquery('english', $2)
+               )
+               SELECT 
+                   COALESCE(v.chunk_id, t.chunk_id) as chunk_id,
+                   COALESCE(v.content, t.content) as content,
+                   COALESCE(v.metadata, t.metadata) as metadata,
+                   COALESCE(v.document_id, t.document_id) as document_id,
+                   (COALESCE(v.vector_similarity, 0) * $3 + COALESCE(t.text_similarity, 0) * $4) as combined_score
+               FROM vector_search v
+               FULL OUTER JOIN text_search t ON v.chunk_id = t.chunk_id
+               ORDER BY combined_score DESC
+               LIMIT $5
+           """
+
+           async with self.pool.acquire() as conn:
+               rows = await conn.fetch(query, query_embedding, query_text, vector_weight, text_weight, limit)
+
+           results = []
+           for row in rows:
+               results.append(VectorSearchResult(
+                   chunk_id=row['chunk_id'],
+                   content=row['content'],
+                   similarity=float(row['combined_score']),
+                   metadata=row['metadata'] or {},
+                   document_id=row['document_id']
+               ))
+
+           return results
+
+       async def delete_document_embeddings(self, document_id: str):
+           """Delete all embeddings for a document"""
+           if not self.pool:
+               raise RuntimeError("Database not initialized")
+
+           async with self.pool.acquire() as conn:
+               await conn.execute(
+                   "DELETE FROM document_embeddings WHERE document_id = $1",
+                   document_id
+               )
+
+   # Global instance
+   vectordb = None
+
+   async def initialize_vectordb():
+       global vectordb
+       from src.core.config import get_settings
+       settings = get_settings()
+       vectordb = PgVectorDB(settings.database_url)
+       await vectordb.initialize()
+
+   def get_vectordb() -> PgVectorDB:
+       global vectordb
+       if vectordb is None:
+           raise RuntimeError("VectorDB not initialized")
+       return vectordb
+   ```
+
+3. **Embedding Service**
+   ```python
+   # services/ai-compute/src/services/embedding_service.py
+   import asyncio
+   from typing import List, Dict, Any, Optional
+   import numpy as np
+   import time
+   from dataclasses import dataclass
+   import hashlib
+   import pickle
+
+   @dataclass
+   class EmbeddingRequest:
+       text: str
+       model: str = "text-embedding-004"
+       chunk_id: Optional[str] = None
+       metadata: Optional[Dict[str, Any]] = None
+
+   @dataclass 
+   class EmbeddingResponse:
+       embedding: List[float]
+       model: str
+       usage: Dict[str, int]
+       processing_time: float
+
+   class EmbeddingService:
+       def __init__(self):
+           self.ai_client = None  # Will be injected from @lostmind/ai-clients
+           self.cache = {}  # Redis cache will be implemented
+           self.batch_size = 100
+           self.rate_limit = 1000  # requests per minute
+
+       @classmethod
+       async def initialize(cls):
+           # Initialize AI client and cache connections
+           pass
+
+       async def embed_text(self, text: str, model: str = "text-embedding-004") -> EmbeddingResponse:
+           """Generate embedding for a single text"""
+           start_time = time.time()
+           
+           # Check cache first
+           cache_key = self.get_cache_key(text, model)
+           cached_result = await self.get_cached_embedding(cache_key)
+           if cached_result:
+               return cached_result
+
+           try:
+               # Use shared AI client from @lostmind/ai-clients
+               result = await self.ai_client.embed_text(text, model=model)
+               
+               embedding_response = EmbeddingResponse(
+                   embedding=result['embedding'],
+                   model=model,
+                   usage=result.get('usage', {}),
+                   processing_time=time.time() - start_time
+               )
+               
+               # Cache result
+               await self.cache_embedding(cache_key, embedding_response)
+               
+               return embedding_response
+               
+           except Exception as e:
+               raise RuntimeError(f"Embedding generation failed: {str(e)}")
+
+       async def embed_batch(self, requests: List[EmbeddingRequest]) -> List[EmbeddingResponse]:
+           """Generate embeddings for multiple texts in batch"""
+           if not requests:
+               return []
+
+           # Split into batches to respect rate limits
+           batches = [requests[i:i + self.batch_size] for i in range(0, len(requests), self.batch_size)]
+           all_responses = []
+
+           for batch in batches:
+               batch_responses = await self._process_batch(batch)
+               all_responses.extend(batch_responses)
+               
+               # Rate limiting delay between batches
+               if len(batches) > 1:
+                   await asyncio.sleep(1)
+
+           return all_responses
+
+       async def _process_batch(self, batch: List[EmbeddingRequest]) -> List[EmbeddingResponse]:
+           """Process a single batch of embedding requests"""
+           tasks = []
+           for request in batch:
+               task = self.embed_text(request.text, request.model)
+               tasks.append(task)
+
+           return await asyncio.gather(*tasks, return_exceptions=False)
+
+       async def embed_document_chunks(
+           self, 
+           document_id: str, 
+           chunks: List[Dict[str, Any]]
+       ) -> List[Dict[str, Any]]:
+           """Generate embeddings for document chunks and prepare for storage"""
+           embedding_requests = []
+           
+           for chunk in chunks:
+               embedding_requests.append(EmbeddingRequest(
+                   text=chunk['content'],
+                   chunk_id=chunk['chunk_id'],
+                   metadata=chunk.get('metadata', {})
+               ))
+
+           embedding_responses = await self.embed_batch(embedding_requests)
+           
+           # Prepare for database storage
+           storage_records = []
+           for i, (chunk, response) in enumerate(zip(chunks, embedding_responses)):
+               storage_records.append({
+                   'document_id': document_id,
+                   'chunk_id': chunk['chunk_id'],
+                   'content': chunk['content'],
+                   'embedding': response.embedding,
+                   'metadata': {
+                       **chunk.get('metadata', {}),
+                       'embedding_model': response.model,
+                       'processing_time': response.processing_time
+                   }
+               })
+
+           return storage_records
+
+       def get_cache_key(self, text: str, model: str) -> str:
+           """Generate cache key for text and model combination"""
+           content = f"{text}:{model}"
+           return hashlib.md5(content.encode()).hexdigest()
+
+       async def get_cached_embedding(self, cache_key: str) -> Optional[EmbeddingResponse]:
+           """Retrieve cached embedding result"""
+           # Redis implementation would go here
+           return self.cache.get(cache_key)
+
+       async def cache_embedding(self, cache_key: str, response: EmbeddingResponse):
+           """Cache embedding result"""
+           # Redis implementation would go here
+           self.cache[cache_key] = response
+
+   # Global service instance
+   embedding_service = EmbeddingService()
+
+   def get_embedding_service() -> EmbeddingService:
+       return embedding_service
+   ```
+
+## 🛠️ RAG-Specific CLI Tools
+
+### 1. **Vector Database Management**
+```bash
+# PostgreSQL with pgvector
+psql $DATABASE_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"
+psql $DATABASE_URL -c "SELECT * FROM document_embeddings LIMIT 5;"
+
+# Vector similarity testing
+psql $DATABASE_URL -c "
+SELECT chunk_id, content, 1 - (embedding <=> '[0.1,0.2,...]'::vector) as similarity 
+FROM document_embeddings 
+ORDER BY embedding <=> '[0.1,0.2,...]'::vector 
+LIMIT 10;"
+```
+
+### 2. **Embedding Performance Testing**
+```bash
+# Benchmark embedding generation
+curl -X POST "http://localhost:8001/api/v1/embeddings/embed" \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["test document content"], "model": "text-embedding-004"}'
+
+# Batch embedding testing
+curl -X POST "http://localhost:8001/api/v1/embeddings/batch" \
+  -H "Content-Type: application/json" \
+  -d '{"requests": [{"text": "document 1"}, {"text": "document 2"}]}'
+```
+
+### 3. **RAG Query Testing**
+```bash
+# Test RAG retrieval
+curl -X POST "http://localhost:8001/api/v1/rag/query" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What are the key benefits?", "max_results": 5}'
+
+# Hybrid search testing
+curl -X POST "http://localhost:8001/api/v1/search/hybrid" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "machine learning applications", "vector_weight": 0.7, "text_weight": 0.3}'
+```
+
+## 🎯 Integration with TurboRepo Applications
+
+### Ask App Integration
+```typescript
+// apps/ask/src/lib/rag-client.ts
+import { RAGQuery, RAGResponse } from '@lostmind/rag';
+
+export class AskAppRAGClient {
+  private baseUrl: string;
+
+  constructor(baseUrl: string = 'http://localhost:8001') {
+    this.baseUrl = baseUrl;
+  }
+
+  async queryDocuments(query: RAGQuery): Promise<RAGResponse> {
+    const response = await fetch(`${this.baseUrl}/api/v1/rag/query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(query),
+    });
+
+    if (!response.ok) {
+      throw new Error(`RAG query failed: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async uploadDocument(file: File, userId: string): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('user_id', userId);
+
+    const response = await fetch(`${this.baseUrl}/api/v1/rag/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Document upload failed: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.document_id;
+  }
+}
+```
+
+### Chatcrawler Integration
+```typescript
+// apps/chatcrawler/src/lib/rag-integration.ts
+export class ChatcrawlerRAGIntegration {
+  async processScrapedContent(
+    scrapedData: ScrapedWebsite[], 
+    userId: string
+  ): Promise<void> {
+    // Process scraped content through RAG system
+    for (const site of scrapedData) {
+      await this.createDocumentFromWebsite(site, userId);
+    }
+  }
+
+  private async createDocumentFromWebsite(
+    site: ScrapedWebsite, 
+    userId: string
+  ): Promise<string> {
+    const document = {
+      content: site.content,
+      metadata: {
+        title: site.title,
+        source: site.url,
+        type: 'html',
+        scrapedAt: site.scrapedAt,
+        tags: site.tags
+      },
+      userId
+    };
+
+    // Send to RAG service for processing
+    const response = await fetch('http://localhost:8001/api/v1/rag/documents', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(document)
+    });
+
+    const result = await response.json();
+    return result.document_id;
+  }
+}
+```
+
+## ✅ RAG Integration Checklist
+
+### Phase 1: Shared Package Development
+- [ ] Create @lostmind/rag package with TypeScript interfaces
+- [ ] Implement document chunking utilities
+- [ ] Create embedding and similarity calculation helpers
+- [ ] Build query interfaces and response models
+- [ ] Add comprehensive type definitions
+
+### Phase 2: AI Compute Service
+- [ ] Set up FastAPI service with async support
+- [ ] Implement pgvector database integration
+- [ ] Create embedding service with batch processing
+- [ ] Build RAG retrieval and generation pipelines
+- [ ] Add comprehensive error handling and logging
+
+### Phase 3: Database & Storage
+- [ ] Configure PostgreSQL with pgvector extension
+- [ ] Create optimized database schema for embeddings
+- [ ] Implement efficient similarity search queries
+- [ ] Set up database indexing for performance
+- [ ] Add data cleanup and maintenance procedures
+
+### Phase 4: Integration Testing
+- [ ] Test embedding generation for various document types
+- [ ] Validate similarity search accuracy and performance
+- [ ] Test RAG query-response pipeline end-to-end
+- [ ] Benchmark performance under load
+- [ ] Verify integration with all TurboRepo applications
+
+### Phase 5: Production Deployment
+- [ ] Deploy AI compute service to Google Cloud Run
+- [ ] Configure auto-scaling and resource limits
+- [ ] Set up monitoring and alerting
+- [ ] Implement caching strategies for performance
+- [ ] Configure backup and disaster recovery
+
+## 🎯 Success Metrics
+
+### Performance Targets
+- **Embedding Generation**: <200ms per document chunk
+- **Similarity Search**: <100ms for 10 results
+- **RAG Query Response**: <2s end-to-end
+- **Batch Processing**: 1000+ documents per hour
+- **Search Accuracy**: >85% relevant results in top 5
+
+### Scalability Targets
+- **Concurrent Users**: 100+ simultaneous queries
+- **Document Volume**: 1M+ documents per tenant
+- **Query Throughput**: 1000+ queries per minute
+- **Storage Efficiency**: <10MB per 1000 document chunks
+
+## 🤝 Integration Communication
+
+### When Ready for Integration
+1. **Package Functionality**: All RAG utilities working and tested
+2. **Service Performance**: AI compute service meeting performance targets
+3. **Database Integration**: pgvector setup and optimized for scale
+4. **App Integrations**: Successfully integrated with ask and chatcrawler apps
+5. **Production Deployment**: Service deployed and monitoring configured
+
+### Handoff Documentation Required
+- **API Documentation**: Complete OpenAPI specification
+- **Performance Benchmarks**: Load testing results and optimizations
+- **Database Schema**: pgvector setup and optimization details
+- **Integration Examples**: Code samples for each TurboRepo app
+- **Monitoring Setup**: Logging, metrics, and alerting configuration
+
+---
+
+**🎯 Your Mission**: Transform the RAG embeddings architecture into a scalable, production-ready system that serves as the intelligent foundation for document understanding and contextual AI responses across the entire LostMind AI platform.
+
+**📞 Ready Signal**: Create a comprehensive pull request with performance benchmarks, integration examples, and complete API documentation when the RAG system integration is complete and validated across all applications.

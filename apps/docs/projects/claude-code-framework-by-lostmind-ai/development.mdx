@@ -1,0 +1,144 @@
+---
+title: "Development Guide - Claude Code Framework by LOSTMIND AI"
+description: "AI-assisted development instructions and project guidelines"
+---
+
+<Info>
+This content was automatically extracted from Claude Code Framework by LOSTMIND AI.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md — User Directory (Sumit Mondal)
+
+Owner: Sumit Mondal
+Profile: https://www.lostmindai.com
+Primary AI Assistant: Comet / "LostMind AI Orb" (ask.lostmindai.com)
+
+## PURPOSE
+This file defines universal development, API verification, and context-preservation standards for all projects and subdirectories beneath this User profile. It ensures that all project work, from planning to implementation, follows best practice for trackable, validated, and future-proof AI/cloud/software development.
+
+## CRITICAL DEVELOPMENT PRINCIPLES
+- Plan Once, Scaffold Immediately, Verify Always
+- API training data is NOT to be trusted — always search and validate.
+- No implementation without verified, dated documentation.
+- Sustain project context using breadcrumbs, explicit timestamps, and persistent memory.
+- Use Australian English consistently in all documentation and code.
+
+## DIRECTORIES & INHERITANCE
+All directories underneath the User directory MUST follow these standards:
+- Each directory includes its own CLAUDE.md extending from this root.
+- CLAUDE.md at directory/project level MUST record:
+  - Purpose, parent/child context, API dependencies (with dated verification status)
+  - All planning decisions (with timing and API impact)
+  - File purposes and API usage
+  - Verification schedules, compliance, and next required checks
+  - ALL code and doc comments in Australian English
+
+## UNIVERSAL API VERIFICATION STANDARD
+NO advice, integration, or synthesis involving AI/ML/cloud APIs, SDKs, or frameworks may be actioned without a live, dated, multi-source verification.
+
+When to trigger a search:
+- Any: model/SDK/service/framework name, API endpoint, package install, breaking/preview/deprecation note, authentication method, pricing/limits, version, feature list, migration, region info.
+
+How to verify:
+1) Search: "[Service] API documentation latest [Month Year]"
+2) Search: "[Service] breaking changes [Year]"
+3) Cross-check official docs, GitHub, developer portals, and release logs from the last 6 months.
+4) Return only practices with a stated verification date and source citation: “as of [date] …”
+5) Log status into each file or directory with an API VERIFICATION block.
+
+If verification fails:
+1) State clearly: “Cannot verify current API status without search”
+2) Add disclaimer: “This may be outdated — please verify at [official source]”
+3) Request manual confirmation if critical
+4) Never fill gaps based on unverified knowledge
+
+Example verification block (paste into code/docs):
+
+API VERIFICATION BLOCK
+Service: [Service Name]
+Documentation: [URL]
+Last Verified: [Date]
+Current Version: [version]
+Status: [Stable/Preview/Deprecated/etc.]
+Breaking Changes: [Yes/No – Details]
+Next Verification: [Date + 30 days]
+text
+
+## PROJECT MANAGEMENT & CONTEXT
+- PROJECT_MAP.md required in each project root:
+  - Project summary, directory structure, API dependencies, planning history, active decisions, verification schedules
+- Every planning session MUST:
+  - Run ls -la; create/refresh directory tree with file purposes
+  - Check for README, PROJECT_CONTEXT.md, and CLAUDE.md presence
+  - Audit all API dependencies and log current status
+  - Update PROJECT_MAP.md and relevant directory/file comment blocks
+
+Tip: When running multiple features in parallel, use Git worktrees and separate Claude instances to isolate context and avoid cross-contamination (e.g., worktree per feature branch with its own CLAUDE session and hooks), and keep PROJECT_MAP.md updated per branch to reflect active decisions and verification status.
+
+## FILE & DIRECTORY REQUIREMENTS
+- Each code/doc file must declare purpose, context, dependencies, and verification status in the header.
+- Each directory must have a contextualised CLAUDE.md.
+- Skeleton files are created immediately after planning with context/todo/verification blocks.
+- All files:
+  - Know full path, purpose, creation/planning date, dependencies, dependents
+  - Include navigation comments (Prev/Next/Parent)
+- Track “TODO from planning” and “API verification pending” via comments and search
+- Test plans must describe API mocking strategy (see TEST_PLAN.md)
+
+## ENVIRONMENT & RESOURCE MANAGEMENT
+- Update environment variables (e.g., ~/.zshrc) on project switch:
+  - Use correct API keys, project IDs, service account file for current development context
+  - Current: coral-muse project (as of 05.09.2025)
+- Before deployments/data-cost tasks: confirm GOOGLE_CLOUD_PROJECT and GOOGLE_APPLICATION_CREDENTIALS match the intended project; do not proceed if mismatched.
+- Log all changes in project-level or global CHANGELOG.md, noting resource switchovers and API key updates
+
+## QUALITY CHECKLIST
+Before any release, ensure:
+- All planned files/directories are created with up-to-date skeletons
+- All APIs/SDKs used have been verified in the last 30 days (see verification block)
+- All directories have up-to-date CLAUDE.md with API status
+- PROJECT_MAP.md and CHANGELOG.md are current and log all changes
+- Navigation and context links (Prev/Next/Parent) exist for major files/modules
+- All TODOs reference planning and verification sessions with dates
+- Breaking changes are documented, and mitigation strategies set
+- Next verification is scheduled (calendar reminders)
+
+## COMMUNICATION & STYLE
+- Write all doc and code comments in clear, matter-of-fact language, using Australian English
+- State verification status with every API claim (“as of [date] …”)
+- Explain “why” for major design/architecture choices
+- Flag unverified information, deprecated features, or experimental/beta functions
+
+Code signature example:
+
+alright, using google-genai v1.0.12 as of 2025-09-13 (stable per docs; google-generativeai deprecates Nov 2025)
+text
+
+## SCHEDULE & REMINDERS
+- Set monthly reminders for API verification/audit across active project resources
+- Monitor releases, deprecation notices, and breaking changes
+- For parallel development, keep a simple register of active worktrees and their verification due dates
+
+## VERSION CONTROL & LIFECYCLE
+- Track API version and breaking change history in CHANGELOG.md (impact and mitigation)
+- Note expiry dates for preview/experimental features and monitor them
+- Use feature flags and compatibility matrices for cross-version support
+
+## EXTERNAL REFERENCES
+- AI_API_GUIDELINES.md (must be checked for every AI/cloud API development)
+- LostMind AI project and chat: www.lostmindai.com, ask.lostmindai.com
+- Share this file with collaborators to ensure consistent onboarding and standards
+
+## PERSONALISATION & GROWTH AREAS
+Sumit’s interests:
+- Verified AI/ML application development (Gemini, GPT, Claude)
+- Cloud-native & full-stack applications
+- Mobile SDKs
+- Enterprise patterns and microservices
+- MCP integrations
+
+### REMINDER
+Before giving any technical advice on APIs, SDKs, frameworks, or rapidly evolving tech: SEARCH, VERIFY, ANNOTATE, THEN IMPLEMENT.
+
+If a project needs a local variation, add a short “Deviations from global” section at the top of the project’s CLAUDE.md and record the justification and timeframe, then inherit the rest verbatim to avoid drift.

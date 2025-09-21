@@ -1,0 +1,280 @@
+---
+title: "Development Guide - Back End Architecture for Turborepo with RAG Embeddings"
+description: "AI-assisted development instructions and project guidelines"
+---
+
+<Info>
+This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a comprehensive backend intelligence architecture for LostMind AI, featuring RAG (Retrieval-Augmented Generation) capabilities with Google Generative AI embeddings, designed as a Python monorepo architecture. The system provides AI-powered services for document processing, Excel analysis, web scraping intelligence, and job discovery.
+
+## Architecture
+
+### Core Structure
+- **Monorepo Architecture**: Organized packages with shared dependencies using Python path manipulation
+- **Microservices Design**: Independent services communicating via FastAPI endpoints
+- **Modern AI Integration**: Google Generative AI SDK (google-genai>=0.3.0) with latest models
+- **Multi-Provider Vector Database**: Support for Pinecone, ChromaDB, and Weaviate
+
+### Key Components
+1. **API Gateway** (`apps/api-gateway/main.py`) - FastAPI application with authentication, rate limiting, and service orchestration
+2. **Core Services** (`packages/core-services/`) - Embedding generation, vector operations, document processing, and configuration
+3. **RAG Pipeline** (`packages/rag-pipeline/`) - Complete RAG implementation with conversation management
+4. **Intelligence Modules** (`packages/analysis-modules/`) - Specialized AI services for Excel, web scraping, job discovery, and news
+5. **Analysis Components** (`packages/analysis-components/`) - Utility analyzers for formulas, VBA, worksheets, and dashboards
+
+## Development Commands
+
+### Environment Setup
+```bash
+# Navigate to API Gateway and install dependencies
+cd apps/api-gateway
+pip install -r requirements.txt
+
+# IMPORTANT: Ensure using modern google-genai package (not legacy google-generativeai)
+pip install google-genai>=0.3.0
+
+# Required environment variables
+export GOOGLE_API_KEY=your_google_api_key
+export GEMINI_API_KEY=your_google_api_key  # Alternative env var for genai.Client()
+export VECTOR_DB_PROVIDER=pinecone  # or chromadb, weaviate
+export VECTOR_DB_API_KEY=your_vector_db_key
+export VECTOR_DB_ENVIRONMENT=us-east-1-aws
+export VECTOR_DB_INDEX=lostmind-embeddings
+```
+
+### Running Services
+```bash
+# Start the main API Gateway (includes all services)
+cd apps/api-gateway
+python main.py
+
+# Run specific analysis tools
+cd tools/analysis-runners
+python run_simple_analysis.py
+python run_advanced_analysis.py  
+python run_formula_intelligence.py
+python run_relationship_analysis.py
+python standalone_excel_analyzer.py
+```
+
+### Testing and Validation
+```bash
+# Validate configuration
+cd packages/core-services
+python config.py
+
+# Health check all services
+curl http://localhost:8000/health
+
+# Check specific service health
+curl http://localhost:8000/health/rag
+curl http://localhost:8000/health/embedding
+```
+
+## Technical Implementation
+
+### Python Monorepo Import Structure
+The project uses path manipulation for cross-package imports:
+```python
+# From apps/api-gateway/main.py
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+from packages.rag_pipeline.rag_service import get_rag_service
+from packages.core_services.embedding_service import get_embedding_service
+```
+
+### AI/ML Integration
+- **Google GenAI SDK**: Version 0.3.0+ using modern `google-genai` package (not legacy `google-generativeai`)
+- **Import Pattern**: `from google import genai` and `from google.genai import types`
+- **Primary Models**: 
+  - Embeddings: `text-embedding-004` (768 dimensions)
+  - Generation: `gemini-2.5-flash`, `gemini-2.0-flash-exp`, `gemini-2.0-pro-exp`
+- **RAG Pipeline**: Advanced retrieval with streaming responses and conversation history
+- **Rate Limiting**: Configured per-service limits (30/min RAG, 50/min embeddings, 10/min ingestion)
+
+### Service Communication
+- **Synchronous**: REST APIs via FastAPI with Pydantic validation
+- **Authentication**: JWT Bearer tokens (demo implementation in place)
+- **Background Tasks**: FastAPI BackgroundTasks for usage logging
+- **Health Monitoring**: Comprehensive health checks with service status aggregation
+
+### Async Service Architecture
+Services are initialized asynchronously in the API Gateway lifespan:
+```python
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize all services
+    services['rag'] = await get_rag_service()
+    services['embedding'] = await get_embedding_service()
+    # ... other services
+    yield
+    # Cleanup services with .cleanup() methods
+```
+
+## Key Service Files
+
+### API Gateway (`apps/api-gateway/`)
+- `main.py` - FastAPI application with all endpoints and middleware
+- `requirements.txt` - Python dependencies including google-genai, fastapi, uvicorn
+
+### Core Services (`packages/core-services/`)
+- `embedding_service.py` - Google Generative AI embedding generation with caching
+- `vector_db_service.py` - Multi-provider vector database operations (Pinecone/ChromaDB/Weaviate)
+- `document_processing_service.py` - PDF, DOCX, Excel document parsing and chunking
+- `config.py` - Dataclass-based configuration management with validation
+
+### RAG Pipeline (`packages/rag-pipeline/`)
+- `rag_service.py` - Complete RAG implementation with conversation management and streaming
+
+### Intelligence Modules (`packages/analysis-modules/`)
+- `excel_intelligence_service.py` - Excel file analysis with formula and VBA intelligence
+- `web_scraping_intelligence_service.py` - AI-powered web scraping and content analysis
+- `job_discovery_intelligence_service.py` - Job matching with career recommendations
+- `news_extraction_system_v2.py` - News article extraction and sentiment analysis
+
+### Analysis Components (`packages/analysis-components/`)
+- `formula_analyzer.py` - Excel formula complexity and dependency analysis
+- `vba_analyzer.py` - VBA code analysis with security assessment
+- `worksheet_mapper.py` - Excel worksheet structure and relationship mapping
+- `dashboard_analyzer.py` - Business intelligence dashboard analysis
+
+## Configuration Management
+
+### Environment Variables
+```bash
+# AI Configuration
+GOOGLE_API_KEY=your_google_api_key
+EMBEDDING_MODEL=text-embedding-004
+GEMINI_MODEL=gemini-2.0-flash-exp
+GEMINI_PRO_MODEL=gemini-2.0-pro-exp
+
+# Vector Database
+VECTOR_DB_PROVIDER=pinecone
+VECTOR_DB_API_KEY=your_api_key
+VECTOR_DB_ENVIRONMENT=us-east-1-aws
+VECTOR_DB_INDEX=lostmind-embeddings
+VECTOR_DB_DIMENSION=768
+
+# API Gateway
+API_HOST=0.0.0.0
+API_PORT=8000
+SECRET_KEY=your-secret-key-change-in-production
+
+# Optional Services
+REDIS_HOST=localhost
+REDIS_PORT=6379
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=lostmind_ai
+```
+
+### Configuration Classes
+All services use dataclass-based configuration from `packages/core-services/config.py`:
+- `AIConfig` - Google GenAI SDK models and parameters (using modern `google-genai` package)
+- `VectorDBConfig` - Multi-provider vector database settings
+- `AppConfig` - API Gateway and authentication settings
+- `Config` - Main configuration aggregator with validation
+
+**⚠️ IMPORTANT**: The codebase currently uses legacy `google.generativeai` imports. Migration to the modern `google-genai` SDK is required:
+- Replace `import google.generativeai as genai` with `from google import genai`
+- Replace `from google.generativeai import types` with `from google.genai import types`
+- Update client initialization to use `genai.Client()` instead of configuration pattern
+
+## API Endpoints
+
+### Core API Structure
+- **Health**: `/health` - Overall system health, `/health/{service}` - Individual service health
+- **RAG Service**: `/api/v1/rag/*` - Query processing, document ingestion, conversation management
+- **Excel Intelligence**: `/api/v1/excel/*` - Excel file analysis and insights
+- **Web Scraping**: `/api/v1/scraping/*` - Intelligent web content extraction and search
+- **Job Discovery**: `/api/v1/jobs/*` - Job matching and career recommendations  
+- **Embeddings**: `/api/v1/embeddings/*` - Text embedding generation and similarity calculation
+- **Vector Database**: `/api/v1/vectordb/*` - Vector search and database statistics
+
+### Rate Limiting (per minute)
+- RAG queries: 30/min
+- Document ingestion: 10/min 
+- Excel analysis: 5/min
+- Web scraping: 3/min
+- Job discovery: 5/min
+- Embeddings: 50/min
+- General endpoints: 100/min
+
+## Monorepo Integration
+
+### Current Structure Status
+```
+✅ ORGANIZED: Files structured in monorepo packages
+⚠️  PENDING: Individual package.json files for each package
+⚠️  PENDING: turbo.json configuration for build pipelines  
+⚠️  PENDING: Dependency management optimization
+```
+
+### For Turborepo Integration
+1. **Create turbo.json** in root with workspace configuration
+2. **Add package.json** files to each package directory
+3. **Update import statements** to use proper workspace references
+4. **Configure build and dev scripts** for each service
+5. **Set up shared dependencies** in workspace root
+
+### Current Import Pattern (Transitional)
+The codebase uses path manipulation for imports, suitable for conversion to proper workspace dependencies:
+```python
+# Current pattern in main.py
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from packages.core_services.config import get_config
+
+# Target Turborepo pattern (future)
+from @lostmind/core-services import get_config
+```
+
+## Performance and Scaling
+
+### Async Architecture
+- All services implement async/await patterns
+- Background task processing for non-blocking operations  
+- Connection pooling for database operations
+- Intelligent caching for embeddings and responses
+
+### Monitoring
+- Service health checks with dependency validation
+- Request/response logging with timing
+- Usage analytics with background task logging
+- Performance metrics collection for vector operations
+
+## Security Implementation
+
+- **Authentication**: JWT Bearer tokens with configurable expiration
+- **Rate Limiting**: SlowAPI with per-endpoint limits  
+- **Input Validation**: Pydantic models for all request/response data
+- **Error Handling**: Comprehensive exception handling with structured responses
+- **CORS**: Configurable CORS middleware (currently permissive for development)
+
+## Development Tips
+
+### Service Development Pattern
+1. Services are factory functions returning configured instances
+2. All services support health check methods
+3. Cleanup methods are called during app shutdown
+4. Configuration is injected via the global config instance
+
+### Adding New Services
+1. Create service module in appropriate package directory
+2. Implement async factory function (e.g., `async def get_new_service()`)
+3. Add health check and cleanup methods
+4. Register in API Gateway lifespan manager
+5. Add endpoints with appropriate rate limiting
+
+### Testing Individual Services
+Each service can be tested independently by importing and calling factory functions with proper configuration.

@@ -1,0 +1,709 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# 🌟 LostMind AI Marketing Website Integration Guide
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🔧 All Guides](../README.md#integration-guides)** | **[⚡ CLI Tools](CLI_DEVELOPMENT_TOOLKIT.md)**
+
+**SOURCE PROJECT**: `/Users/sumitm1/Documents/New Ongoing Projects/LostMindAI.com/lostmindai-website`
+
+**TARGET LOCATION**: `apps/marketing/` within LostMind AI TurboRepo
+
+## 🎯 Mission Overview
+
+You are tasked with migrating the **LostMind AI Marketing Website** into the TurboRepo monorepo structure as the primary marketing application. This will serve as the main landing page for lostmindai.com, showcasing all platform capabilities while maintaining high performance, SEO optimization, and conversion-focused design.
+
+## 🏆 Integration Objectives
+
+### Primary Goals
+1. **Migrate** marketing website to `apps/marketing/` in TurboRepo
+2. **Optimize** for SEO, performance, and conversion tracking
+3. **Integrate** with shared UI components and configuration packages
+4. **Showcase** all platform apps (ask, chatcrawler, justdropit, admin)
+5. **Implement** marketing-specific features (analytics, lead generation, content management)
+
+### Success Criteria
+- ✅ Marketing site runs successfully at root domain (lostmindai.com)
+- ✅ Achieves 90+ Lighthouse performance score
+- ✅ Uses shared @lostmind/* packages for consistency
+- ✅ Integrates comprehensive analytics and conversion tracking
+- ✅ Supports marketing campaigns and A/B testing
+- ✅ Optimized for search engine visibility
+
+## 🏗️ Target Architecture Integration
+
+### Current TurboRepo Marketing Context
+```
+apps/marketing/           # ← YOUR DESTINATION
+├── src/
+│   ├── app/             # Next.js App Router pages
+│   │   ├── page.tsx     # Homepage
+│   │   ├── pricing/     # Pricing pages
+│   │   ├── features/    # Feature showcases
+│   │   ├── blog/        # Content marketing
+│   │   └── legal/       # Terms, Privacy, etc.
+│   ├── components/      # Marketing-specific components
+│   │   ├── hero/        # Hero sections
+│   │   ├── pricing/     # Pricing components
+│   │   ├── testimonials/# Social proof
+│   │   └── cta/         # Call-to-action components
+│   └── lib/             # Marketing utilities
+│       ├── analytics.ts # Tracking implementation
+│       ├── seo.ts      # SEO utilities
+│       └── ab-testing.ts# A/B testing logic
+├── public/              # Static assets
+├── content/             # MDX content for blog
+└── package.json
+```
+
+### Marketing-Specific Tech Stack
+- **Framework**: Next.js 15 (App Router) with React Server Components
+- **Styling**: Tailwind CSS + shadcn/ui components from `@lostmind/ui`
+- **Content**: MDX for blog posts and dynamic content
+- **Analytics**: Google Analytics 4, PostHog, Vercel Analytics
+- **SEO**: Next.js metadata API, structured data, sitemap generation
+- **A/B Testing**: PostHog or similar for conversion optimization
+- **Performance**: Image optimization, font optimization, Core Web Vitals
+
+## 🔄 Step-by-Step Migration Process
+
+### Phase 1: Project Analysis & Preparation
+
+1. **Create Integration Branch**
+   ```bash
+   cd /Users/sumitm1/Documents/New\ Ongoing\ Projects/LostMindAI.com/lostmindai-website
+   git checkout -b integration/turbo-repo-marketing
+   ```
+
+2. **Analyze Current Marketing Site**
+   - **Content Audit**: Document all pages, sections, and content types
+   - **Component Inventory**: List all React components and their purposes
+   - **Asset Analysis**: Catalog images, videos, fonts, and static assets
+   - **SEO Analysis**: Document current meta tags, structured data, sitemaps
+   - **Analytics Review**: Identify current tracking implementations
+   - **Performance Baseline**: Run Lighthouse audit on current site
+
+3. **Dependencies & Features Documentation**
+   ```typescript
+   // Document current marketing features
+   interface MarketingSiteFeatures {
+     landingPages: string[];        // Hero, features, pricing, etc.
+     contentMarketing: {
+       blog: boolean;
+       caseStudies: boolean;
+       documentation: boolean;
+     };
+     leadGeneration: {
+       newsletters: boolean;
+       contactForms: boolean;
+       demoRequests: boolean;
+     };
+     analytics: {
+       googleAnalytics: boolean;
+       heatmaps: boolean;
+       abTesting: boolean;
+     };
+     seo: {
+       structuredData: boolean;
+       sitemap: boolean;
+       robotsTxt: boolean;
+     };
+   }
+   ```
+
+### Phase 2: TurboRepo Structure Setup
+
+1. **Package.json Configuration**
+   ```json
+   {
+     "name": "@lostmind/marketing",
+     "version": "0.0.0",
+     "private": true,
+     "scripts": {
+       "dev": "next dev --port 3000",
+       "build": "next build",
+       "start": "next start",
+       "lint": "next lint",
+       "type-check": "tsc --noEmit",
+       "analyze": "ANALYZE=true next build"
+     },
+     "dependencies": {
+       "@lostmind/ui": "workspace:*",
+       "@lostmind/auth": "workspace:*",
+       "@lostmind/db": "workspace:*",
+       "@lostmind/utils": "workspace:*",
+       "next": "15.0.0",
+       "react": "^19.0.0",
+       "react-dom": "^19.0.0",
+       "@next/mdx": "^15.0.0",
+       "@mdx-js/loader": "^3.0.0",
+       "@mdx-js/react": "^3.0.0",
+       "@vercel/analytics": "^1.1.0",
+       "posthog-js": "^1.88.0",
+       "next-sitemap": "^4.2.0",
+       "sharp": "^0.32.0"
+     },
+     "devDependencies": {
+       "@next/bundle-analyzer": "^15.0.0"
+     }
+   }
+   ```
+
+2. **Next.js Configuration for Marketing**
+   ```javascript
+   // apps/marketing/next.config.js
+   const withMDX = require('@next/mdx')();
+   const withBundleAnalyzer = require('@next/bundle-analyzer')({
+     enabled: process.env.ANALYZE === 'true',
+   });
+
+   /** @type {import('next').NextConfig} */
+   const nextConfig = {
+     transpilePackages: [
+       '@lostmind/ui',
+       '@lostmind/auth',
+       '@lostmind/db',
+       '@lostmind/utils'
+     ],
+     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+     images: {
+       formats: ['image/avif', 'image/webp'],
+       domains: ['images.unsplash.com', 'cdn.lostmindai.com']
+     },
+     experimental: {
+       mdxRs: true,
+       optimizePackageImports: ['@lostmind/ui']
+     },
+     async generateBuildId() {
+       return 'marketing-' + Date.now()
+     }
+   };
+
+   module.exports = withBundleAnalyzer(withMDX(nextConfig));
+   ```
+
+### Phase 3: Marketing-Specific Implementation
+
+1. **SEO & Metadata Integration**
+   ```typescript
+   // apps/marketing/src/lib/seo.ts
+   import type { Metadata } from 'next';
+
+   interface SEOConfig {
+     title: string;
+     description: string;
+     keywords?: string[];
+     ogImage?: string;
+     structuredData?: object;
+   }
+
+   export function generateMarketingMetadata(config: SEOConfig): Metadata {
+     return {
+       title: {
+         default: 'LostMind AI - AI-Powered Document Intelligence Platform',
+         template: '%s | LostMind AI'
+       },
+       description: config.description,
+       keywords: config.keywords,
+       authors: [{ name: 'LostMind AI Team' }],
+       creator: 'LostMind AI',
+       publisher: 'LostMind AI',
+       openGraph: {
+         type: 'website',
+         locale: 'en_US',
+         url: 'https://lostmindai.com',
+         title: config.title,
+         description: config.description,
+         siteName: 'LostMind AI',
+         images: [
+           {
+             url: config.ogImage || '/og-image.png',
+             width: 1200,
+             height: 630,
+             alt: config.title
+           }
+         ]
+       },
+       twitter: {
+         card: 'summary_large_image',
+         title: config.title,
+         description: config.description,
+         images: [config.ogImage || '/og-image.png'],
+         creator: '@lostmindai'
+       },
+       robots: {
+         index: true,
+         follow: true,
+         googleBot: {
+           index: true,
+           follow: true,
+           'max-video-preview': -1,
+           'max-image-preview': 'large',
+           'max-snippet': -1
+         }
+       }
+     };
+   }
+   ```
+
+2. **Analytics & Tracking Implementation**
+   ```typescript
+   // apps/marketing/src/lib/analytics.ts
+   import { Analytics } from '@vercel/analytics/react';
+   import posthog from 'posthog-js';
+
+   export class MarketingAnalytics {
+     private static instance: MarketingAnalytics;
+     
+     static getInstance() {
+       if (!this.instance) {
+         this.instance = new MarketingAnalytics();
+       }
+       return this.instance;
+     }
+
+     initialize() {
+       // PostHog initialization
+       if (typeof window !== 'undefined') {
+         posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+           api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+           loaded: (posthog) => {
+             if (process.env.NODE_ENV === 'development') posthog.debug();
+           }
+         });
+       }
+     }
+
+     trackConversion(event: string, properties?: Record<string, any>) {
+       posthog.capture(event, properties);
+       
+       // Google Analytics 4
+       if (typeof gtag !== 'undefined') {
+         gtag('event', event, properties);
+       }
+     }
+
+     trackPageView(url: string) {
+       posthog.capture('$pageview', { url });
+     }
+   }
+   ```
+
+3. **Marketing Components Integration**
+   ```typescript
+   // apps/marketing/src/components/hero/hero-section.tsx
+   import { Button } from '@lostmind/ui';
+   import { ArrowRight, Sparkles } from 'lucide-react';
+   import { MarketingAnalytics } from '@/lib/analytics';
+
+   export function HeroSection() {
+     const analytics = MarketingAnalytics.getInstance();
+
+     const handleCTAClick = () => {
+       analytics.trackConversion('cta_clicked', {
+         location: 'hero',
+         cta_text: 'Start Free Trial'
+       });
+     };
+
+     return (
+       <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white py-20">
+         <div className="container mx-auto px-4">
+           <div className="text-center">
+             <div className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm text-blue-700 mb-8">
+               <Sparkles className="mr-2 h-4 w-4" />
+               New: AI-Powered Document Processing
+             </div>
+             
+             <h1 className="text-5xl font-bold text-gray-900 mb-6">
+               Transform Documents with
+               <span className="text-blue-600"> AI Intelligence</span>
+             </h1>
+             
+             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+               Upload, analyze, and extract insights from any document using 
+               cutting-edge AI. From PDFs to images, we make information accessible.
+             </p>
+
+             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+               <Button size="lg" onClick={handleCTAClick}>
+                 Start Free Trial
+                 <ArrowRight className="ml-2 h-4 w-4" />
+               </Button>
+               
+               <Button variant="outline" size="lg">
+                 Watch Demo
+               </Button>
+             </div>
+           </div>
+         </div>
+       </section>
+     );
+   }
+   ```
+
+### Phase 4: Content Management & Blog
+
+1. **MDX Blog Setup**
+   ```typescript
+   // apps/marketing/src/lib/content.ts
+   import fs from 'fs';
+   import path from 'path';
+   import matter from 'gray-matter';
+
+   export interface BlogPost {
+     slug: string;
+     title: string;
+     description: string;
+     publishedAt: string;
+     author: string;
+     tags: string[];
+     content: string;
+   }
+
+   export async function getBlogPosts(): Promise<BlogPost[]> {
+     const postsDirectory = path.join(process.cwd(), 'content/blog');
+     const filenames = fs.readdirSync(postsDirectory);
+
+     const posts = filenames
+       .filter(name => name.endsWith('.mdx'))
+       .map((name) => {
+         const fullPath = path.join(postsDirectory, name);
+         const fileContents = fs.readFileSync(fullPath, 'utf8');
+         const { data, content } = matter(fileContents);
+
+         return {
+           slug: name.replace(/\.mdx$/, ''),
+           title: data.title,
+           description: data.description,
+           publishedAt: data.publishedAt,
+           author: data.author,
+           tags: data.tags || [],
+           content
+         };
+       })
+       .sort((a, b) => 
+         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+       );
+
+     return posts;
+   }
+   ```
+
+2. **Dynamic Pricing Component**
+   ```typescript
+   // apps/marketing/src/components/pricing/pricing-section.tsx
+   import { Button, Card } from '@lostmind/ui';
+   import { Check, X } from 'lucide-react';
+
+   interface PricingTier {
+     name: string;
+     price: number;
+     description: string;
+     features: { name: string; included: boolean }[];
+     popular?: boolean;
+     ctaText: string;
+   }
+
+   export function PricingSection() {
+     const tiers: PricingTier[] = [
+       {
+         name: 'Starter',
+         price: 0,
+         description: 'Perfect for individuals getting started',
+         features: [
+           { name: '10 document uploads/month', included: true },
+           { name: 'Basic AI analysis', included: true },
+           { name: 'Email support', included: true },
+           { name: 'Advanced AI models', included: false },
+           { name: 'API access', included: false }
+         ],
+         ctaText: 'Start Free'
+       },
+       {
+         name: 'Professional',
+         price: 29,
+         description: 'For growing businesses and teams',
+         features: [
+           { name: 'Unlimited document uploads', included: true },
+           { name: 'Advanced AI analysis', included: true },
+           { name: 'Priority support', included: true },
+           { name: 'API access', included: true },
+           { name: 'Custom integrations', included: true }
+         ],
+         popular: true,
+         ctaText: 'Start Trial'
+       }
+     ];
+
+     return (
+       <section className="py-20 bg-gray-50">
+         <div className="container mx-auto px-4">
+           <div className="text-center mb-12">
+             <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
+             <p className="text-gray-600">Start free, upgrade when you need more power</p>
+           </div>
+
+           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+             {tiers.map((tier) => (
+               <Card key={tier.name} className={`relative p-8 ${tier.popular ? 'ring-2 ring-blue-500' : ''}`}>
+                 {tier.popular && (
+                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                     <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm">
+                       Most Popular
+                     </span>
+                   </div>
+                 )}
+                 
+                 <div className="text-center mb-8">
+                   <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+                   <div className="mb-4">
+                     <span className="text-4xl font-bold">${tier.price}</span>
+                     <span className="text-gray-600">/month</span>
+                   </div>
+                   <p className="text-gray-600">{tier.description}</p>
+                 </div>
+
+                 <ul className="space-y-3 mb-8">
+                   {tier.features.map((feature) => (
+                     <li key={feature.name} className="flex items-center">
+                       {feature.included ? (
+                         <Check className="h-5 w-5 text-green-500 mr-3" />
+                       ) : (
+                         <X className="h-5 w-5 text-gray-400 mr-3" />
+                       )}
+                       <span className={feature.included ? 'text-gray-900' : 'text-gray-500'}>
+                         {feature.name}
+                       </span>
+                     </li>
+                   ))}
+                 </ul>
+
+                 <Button className="w-full" variant={tier.popular ? 'default' : 'outline'}>
+                   {tier.ctaText}
+                 </Button>
+               </Card>
+             ))}
+           </div>
+         </div>
+       </section>
+     );
+   }
+   ```
+
+## 🛠️ Marketing-Specific CLI Tools
+
+### 1. **SEO & Performance Tools**
+```bash
+# SEO Analysis
+npm install -g lighthouse
+lighthouse https://lostmindai.com --view --preset=desktop
+lighthouse https://lostmindai.com --view --preset=mobile
+
+# Sitemap generation
+npm install -g next-sitemap
+npx next-sitemap --config next-sitemap.config.js
+
+# Schema markup validation
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://lostmindai.com"}' \
+  "https://validator.schema.org/validate"
+```
+
+### 2. **Content Management**
+```bash
+# MDX content creation
+mkdir -p content/blog
+touch content/blog/introducing-lostmind-ai.mdx
+
+# Image optimization
+npm install -g @vercel/ncc imagemin-cli
+imagemin public/images/*.png --out-dir=public/images/optimized --plugin=imagemin-optipng
+```
+
+### 3. **Marketing Analytics**
+```bash
+# Google Analytics setup
+npm install -g @google-analytics/data
+ga-data --property-id=GA_PROPERTY_ID --start-date=7daysAgo --end-date=today
+
+# Performance monitoring
+npm install -g clinic
+clinic doctor -- node server.js
+clinic flame -- node server.js
+```
+
+## 📊 Performance & Conversion Optimization
+
+### Core Web Vitals Optimization
+```typescript
+// apps/marketing/src/components/web-vitals.tsx
+'use client';
+
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { MarketingAnalytics } from '@/lib/analytics';
+
+export function WebVitals() {
+  const analytics = MarketingAnalytics.getInstance();
+
+  React.useEffect(() => {
+    getCLS(metric => analytics.trackConversion('web_vital', { name: 'CLS', value: metric.value }));
+    getFID(metric => analytics.trackConversion('web_vital', { name: 'FID', value: metric.value }));
+    getFCP(metric => analytics.trackConversion('web_vital', { name: 'FCP', value: metric.value }));
+    getLCP(metric => analytics.trackConversion('web_vital', { name: 'LCP', value: metric.value }));
+    getTTFB(metric => analytics.trackConversion('web_vital', { name: 'TTFB', value: metric.value }));
+  }, []);
+
+  return null;
+}
+```
+
+### A/B Testing Implementation
+```typescript
+// apps/marketing/src/lib/ab-testing.ts
+import posthog from 'posthog-js';
+
+export function useABTest(testName: string, variants: string[]) {
+  const [variant, setVariant] = React.useState<string>('control');
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const testVariant = posthog.getFeatureFlag(testName) as string;
+      if (variants.includes(testVariant)) {
+        setVariant(testVariant);
+      }
+    }
+  }, [testName, variants]);
+
+  return variant;
+}
+```
+
+## 🚀 Environment & Deployment Configuration
+
+### Environment Variables
+```bash
+# Marketing-specific environment variables
+NEXT_PUBLIC_SITE_URL="https://lostmindai.com"
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID="G-XXXXXXXXXX"
+NEXT_PUBLIC_POSTHOG_KEY="phc_xxxxxxxxxxxxxx"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Content Management
+CONTENTFUL_ACCESS_TOKEN="xxxx" # If using Contentful
+CONTENTFUL_SPACE_ID="xxxx"
+
+# Email Marketing
+MAILCHIMP_API_KEY="xxxx"
+CONVERTKIT_API_KEY="xxxx"
+```
+
+### Vercel Deployment Configuration
+```json
+{
+  "version": 2,
+  "buildCommand": "cd ../.. && pnpm build --filter=marketing",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "https://lostmindai.com"
+  },
+  "functions": {
+    "app/api/newsletter/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## ✅ Marketing Migration Checklist
+
+### Pre-Migration
+- [ ] Document all current marketing pages and content
+- [ ] Analyze current SEO performance and keywords
+- [ ] Export analytics data and conversion funnels
+- [ ] Backup current site and database
+- [ ] Identify all marketing integrations (email, CRM, ads)
+
+### Migration Execution
+- [ ] Set up marketing app structure in TurboRepo
+- [ ] Configure Next.js for marketing optimization
+- [ ] Migrate all pages and components
+- [ ] Implement shared UI components from @lostmind/ui
+- [ ] Set up MDX blog and content management
+- [ ] Configure SEO metadata and structured data
+- [ ] Implement analytics and conversion tracking
+- [ ] Set up A/B testing infrastructure
+
+### Post-Migration Validation
+- [ ] Achieve 90+ Lighthouse performance score
+- [ ] Verify all conversion tracking is working
+- [ ] Test all marketing funnels and CTAs
+- [ ] Validate SEO meta tags and structured data
+- [ ] Check mobile responsiveness and accessibility
+- [ ] Test email signup and lead generation forms
+- [ ] Verify social media integration and sharing
+
+### Production Deployment
+- [ ] Configure custom domain (lostmindai.com)
+- [ ] Set up SSL certificates and security headers
+- [ ] Configure CDN and image optimization
+- [ ] Test all integrations in production environment
+- [ ] Set up monitoring and alerting
+- [ ] Create documentation for content updates
+
+## 🎯 Success Metrics
+
+### Performance Targets
+- **Lighthouse Performance**: 90+
+- **First Contentful Paint**: <1.5s
+- **Largest Contentful Paint**: <2.5s
+- **Cumulative Layout Shift**: <0.1
+- **Time to Interactive**: <3.0s
+
+### Conversion Targets
+- **Email Signup Rate**: 5%+ of visitors
+- **Trial Conversion Rate**: 2%+ of visitors
+- **Page Load Speed**: <2s average
+- **Bounce Rate**: <40% on landing pages
+
+## 🤝 Integration Communication
+
+### When Ready for Integration
+1. **Complete Migration Testing**: Ensure all features work in isolation
+2. **Performance Optimization**: Meet all Lighthouse and Core Web Vitals targets
+3. **Content Migration**: All marketing content and assets transferred
+4. **Analytics Setup**: All tracking and conversion goals configured
+5. **Create Pull Request**: Document all changes and optimizations
+
+### Handoff Documentation Required
+- **Performance Report**: Lighthouse scores and optimization details
+- **SEO Analysis**: Meta tags, structured data, sitemap configuration
+- **Analytics Setup**: Tracking implementation and conversion goals
+- **Content Inventory**: All pages, blog posts, and marketing materials
+- **Integration Status**: Any issues or dependencies
+
+---
+
+**🎯 Your Mission**: Transform the standalone marketing website into a high-performance, conversion-optimized marketing app within the TurboRepo while maintaining brand consistency and improving user experience across all touchpoints.
+
+**📞 Ready Signal**: Create a comprehensive pull request with performance metrics, SEO audit results, and full documentation when the marketing integration is complete and tested.

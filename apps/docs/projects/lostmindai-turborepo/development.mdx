@@ -1,0 +1,1098 @@
+---
+title: "Development Guide - LostMindAI-TurboRepo"
+description: "AI-assisted development instructions and project guidelines"
+---
+
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## 🔍 Code Analysis Context (IMPORTANT)
+
+This documentation reflects **STATIC CODE ANALYSIS ONLY** from comprehensive code audit.
+
+- Code structure and implementation have been examined
+- **No runtime verification has been performed**
+- Functionality claims are based on code existence, not execution testing
+- All "implementations" refer to code presence, not verified working features
+- **Runtime testing required** to verify actual functionality
+
+Evidence Source: `analysis/findings/09_final_report.md` - Comprehensive 9-Phase Code Reality Audit
+
+## 🎯 Assessment & Verification Protocol (CRITICAL)
+
+**ALWAYS verify code first** - Never trust documentation without examining actual source files.
+
+### Evidence-Based Requirements (MANDATORY)
+
+- **All technical claims MUST include file paths and line numbers** as evidence
+- **Cross-reference multiple sources** - Check documentation AND code before making assessments
+- **When misleading information found**: ~~Cross it out~~ and update with correct info to prevent future confusion
+- **Create accountability measures** - Document assessment errors for transparency
+
+### Misinformation Correction Protocol
+
+When you discover incorrect claims in documentation:
+
+1. **Strike through** the misleading information: ~~"incorrect claim here"~~
+2. **Add correct information** with evidence: ✅ **Correct status with file reference**
+3. **Provide evidence** - Include specific file paths and line numbers
+4. **Create audit trail** - Document the correction for future reference
+
+### Verification Checklist Before Making Claims
+
+- [ ] **Code examined** - Actual source files read and analyzed
+- [ ] **Multiple sources checked** - Documentation and implementation cross-referenced
+- [ ] **Evidence provided** - File paths and line numbers included
+- [ ] **Claims backed by facts** - No assumptions or documentation-only assertions
+
+##YOU are currently working on tasks which can be found here if you need to remember where you were unto and what is next yet to complete : '/Users/sumitm1/Documents/New Ongoing Projects/LostMindAI-TurboRepo/docs/tasks/TaskID - JustDropIt-mvp-001.md'
+
+- Use sequentialthinking mcp tool and think-mcp-server mcp tool as much as as you can
+
+---
+
+> **Canonical reference:** Always consult `docs/project/CURRENT_PROJECT_STATE.md` for the real-time repository state, implemented features, and active priorities. Treat that document as authoritative; update it before adjusting this guide.
+
+## 🛡️ SECURITY CODE REVIEW FINDINGS
+
+**Based on comprehensive code analysis (Grade A security assessment):**
+
+The codebase implements **ENTERPRISE-GRADE SECURITY** features:
+
+✅ **Service-to-Service Authentication**: Google IAM OIDC implemented in ai-compute service
+✅ **Secrets Management**: Google Secret Manager integration configured
+✅ **Endpoint Protection**: All API routes require authentication via Auth.js v5
+✅ **Distributed Rate Limiting**: Redis-based rate limiting implemented
+✅ **Multi-tenant Isolation**: Database-level Row Level Security (RLS) policies
+✅ **Comprehensive Audit Logging**: All user actions tracked
+
+**HOWEVER: Cannot verify these actually work without runtime testing**
+
+### Security Verification Required:
+
+- [ ] Authentication actually blocks unauthorized access in running system
+- [ ] JWT tokens are properly validated during requests
+- [ ] Rate limiting enforces limits correctly under load
+- [ ] Multi-tenant isolation prevents data leakage in practice
+- [ ] All security policies function as intended during operation
+- [ ] Google IAM OIDC tokens work for service-to-service calls
+
+Evidence: `analysis/findings/09_final_report.md` - Security Assessment Grade A
+
+## 🛡️ ENHANCED SAFETY RULES (CRITICAL - ALWAYS FOLLOW)
+
+### Security-First Rules (NON-NEGOTIABLE)
+
+1. **NEVER** implement features without proper authentication and authorization
+2. **NEVER** use hardcoded secrets, API keys, or credentials anywhere
+3. **NEVER** create public API endpoints without explicit security review
+4. **ALWAYS** use Google IAM OIDC for service-to-service authentication
+5. **ALWAYS** implement comprehensive audit logging for user actions
+6. **ALWAYS** use Redis/database-backed rate limiting (never in-memory)
+
+### Evidence-Based Assessment Rules (CRITICAL)
+
+7. **NEVER** bypass ESLint validation with --no-verify flag - Always fix issues properly
+8. **ALWAYS** verify code first - Never trust documentation without examining source files
+9. **ALWAYS** provide file paths and line numbers for all technical claims
+10. **ALWAYS** cross out misleading information: ~~incorrect info~~ → ✅ correct info with evidence
+11. **ALWAYS** seek external research help (Perplexity) when stuck on persistent issues
+12. **ALWAYS** update implementation status in CLAUDE.md when features complete
+
+### Original Safety Rules (MAINTAINED)
+
+13. **ALWAYS** create git commits before major changes using `pnpm run checkpoint`
+14. **NEVER** modify production database without explicit user confirmation
+15. **ALWAYS** test locally with `pnpm run dev` before any deployment
+16. **ALWAYS** explain complex changes in simple, non-technical terms
+17. **ALWAYS** use `pnpm run safety` before starting work
+18. **NEVER** delete multiple files without user confirmation
+19. **ALWAYS** work in small, reversible increments with frequent commits
+
+## ✅ SECURITY-ENHANCED VALIDATION CHECKLIST
+
+Before marking any task complete, verify:
+
+### Security Checks (PRIORITY)
+
+- [ ] **Authentication**: All endpoints require proper authentication
+- [ ] **Secrets**: No hardcoded secrets or API keys in code
+- [ ] **Audit Logging**: All user actions are properly logged
+- [ ] **Rate Limiting**: Distributed rate limiting implemented
+- [ ] **Input Validation**: All inputs validated with schemas
+- [ ] **Error Handling**: No sensitive info leaked in errors
+
+### Standard Checks (MAINTAINED)
+
+- [ ] Code runs without errors (`pnpm run dev` works)
+- [ ] Tests pass if they exist (`pnpm run test`)
+- [ ] Git commit created (`pnpm run checkpoint`)
+- [ ] TypeScript has no errors (`pnpm run type-check`)
+- [ ] ESLint passes (`pnpm run lint`)
+
+### Evidence-Based Assessment Checks (CRITICAL)
+
+- [ ] **Evidence provided**: All technical claims include file paths and line numbers
+- [ ] **Code verified**: Claims backed by actual source code examination
+- [ ] **Multiple sources checked**: Documentation and code cross-referenced
+- [ ] **Status updated**: CLAUDE.md reflects current implementation state
+- [ ] **Misinformation corrected**: Any incorrect claims crossed out and updated
+- [ ] **External research used**: Perplexity consulted for persistent technical issues
+
+## Project Overview - Security-Enhanced
+
+LostMind AI is a **security-first** AI-powered SaaS platform built for investors, advisors, and strategic partnerships. We're implementing **enterprise-grade security** as a competitive advantage, including:
+
+- **Private Documentation Hub** for controlled strategic information sharing
+- **Role-based access control** with granular permissions (Advisor, Investor, Enterprise, Beta Partner)
+- **Comprehensive audit trails** for all user actions and access patterns
+- **SOC2/GDPR compliance** features for regulatory requirements
+
+## Core Tech Stack - Security Hardened
+
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript 5.4 (strict mode)
+- **Backend**: FastAPI (Python) with **OIDC authentication** and security middleware
+- **Database**: PostgreSQL with **Prisma ORM + Row Level Security (RLS)**
+- **Authentication**: **Auth.js v5** with enhanced security controls
+- **Security**: **Google Secret Manager**, **comprehensive audit logging**
+- **Rate Limiting**: **Redis-based distributed** rate limiting
+- **AI**: Google Generative AI (Gemini) with **usage monitoring**
+- **Deployment**: Vercel (Next.js), **Google Cloud Run** (FastAPI)
+
+## 📊 Status Management & Progress Tracking (CRITICAL)
+
+**Keep project memory aligned with reality** - Update implementation status as development progresses.
+
+### Progress Tracking Responsibilities (MANDATORY)
+
+- **Update CLAUDE.md status** when features are completed or milestones reached
+- **Sync documentation** - Ensure README, PROJECT_STATE, and CLAUDE.md reflect current reality
+- **Track implementation gaps** - Know exactly what's built vs what's planned
+- **Monitor scope changes** - Understand how far we are from project completion
+
+### Scope Change Detection Protocol
+
+**ASK USER WHEN**:
+
+- Requests might expand beyond original MVP scope
+- New features are suggested that weren't in initial plan
+- Implementation complexity suggests scope creep
+- Timeline expectations might be shifting
+
+**Questions to Ask**:
+
+- "Is this expanding our original MVP scope?"
+- "Should we add this to the current phase or plan for later?"
+- "Does this change our core objectives?"
+- "Are we staying focused on the essential features?"
+
+### Status Update Requirements
+
+Before marking any major task complete:
+
+- [ ] **Update implementation status** in relevant documentation
+- [ ] **Cross out outdated claims** and replace with verified reality
+- [ ] **Sync all status references** across README, CLAUDE.md, PROJECT_STATE
+- [ ] **Document what changed** and why
+
+### Keep User Grounded Strategy
+
+- **Prevent distraction** from core objectives
+- **Highlight scope expansion** when it occurs
+- **Remind of original goals** when suggesting alternatives
+- **Ask for confirmation** before pursuing tangential improvements
+
+## 🚦 Security-Enhanced Commands
+
+### Security Commands (RUN FIRST)
+
+```bash
+# CRITICAL: Always run before starting work
+pnpm run security:verify        # Verify security configuration
+pnpm run security:scan          # Scan for vulnerabilities
+pnpm run security:test          # Run security test suite
+
+# Development with security monitoring
+pnpm run dev:secure             # Start with security monitoring
+pnpm run checkpoint:secure      # Secure checkpoint with audit
+```
+
+### Enhanced Safety Commands (MAINTAINED)
+
+```bash
+pnpm run safety                 # Run all safety checks before work
+pnpm run checkpoint             # Create a git checkpoint (safe rollback point)
+pnpm run validate               # Validate code quality before deployment
+pnpm run rollback               # Undo last commit (emergency recovery)
+pnpm run emergency-reset        # Full reset if things are badly broken
+pnpm run safe-start             # Safety check + start development
+pnpm run pre-deploy             # Full validation before deployment
+```
+
+### Secret Management Commands (NEW)
+
+```bash
+pnpm run secrets:validate       # Validate secret configuration
+pnpm run secrets:scan           # Scan for hardcoded secrets
+pnpm run secrets:rotate         # Rotate secrets (90-day schedule)
+```
+
+## Essential Development Commands (MAINTAINED)
+
+### Quick Start
+
+```bash
+pnpm install                    # Install dependencies
+task bootstrap                  # Full monorepo initialization
+cp .env.example .env.local      # Configure environment
+pnpm run security:verify        # CRITICAL: Verify security first
+pnpm run db:push               # Push database schema
+pnpm run dev                   # Start all apps
+```
+
+### Development Commands
+
+```bash
+# Running applications
+task dev                        # Start all apps (or: pnpm run dev)
+task dev:marketing              # Marketing site only
+task dev:ask                   # Ask app only
+task dev:private-docs          # Private documentation hub (NEW)
+pnpm run dev --filter=marketing # Alternative: specific app
+
+# Code quality
+task lint                       # Run ESLint
+task lint:fix                  # Fix lint issues
+task format                    # Format with Prettier
+task type-check                # TypeScript validation
+
+# Testing
+task test                      # Run all tests
+task test:watch                # Watch mode
+task test:coverage             # With coverage report
+task test:security             # Security test suite (NEW)
+
+# Building
+task build                     # Build all apps and packages
+task build:secure              # Build with security optimizations (NEW)
+task clean                     # Clean build artifacts
+```
+
+### Database Commands (SECURITY-ENHANCED)
+
+```bash
+# Development
+task db:push                   # Push schema changes (dev)
+task db:migrate:secure         # Secure migrations with validation (NEW)
+task db:seed                   # Seed sample data
+task db:seed:secure            # Seed with security-compliant data (NEW)
+task db:studio                 # Open Prisma Studio
+task db:reset                  # Reset database
+task db:audit:check            # Verify audit logging (NEW)
+
+# Production
+task db:migrate                # Create and apply migrations
+pnpm run db:generate           # Generate Prisma client
+```
+
+### Deployment Commands (SECURITY-ENHANCED)
+
+```bash
+task deploy:preview            # Deploy to preview environment
+task deploy:prod               # Deploy to production
+task deploy:secure             # Deploy with security validation (NEW)
+task deploy:rollback           # Rollback deployment
+```
+
+## 🏗️ Enhanced Project Structure (planned expansion — confirm against CURRENT_PROJECT_STATE.md before acting)
+
+```
+apps/
+  marketing/              # lostmindai.com - Public website
+  ask/                   # ask.lostmindai.com - AI query interface
+  private-docs/          # 🆕 Strategic documentation hub (role-based access)
+  chatcrawler/           # Web crawling chat application
+  justdropit/            # Document processing interface
+  admin/                 # Internal admin dashboard
+
+packages/
+  ui/                    # Shared shadcn/ui components
+  config/                # ESLint, TypeScript, Tailwind configs
+  auth/                  # 🔒 Enhanced Auth.js v5 with OIDC and MFA
+  db/                    # 🔒 Prisma schema + client with RLS + audit logging
+  security/              # 🆕 Security utilities and middleware
+  billing/               # Stripe integration package
+  ai-clients/            # Google Generative AI abstraction
+  rag/                   # RAG utilities with pgvector
+  utils/                 # Shared utilities
+
+services/
+  document-processor/    # FastAPI - PDF, OCR processing
+  crawler-engine/        # FastAPI - Web scraping engine
+  ai-compute/            # 🔒 FastAPI - ML operations with OIDC auth
+  security-monitor/      # 🆕 Security monitoring service
+
+docs/
+  security/              # 🆕 Security documentation
+    security-best-practices.md
+    security-architecture.md
+    incident-response.md
+    compliance-checklist.md
+```
+
+## 🔒 CRITICAL SECURITY PATTERNS
+
+### Authentication Pattern (MANDATORY FOR ALL API ROUTES)
+
+```typescript
+// app/api/[resource]/route.ts - EVERY API route must follow this pattern
+import { auth } from "@lostmind/auth"
+import { auditLog } from "@lostmind/security"
+
+export async function POST(request: Request) {
+  // 1. ALWAYS verify authentication first
+  const session = await auth()
+  if (!session?.user) {
+    await auditLog({
+      action: "UNAUTHORIZED_ACCESS_ATTEMPT",
+      resource: "api_endpoint",
+      ipAddress: request.headers.get("x-forwarded-for"),
+      riskLevel: "HIGH",
+    })
+    return new Response("Unauthorized", { status: 401 })
+  }
+
+  // 2. ALWAYS check permissions
+  if (!hasPermission(session.user, "resource:write")) {
+    await auditLog({
+      userId: session.user.id,
+      action: "PERMISSION_DENIED",
+      resource: "api_endpoint",
+      riskLevel: "MEDIUM",
+    })
+    return new Response("Forbidden", { status: 403 })
+  }
+
+  // 3. ALWAYS validate input
+  const validatedData = validateInput(await request.json())
+
+  // 4. ALWAYS log the action
+  await auditLog({
+    userId: session.user.id,
+    action: "RESOURCE_ACCESSED",
+    resource: "api_endpoint",
+    riskLevel: "LOW",
+  })
+
+  // 5. Include tenant isolation (RLS)
+  const data = await prisma.resource.findMany({
+    where: { tenantId: session.user.tenantId },
+  })
+
+  return Response.json(data)
+}
+```
+
+### Service-to-Service Authentication (MANDATORY)
+
+```typescript
+// For calling FastAPI services from Next.js - NEVER use shared secrets
+import { ServiceAuthenticator } from "@lostmind/security"
+
+const auth = new ServiceAuthenticator()
+const response = await auth.callService("https://ai-compute-service-url", {
+  data: "secure request",
+})
+// This uses Google IAM OIDC tokens automatically
+```
+
+### AI Provider Pattern (ENHANCED WITH MONITORING)
+
+```typescript
+// Always use abstraction layer with usage monitoring
+import { createAIClient } from "@lostmind/ai-clients"
+
+const provider = createAIClient("google")
+const response = await provider.generateText(prompt, {
+  userId: session.user.id,
+  auditLog: true, // Automatically logs AI usage
+  rateLimit: true, // Applies user-specific rate limiting
+})
+```
+
+## Environment Configuration - Security-First
+
+### Development Environment
+
+```bash
+# Database (PostgreSQL with RLS enabled)
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
+
+# Authentication (Auth.js v5 with enhanced security)
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="[generate with: openssl rand -base64 32]"
+GOOGLE_CLIENT_ID="[oauth-client-id]"
+GOOGLE_CLIENT_SECRET="[oauth-secret]"
+
+# AI Services (MUST use coral-muse project)
+GOOGLE_GENERATIVE_AI_API_KEY="[coral-muse-gemini-key]"
+GEMINI_API_KEY="[coral-muse-gemini-key]"
+GCP_PROJECT_ID="coral-muse-469919-m0"
+PROJECT_ID="coral-muse-469919-m0"
+
+# Security Configuration (NEW)
+SECURITY_MODE="development"
+AUDIT_LOG_LEVEL="MEDIUM"
+RATE_LIMIT_ENABLED=true
+
+# Redis for Distributed Rate Limiting (REQUIRED)
+UPSTASH_REDIS_REST_URL="[redis-url]"
+UPSTASH_REDIS_REST_TOKEN="[redis-token]"
+
+# Stripe Billing
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+```
+
+### Production Environment (SECRET MANAGER)
+
+```bash
+# CRITICAL: Production MUST use Google Secret Manager
+DATABASE_URL="secret://projects/PROJECT_ID/secrets/database-url/versions/latest"
+NEXTAUTH_SECRET="secret://projects/PROJECT_ID/secrets/nextauth-secret/versions/latest"
+GOOGLE_CLIENT_SECRET="secret://projects/PROJECT_ID/secrets/google-client-secret/versions/latest"
+
+# Security Configuration
+SECURITY_MODE="production"
+AUDIT_LOG_LEVEL="HIGH"
+GDPR_COMPLIANCE_ENABLED=true
+SOC2_AUDIT_MODE=true
+```
+
+## 🎯 PRIVATE DOCUMENTATION HUB - KEY FEATURE
+
+### Access Control Tiers (SECURITY-MANAGED)
+
+- **ADVISOR**: Full technical and strategic access (comprehensive audit)
+- **INVESTOR**: Business strategy and financials (compliance tracked)
+- **ENTERPRISE**: Technical documentation (usage monitored)
+- **BETA_PARTNER**: Product updates (engagement tracked)
+
+### Private Docs Security Pattern
+
+```typescript
+// Role-based content access with automatic audit trails
+import { SecurePrivateDocsDB } from "@lostmind/db"
+
+const secureDB = new SecurePrivateDocsDB(prisma)
+await secureDB.setUserContext(userId, ipAddress)
+
+const hasAccess = await secureDB.checkContentAccess(
+  userId,
+  ContentSection.FINANCIALS,
+  "read",
+  ipAddress
+)
+
+if (!hasAccess) {
+  // Automatically logged as security event
+  return redirect("/unauthorized")
+}
+```
+
+## Key Development Principles (SECURITY-ENHANCED)
+
+### Security Requirements (HIGHEST PRIORITY)
+
+- **Zero hardcoded secrets** in any environment
+- **Comprehensive audit logging** for all user actions
+- **Google IAM OIDC authentication** for all service-to-service calls
+- **Row Level Security (RLS)** on all tenant tables
+- **Distributed rate limiting** with Redis (never in-memory)
+- **Input validation** with proper schemas for all endpoints
+
+### Code Style Requirements (MAINTAINED)
+
+- TypeScript strict mode enabled for all packages
+- ESLint configuration from @lostmind/config
+- Prettier formatting (automatically applied on save)
+- No console.log in production code
+- Comprehensive error handling with proper logging
+
+### Performance Guidelines (MAINTAINED)
+
+- Dynamic imports for heavy components
+- Proper database indexing on tenant_id columns
+- Use Prisma select to limit data transfer
+- Implement caching where appropriate
+- Bundle size monitoring in CI/CD
+
+### Testing Requirements (ENHANCED)
+
+- **Security tests** for all authentication flows (PRIORITY)
+- Unit tests for business logic (Vitest)
+- Integration tests for API routes
+- E2E tests for critical user flows (Playwright)
+- **Penetration testing** before major releases
+- Minimum 80% code coverage target
+
+## Working with Packages (SECURITY-ENHANCED)
+
+### Using Enhanced Security Package
+
+```typescript
+import { auditLog, hasPermission, validateInput } from "@lostmind/security"
+import { SecurePrivateDocsDB } from "@lostmind/db"
+```
+
+### Database Operations (SECURITY-MANDATORY)
+
+```typescript
+import { SecurePrivateDocsDB } from "@lostmind/db"
+
+const secureDB = new SecurePrivateDocsDB(prisma)
+await secureDB.setUserContext(userId, ipAddress)
+
+// All operations automatically include audit logging
+const result = await secureDB.getUserAccess(userId, ipAddress)
+```
+
+### Authentication (ENHANCED)
+
+```typescript
+import { auth } from "@lostmind/auth"
+
+const session = await auth()
+if (!session) throw new Error("Unauthorized")
+
+// Enhanced with role checking
+if (!hasPermission(session.user, "admin:access")) {
+  throw new Error("Insufficient permissions")
+}
+```
+
+## TypeScript Configuration & Common Issues (CRITICAL FOR MONOREPO)
+
+### TypeScript Inheritance Patterns (MANDATORY)
+
+**ALWAYS** follow these rules when working with TypeScript configurations:
+
+```typescript
+// ✅ CORRECT: Inherit from base config, only override what you need
+{
+  "extends": "@lostmind/config/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true
+    // ❌ NEVER redefine "lib" - it causes duplicate entry errors
+    // ❌ NEVER redefine "target" unless absolutely necessary
+  }
+}
+
+// ❌ INCORRECT: This will cause validation errors
+{
+  "extends": "@lostmind/config/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "dom"], // DUPLICATE with base config!
+    "target": "ES2022"        // UNNECESSARY override
+  }
+}
+```
+
+### Common TypeScript Issues to Watch For
+
+**Duplicate Library Entries Error:**
+
+```
+'compilerOptions/lib' must NOT have duplicate items
+```
+
+- **Cause**: Package `tsconfig.json` defines `"lib"` when base config already has it
+- **Fix**: Remove `"lib"` from package configs, let them inherit from base
+- **Prevention**: Base config should define all common libraries
+
+**Target Mismatches:**
+
+- **Base Config**: `"target": "ES2022"`
+- **Package Config**: Only override if package needs different target
+- **Rule**: Keep target consistent across monorepo unless package requires different JS version
+
+### File Organization Standards (MANDATORY)
+
+**Task Files:**
+
+```
+✅ CORRECT locations:
+apps/ask/tasks01.md              # Tasks for ask app
+packages/ui/tasks01.md           # Tasks for UI package
+services/ai-compute/tasks01.md   # Tasks for AI compute service
+docs/tasks01.md                  # Tasks for documentation
+
+❌ INCORRECT locations:
+tasks02.md                       # Main directory (WRONG!)
+/tasks01.md                      # Root level (WRONG!)
+task-list.md                     # Generic naming (WRONG!)
+```
+
+**Test Files:**
+
+```
+✅ CORRECT structure:
+packages/ui/src/components/Button.test.tsx
+packages/ui/src/components/__tests__/Button.test.tsx
+apps/ask/src/app/api/__tests__/route.test.ts
+
+❌ INCORRECT locations:
+packages/ui/tests/Button.test.tsx    # Wrong directory structure
+apps/ask/test/route.test.ts          # Wrong naming convention
+```
+
+**Documentation Files:**
+
+```
+✅ CORRECT:
+packages/ui/README.md              # Package documentation
+apps/ask/docs/                     # App-specific docs
+docs/guides/                       # General guides
+docs/architecture/                 # Architecture docs
+
+❌ INCORRECT:
+UI_README.md                       # Wrong naming convention
+documentation/                     # Generic naming
+```
+
+## 🛠️ Development Patterns & Common Issues
+
+### TypeScript Monorepo Best Practices
+
+**Configuration Inheritance:**
+
+- Base config (`packages/config/tsconfig.json`) defines shared settings
+- Package configs extend base and only override package-specific needs
+- Never redefine `lib`, `target`, or `moduleResolution` unless absolutely necessary
+- Use paths for monorepo package references
+
+**Common Pitfalls to Avoid:**
+
+- ❌ Defining `"lib"` in package configs when base already defines it
+- ❌ Creating files in wrong directories (especially task files in root)
+- ❌ Using inconsistent naming conventions across packages
+- ❌ Adding dependencies without checking existing package usage
+- ❌ Modifying shared configs without understanding inheritance impact
+
+### Development Workflow Standards
+
+**Before Starting Work:**
+
+1. Check for existing task files in relevant directories
+2. Run `pnpm run safety` to verify environment
+3. Understand current project structure and patterns
+4. Check for similar implementations in other packages/apps
+
+**During Development:**
+
+1. Follow established naming conventions
+2. Use existing utilities and patterns when possible
+3. Keep changes focused and minimal
+4. Test frequently with `pnpm run dev`
+
+**Before Committing:**
+
+1. Run `pnpm run lint` and `pnpm run type-check`
+2. Ensure no new TypeScript configuration issues
+3. Verify files are in correct locations
+4. Create appropriate task files for future work
+
+## 🎯 CODE IMPLEMENTATION STATUS (From Static Analysis)
+
+### Security Implementation Status (Enterprise-Grade Found)
+
+**Code Analysis Results**: All security features EXIST in codebase
+
+✅ **Google IAM OIDC authentication**: Implemented in ai-compute service middleware
+✅ **Secrets Management**: Google Secret Manager integration configured
+✅ **API Endpoint Protection**: All routes require authentication via Auth.js v5
+✅ **Redis-based Rate Limiting**: Distributed rate limiting implemented
+
+**Architectural Quality**: Grade A- (Enterprise-Grade with Implementation Gaps)
+
+### Application Implementation Status
+
+✅ **Ask App**: Production-ready with 3D interface, auth, billing (Grade A)
+✅ **AI Compute Service**: Enterprise microservice with multi-tier authentication (Grade A+)
+✅ **Database**: Multi-tenant RLS with pgvector and audit logging (Grade A+)
+✅ **Infrastructure**: Enterprise GCP Terraform (630+ lines, Grade A+)
+
+### Critical Implementation Gaps Identified
+
+❌ **@lostmind/ai-clients Package**: Complete architecture, ZERO implementation
+⚠️ **Testing Coverage**: ~5% coverage despite sophisticated test infrastructure
+⚠️ **Package Integration**: Frontend bypasses ai-clients, calls services directly
+
+Evidence: `analysis/findings/09_final_report.md` - Comprehensive Assessment
+
+### Critical Architectural Disconnect: AI Clients Package
+
+**Expected**: Frontend → @lostmind/ai-clients → Backend Services
+**Reality**: Frontend → Direct API calls → ai-compute service
+
+The @lostmind/ai-clients package exists with complete architecture but ALL provider methods throw "not yet implemented" errors. Ask app bypasses this package entirely and makes direct HTTP calls to the ai-compute service.
+
+**Impact**:
+
+- Architectural inconsistency between planned and actual implementation
+- Missing abstraction layer for AI provider management
+- Direct coupling between frontend and backend services
+
+**Evidence**: `analysis/findings/05_packages_analysis.md` - AI Clients Package Assessment
+
+### PHASE 1: SECURE FOUNDATION (WEEK 1)
+
+1. **Database Security**: RLS policies, audit logging, secure API key management
+2. **Infrastructure Security**: Secret Manager integration, monitoring, compliance
+
+### PHASE 2: SECURE APPLICATION DEVELOPMENT (WEEK 2)
+
+1. **Enhanced Authentication**: MFA, advanced RBAC, security monitoring
+2. **Private Documentation Hub**: Role-based access with comprehensive audit trails
+
+### Target: **Security-First MVP Launch** (Week 3)
+
+## 📊 Success Metrics (SECURITY-FOCUSED)
+
+### Security Metrics (PRIMARY)
+
+- [ ] Zero critical security vulnerabilities
+- [ ] 100% API endpoint authentication coverage
+- [ ] Complete audit trail for all user actions
+- [ ] SOC2 Type I compliance preparation
+- [ ] Penetration testing passed
+
+### Business Metrics (SECONDARY)
+
+- [ ] Private documentation hub operational
+- [ ] Role-based access control working
+- [ ] Investor-ready security documentation
+- [ ] Professional stakeholder management
+
+## 🚨 CRITICAL REMINDERS FOR CLAUDE CODE
+
+### ALWAYS VERIFY FIRST
+
+1. **Security Status**: Check if Phase 0 security fixes are complete
+2. **Authentication**: Every endpoint needs proper auth
+3. **Secrets**: No hardcoded values anywhere
+4. **Audit Logging**: Log all user actions
+5. **Rate Limiting**: Use Redis, never in-memory
+
+### NEVER DO (SECURITY VIOLATIONS)
+
+- Skip authentication on API endpoints
+- Use hardcoded secrets or API keys
+- Implement in-memory rate limiting for production
+- Skip audit logging for user actions
+- Expose sensitive information in error messages
+
+### ASK BEFORE
+
+- Creating any public API endpoints
+- Modifying authentication or authorization logic
+- Changing database schema without RLS consideration
+- Implementing new third-party integrations
+
+### EVIDENCE-BASED VERIFICATION (MANDATORY)
+
+- **Verify before claiming** - Examine source code before making technical statements
+- **Update status actively** - Keep implementation status current in CLAUDE.md
+- **Ask about scope changes** - Detect when user requests might deviate from original plan
+- **Use external research** - Leverage Perplexity tool for persistent technical issues
+- **Cross out misinformation** - When found, ~~strike through~~ and update with evidence
+- **Provide file references** - All claims must include file paths and line numbers
+
+## 🎯 Session Best Practices (ENHANCED)
+
+1. **Start Every Session**:
+
+   ```bash
+   pnpm run security:verify  # First priority
+   pnpm run safety          # Second priority
+   pnpm run checkpoint      # Create rollback point
+   ```
+
+2. **Before Major Changes**: Explain security implications and get confirmation
+
+3. **After Each Feature**:
+
+   ```bash
+   pnpm run security:test   # Validate security
+   pnpm run checkpoint      # Create checkpoint
+   ```
+
+4. **When Stuck**: Stop and explain security concerns before proceeding
+
+5. **End of Session**: Update security documentation and create final checkpoint
+
+## 🤝 Delegation & Task Workflow (Agent‑Neutral)
+
+### Task File Lifecycle Management (CRITICAL)
+
+**TASK STATUS SYSTEM:**
+
+```markdown
+# 🟢 ACTIVE TASKS
+
+- Must have clear acceptance criteria
+- Should be worked on immediately
+- File remains until completion
+
+# ✅ COMPLETED TASKS
+
+- Must be deleted immediately after completion
+- Never keep completed tasks as "reference"
+- Completion verified by acceptance criteria
+
+# 🔄 BLOCKED/STALLED TASKS
+
+- Must include blocking reason and ETA
+- Review weekly for unblocking
+- Convert to new task or delete after 2 weeks
+```
+
+### Task Status Template (MANDATORY)
+
+**Every task file must include status tracking:**
+
+```markdown
+Status: 🟢 ACTIVE | ✅ COMPLETED | 🔄 BLOCKED
+Last Updated: YYYY-MM-DD
+Assigned: Claude/OpenAI/Devin
+
+# After completion, DELETE this file immediately
+```
+
+### Task File Locations (MANDATORY)
+
+**ALWAYS** create task files in the correct subdirectories:
+
+```bash
+# ✅ CORRECT: Task files in relevant directories
+apps/ask/tasks01.md              # Tasks for ask app
+apps/marketing/tasks01.md        # Tasks for marketing site
+packages/ui/tasks01.md           # Tasks for UI package
+packages/db/tasks02.md           # Tasks for database package
+services/ai-compute/tasks01.md   # Tasks for AI compute service
+docs/tasks01.md                  # Tasks for documentation
+
+# ❌ INCORRECT: These pollute the main directory
+/tasks01.md                      # NEVER in root
+tasks02.md                       # NEVER in root
+task-list.md                     # NEVER generic names
+```
+
+### Task File Standards (MANDATORY)
+
+Each task file must include:
+
+- **Title**: Clear, descriptive title
+- **Goal**: What success looks like
+- **Background**: Context and current state
+- **Tasks/Steps**: Numbered, actionable steps
+- **Acceptance Criteria**: How to verify completion
+- **Constraints**: Minimal diffs, no new dependencies unless required
+
+### Common Task Patterns
+
+**Package Development Tasks:**
+
+```markdown
+# packages/ui/tasks01.md
+
+Title: Add Dark Mode Toggle Component
+
+Goal: Create reusable dark mode toggle for all apps
+
+Background: Apps need consistent theming controls
+
+Tasks:
+
+1. Create Toggle component in packages/ui/src/components
+2. Add TypeScript types for theme states
+3. Export from packages/ui/src/index.ts
+4. Update documentation
+
+Acceptance Criteria:
+
+- Component renders in Storybook
+- TypeScript compilation passes
+- No breaking changes to existing exports
+```
+
+**App Feature Tasks:**
+
+```markdown
+# apps/ask/tasks01.md
+
+Title: Implement Chat Message Persistence
+
+Goal: Save chat history to database
+
+Background: Current chats are lost on refresh
+
+Tasks:
+
+1. Create API route for message storage
+2. Add database schema for messages
+3. Implement save/load logic in chat component
+4. Add error handling for offline scenarios
+```
+
+### Task Cleanup Process (MANDATORY)
+
+**IMMEDIATE CLEANUP REQUIRED:**
+
+```bash
+# After completing any task:
+1. Verify acceptance criteria met
+2. Delete the task file immediately
+3. Update project status documentation if needed
+4. Move to next task or create new task file
+```
+
+**Weekly Task Audit:**
+
+```bash
+# Run weekly to clean up stale tasks:
+pnpm run tasks:audit    # Shows all task files with status
+pnpm run tasks:cleanup  # Removes completed/blocked tasks
+```
+
+### Task Management Rules
+
+- **Single Responsibility**: One task file per feature/component
+- **Scoped Changes**: Keep modifications focused on target directory
+- **Test Coverage**: Include testing requirements where applicable
+- **Documentation**: Update relevant docs when completing tasks
+- **Immediate Cleanup**: Delete task file after completion - NO EXCEPTIONS
+- **Status Tracking**: Always include status in task files
+
+Notes:
+
+- Task numbering may change; agents should always follow the currently assigned task file in the target directory.
+- Keep diffs minimal and scoped to the task's intent; avoid repo‑wide formatting or refactors.
+- **NEVER keep completed task files** - they create confusion about project state.
+
+## 🔁 PR/CI Protocol & Lockfile Policy
+
+- Rebase first:
+  - git fetch origin && git pull --rebase origin main (on your feature branch)
+- Local validation loop:
+  - pnpm install
+  - pnpm -w lint
+  - pnpm -w type-check
+  - pnpm -w test
+  - pnpm -w build
+- Lockfile policy:
+  - CI runs with a frozen lockfile; if CI “Install dependencies” fails due to lockfile drift, run pnpm install locally to sync pnpm-lock.yaml and commit it.
+  - Never hand‑edit pnpm-lock.yaml. Always regenerate via pnpm install.
+  - Commit message pattern for lockfile sync: chore: sync lockfile for {package or scope}
+
+## 🌿 Branch & Commit Rules
+
+- Branch naming: devin/{timestamp}-{topic} (example: devin/1757807000-ci-lockfile-sync)
+- Conventional commits (feat, fix, chore, docs, refactor, test, perf).
+- Use pnpm run checkpoint before risky changes; keep commits small and reversible.
+
+## 🗣️ Track A Standards (Voice + Artifacts)
+
+- Voice (OpenAI Realtime primary, Grok fallback):
+  - Use provider abstraction; configure env keys (OPENAI_API_KEY, GROK_API_KEY) via Secret Manager or local .env only.
+  - Implement mic control UX, stream TTS audio, and avoid blocking UI threads.
+  - Do not log secrets; ensure auth guarding on any voice endpoints.
+- Artifacts/Links:
+  - Standardize message payloads to include artifacts array with URL provenance and titles.
+  - Render artifacts alongside chat without degrading the orb UI performance.
+  - Include source URL(s) for link accuracy; avoid hallucinated links.
+
+## 🧭 Planned vs Present Clarity
+
+- Some items in project structure are planned or aspirational unless scaffolded:
+  - apps/private-docs (strategic documentation hub)
+  - packages/security (security utilities/middleware)
+  - services/security-monitor (monitoring service)
+- Treat these as “planned” unless directories and minimal scaffolds exist in the repo.
+
+## ⚙️ React Version Consistency
+
+- Normalize references to React 19 Stable across docs. Avoid “RC” wording unless actively testing RCs.
+
+## 🔬 RUNTIME VERIFICATION REQUIRED
+
+The following cannot be confirmed without running the code:
+
+### Critical System Verification
+
+- [ ] Applications start successfully (`pnpm run dev`)
+- [ ] Authentication blocks unauthorized access in practice
+- [ ] Database connections and queries execute correctly
+- [ ] AI service generates responses to requests
+- [ ] Billing processes webhooks correctly
+- [ ] Rate limiting actually enforces limits under load
+- [ ] Multi-tenant isolation prevents data leakage
+- [ ] Infrastructure is deployed and accessible
+- [ ] All API endpoints respond correctly to requests
+- [ ] 3D orb interface loads and functions
+
+### Next Steps (Based on Code Analysis)
+
+#### Immediate Verification Needed:
+
+1. Run `pnpm run dev` and verify apps start without errors
+2. Test authentication flow manually in browser
+3. Verify database connections work
+4. Check if AI service responds to requests
+5. Test billing webhook processing
+
+#### Code Issues to Address:
+
+1. Implement @lostmind/ai-clients package or remove architectural references
+2. Add comprehensive test coverage (currently ~5%)
+3. Complete billing package implementation
+4. Document actual vs planned functionality
+
+#### Testing Priority:
+
+- **Critical**: Authentication, database, basic app startup
+- **Important**: AI service responses, billing webhooks
+- **Nice-to-have**: Performance, edge cases, full integration
+
+This documentation provides accurate context for development decisions based on static code analysis only.
+
+---
+
+## 📚 Documentation References
+
+- **Security**: `docs/security/` - All security documentation
+- **Architecture**: `docs/architecture/lostmind-master-plan.md`
+- **ADRs**: `docs/architecture/lostmind-adrs.md`
+- **Private Docs**: `docs/features/private-documentation-hub.md`
+- **Project Status**: `docs/project/CURRENT_PROJECT_STATE.md`
+
+---
+
+**🛡️ REMEMBER: Security is our competitive advantage. Every feature must be secure by design. When in doubt, choose the more secure option.**
+
+_Last Updated: September 16, 2025_
+_Security Review: Required every 30 days_
+_Next Security Audit: October 16, 2025_
+_TypeScript & Task Management Guidelines Added: September 16, 2025_
+_File Organization Standards Added: September 16, 2025_

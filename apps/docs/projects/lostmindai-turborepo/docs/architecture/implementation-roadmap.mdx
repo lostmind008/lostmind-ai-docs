@@ -1,0 +1,576 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Implementation Roadmap & Development Workflow
+
+> **[📚 Documentation Hub](../README.md)** | **[🏠 Main README](../../README.md)** | **[🎯 Master Plan](lostmind-master-plan.md)** | **[📋 ADRs](lostmind-adrs.md)**
+
+## Quick Start Commands
+
+```bash
+# Initial setup
+git clone https://github.com/lostmind008/LostMindAI-TurboRepo-ApprovedPlan.git
+cd LostMindAI-TurboRepo-ApprovedPlan
+pnpm install
+task bootstrap
+
+# Development
+task dev                    # Start all apps
+task dev:marketing         # Start specific app
+task dev:ask
+
+# Database
+task db:push              # Push schema (dev)
+task db:migrate           # Create migration (prod)
+task db:seed              # Seed sample data
+
+# Quality
+task lint                 # Run linting
+task format               # Format code
+task type-check           # TypeScript checking
+task test                 # Run tests
+
+# Deployment
+task build                # Build all
+task deploy:preview       # Deploy preview
+task deploy:prod          # Deploy production
+```
+
+## Week-by-Week Implementation Plan
+
+### Week 1: Foundation Setup ✅
+
+#### Day 1-2: Monorepo Initialization
+```bash
+# 1. Initialize monorepo structure
+mkdir -p apps packages services infra docs
+touch pnpm-workspace.yaml turbo.json Taskfile.yml
+
+# 2. Configure pnpm workspaces
+cat > pnpm-workspace.yaml << 'EOF'
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "services/*"
+EOF
+
+# 3. Setup Turborepo
+cat > turbo.json << 'EOF'
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {},
+    "type-check": {},
+    "test": {
+      "outputs": ["coverage/**"]
+    }
+  }
+}
+EOF
+```
+
+#### Day 3-4: Core Packages
+```bash
+# Create shared packages
+pnpm create @lostmind/ui --template shadcn
+pnpm create @lostmind/config
+pnpm create @lostmind/utils
+pnpm create @lostmind/db
+pnpm create @lostmind/auth
+```
+
+#### Day 5: Database Setup
+```typescript
+// packages/db/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tenant {
+  id    String @id @default(cuid())
+  name  String
+  plan  Plan   @default(FREE)
+  users User[]
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+```
+
+### Week 2: Authentication & Core UI
+
+#### Day 6-7: Auth Implementation
+```typescript
+// packages/auth/src/index.ts
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@lostmind/db"
+
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (token?.sub && session?.user) {
+        session.user.id = token.sub
+        session.user.tenantId = token.tenantId as string
+      }
+      return session
+    },
+  },
+})
+```
+
+#### Day 8-9: UI Components
+```typescript
+// packages/ui/src/components/button.tsx
+import { cn } from "@lostmind/utils"
+import { forwardRef } from "react"
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost"
+  size?: "default" | "sm" | "lg" | "icon"
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", ...props }, ref) => {
+    return (
+      <button
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+#### Day 10: CI/CD Setup
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run type-check
+      - run: pnpm run test
+      - run: pnpm run build
+```
+
+### Week 3-4: Core Applications
+
+#### Marketing Site (Next.js 15)
+```typescript
+// apps/marketing/app/page.tsx
+import { Button } from "@lostmind/ui"
+import Link from "next/link"
+
+export default function HomePage() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <h1 className="text-6xl font-bold">LostMind AI</h1>
+      <p className="mt-4 text-xl">AI-Powered Document Intelligence</p>
+      <div className="mt-8 flex gap-4">
+        <Button asChild>
+          <Link href="/signin">Get Started</Link>
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/docs">Documentation</Link>
+        </Button>
+      </div>
+    </main>
+  )
+}
+```
+
+#### Ask Application
+```typescript
+// apps/ask/app/api/query/route.ts
+import { auth } from "@lostmind/auth"
+import { prisma } from "@lostmind/db"
+import { generateAIResponse } from "@lostmind/ai-clients"
+
+export async function POST(req: Request) {
+  const session = await auth()
+  if (!session?.user) {
+    return new Response("Unauthorized", { status: 401 })
+  }
+
+  const { query } = await req.json()
+  
+  // Check rate limits
+  const usage = await prisma.usage.findFirst({
+    where: { userId: session.user.id }
+  })
+  
+  if (usage && usage.count >= usage.limit) {
+    return new Response("Rate limit exceeded", { status: 429 })
+  }
+
+  // Generate response
+  const response = await generateAIResponse(query)
+  
+  // Track usage
+  await prisma.usage.upsert({
+    where: { userId: session.user.id },
+    update: { count: { increment: 1 } },
+    create: { userId: session.user.id, count: 1, limit: 100 }
+  })
+
+  return Response.json({ response })
+}
+```
+
+### Week 5-6: FastAPI Services
+
+#### Document Processor Service
+```python
+# services/document-processor/main.py
+from fastapi import FastAPI, BackgroundTasks
+from pydantic import BaseModel
+import pypdf2
+from google.generativeai import GenerativeModel
+
+app = FastAPI(title="Document Processor")
+
+class ProcessRequest(BaseModel):
+    document_id: str
+    tenant_id: str
+
+@app.post("/process")
+async def process_document(
+    request: ProcessRequest,
+    background_tasks: BackgroundTasks
+):
+    # Queue for background processing
+    background_tasks.add_task(
+        process_document_task,
+        request.document_id,
+        request.tenant_id
+    )
+    return {"status": "processing", "id": request.document_id}
+
+async def process_document_task(document_id: str, tenant_id: str):
+    # Heavy processing here
+    # Extract text, run OCR, generate embeddings
+    pass
+```
+
+#### Crawler Engine
+```python
+# services/crawler-engine/main.py
+from fastapi import FastAPI
+from playwright.async_api import async_playwright
+import asyncio
+
+app = FastAPI(title="Crawler Engine")
+
+@app.post("/crawl")
+async def crawl_website(url: str, depth: int = 2):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.goto(url)
+        
+        # Extract content
+        content = await page.content()
+        links = await page.evaluate("""
+            Array.from(document.querySelectorAll('a'))
+                 .map(a => a.href)
+        """)
+        
+        await browser.close()
+        
+    return {
+        "url": url,
+        "content": content[:1000],  # Preview
+        "links": links[:10]
+    }
+```
+
+### Week 7-8: Production Readiness
+
+#### Security Implementation
+```typescript
+// packages/auth/src/middleware.ts
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+import { auth } from "./index"
+
+export async function middleware(request: NextRequest) {
+  const session = await auth()
+  
+  // Check authentication
+  if (!session && request.nextUrl.pathname.startsWith("/app")) {
+    return NextResponse.redirect(new URL("/signin", request.url))
+  }
+  
+  // Add security headers
+  const response = NextResponse.next()
+  response.headers.set("X-Frame-Options", "DENY")
+  response.headers.set("X-Content-Type-Options", "nosniff")
+  response.headers.set("X-XSS-Protection", "1; mode=block")
+  
+  return response
+}
+```
+
+#### Monitoring Setup
+```typescript
+// packages/utils/src/monitoring.ts
+export function withTelemetry<T extends (...args: any[]) => any>(
+  operation: string,
+  fn: T
+): T {
+  return (async (...args: Parameters<T>) => {
+    const start = performance.now()
+    const traceId = crypto.randomUUID()
+    
+    console.log({
+      event: "operation_start",
+      operation,
+      traceId,
+      timestamp: new Date().toISOString()
+    })
+    
+    try {
+      const result = await fn(...args)
+      console.log({
+        event: "operation_success",
+        operation,
+        traceId,
+        duration: performance.now() - start
+      })
+      return result
+    } catch (error) {
+      console.error({
+        event: "operation_error",
+        operation,
+        traceId,
+        error: error.message,
+        duration: performance.now() - start
+      })
+      throw error
+    }
+  }) as T
+}
+```
+
+## Development Standards
+
+### Git Workflow
+```bash
+# Branch naming
+feature/add-payment-integration
+bugfix/fix-auth-redirect
+hotfix/critical-security-patch
+chore/update-dependencies
+
+# Commit messages (Conventional Commits)
+feat: add Stripe payment integration
+fix: resolve authentication redirect loop
+docs: update API documentation
+style: format code with prettier
+refactor: extract billing logic to package
+test: add unit tests for auth flow
+chore: update dependencies to latest
+```
+
+### Code Review Checklist
+- [ ] Tests pass and coverage maintained
+- [ ] TypeScript types are properly defined
+- [ ] No console.logs in production code
+- [ ] Security considerations addressed
+- [ ] Database migrations included if needed
+- [ ] Documentation updated
+- [ ] Performance impact considered
+
+### Testing Requirements
+```typescript
+// Example test structure
+describe("UserService", () => {
+  it("should create a new user", async () => {
+    const user = await createUser({
+      email: "test@example.com",
+      name: "Test User"
+    })
+    
+    expect(user).toBeDefined()
+    expect(user.email).toBe("test@example.com")
+  })
+  
+  it("should enforce tenant isolation", async () => {
+    const tenant1User = await createUser({ tenantId: "tenant1" })
+    const tenant2User = await createUser({ tenantId: "tenant2" })
+    
+    const results = await getUsersByTenant("tenant1")
+    expect(results).not.toContain(tenant2User)
+  })
+})
+```
+
+## Deployment Process
+
+### Preview Deployments
+```bash
+# Automatic on PR
+# Vercel creates preview URL
+# FastAPI services deploy to staging Cloud Run
+```
+
+### Production Deployment
+```bash
+# 1. Merge to main
+# 2. CI runs tests
+# 3. Database migrations applied
+# 4. Next.js apps deploy to Vercel
+# 5. FastAPI services deploy to Cloud Run
+# 6. Monitor for issues
+```
+
+### Rollback Procedure
+```bash
+# If issues detected:
+task deploy:rollback
+# or
+vercel rollback
+gcloud run services update-traffic --to-revisions=PREVIOUS=100
+```
+
+## Performance Optimization
+
+### Bundle Size Monitoring
+```javascript
+// next.config.js
+module.exports = {
+  experimental: {
+    optimizePackageImports: ['@lostmind/ui']
+  },
+  images: {
+    domains: ['storage.googleapis.com'],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, './src'),
+      }
+    }
+    return config
+  }
+}
+```
+
+### Database Query Optimization
+```typescript
+// Use proper indexes
+await prisma.$executeRaw`
+  CREATE INDEX idx_documents_tenant_id ON documents(tenant_id);
+  CREATE INDEX idx_documents_created_at ON documents(created_at DESC);
+`
+
+// Use select to limit data transfer
+const users = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+    name: true
+  },
+  where: { tenantId }
+})
+```
+
+## Troubleshooting Guide
+
+### Common Issues
+
+#### Build Failures
+```bash
+# Clear caches
+rm -rf .turbo node_modules
+pnpm install
+pnpm run build
+```
+
+#### Database Connection Issues
+```bash
+# Check connection
+npx prisma db push --force-reset
+npx prisma generate
+```
+
+#### Authentication Problems
+```bash
+# Verify environment variables
+echo $NEXTAUTH_URL
+echo $NEXTAUTH_SECRET
+# Regenerate secret if needed
+openssl rand -base64 32
+```
+
+## Success Metrics Dashboard
+
+| Metric | Target | Current | Status |
+|--------|--------|---------|--------|
+| Build Time | <2 min | - | 🟡 |
+| Test Coverage | >80% | - | 🟡 |
+| API Response | <200ms | - | 🟡 |
+| Deployment Frequency | Daily | - | 🟡 |
+| MTTR | <1 hour | - | 🟡 |
+| Uptime | 99.9% | - | 🟡 |
+
+---
+
+**This roadmap provides the complete implementation path from empty repository to production-ready monorepo.**

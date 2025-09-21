@@ -1,0 +1,81 @@
+<Info>
+This content was automatically extracted from Back End Architecture for Turborepo with RAG Embeddings.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Deployment Guide
+
+This guide provides step-by-step instructions for deploying the backend intelligence services using Docker and Kubernetes.
+
+## Prerequisites
+
+- Docker
+- Kubernetes (Minikube, Docker Desktop, or a cloud provider)
+- `kubectl` command-line tool
+- `helm` command-line tool
+
+## Docker Deployment
+
+### 1. Build Docker Images
+
+Navigate to the root of the `backend-architecture` directory and run the following command to build Docker images for all services:
+
+```bash
+docker-compose build
+```
+
+### 2. Run Services with Docker Compose
+
+Use Docker Compose to run all services locally:
+
+```bash
+docker-compose up -d
+```
+
+This will start all services, including the API Gateway, RAG service, and analysis modules. The API Gateway will be available at `http://localhost:8000`.
+
+## Kubernetes Deployment
+
+### 1. Create Kubernetes Namespace
+
+Create a dedicated namespace for the backend services:
+
+```bash
+kubectl create namespace backend-intelligence
+```
+
+### 2. Deploy with Helm
+
+We provide a Helm chart for easy deployment to Kubernetes. Navigate to the `helm` directory and run the following command:
+
+```bash
+helm install backend-intelligence ./helm/backend-intelligence --namespace backend-intelligence
+```
+
+This will deploy all services, create necessary resources (Deployments, Services, ConfigMaps), and expose the API Gateway through a LoadBalancer service.
+
+### 3. Accessing the API
+
+To get the external IP address of the API Gateway, run:
+
+```bash
+kubectl get services -n backend-intelligence
+```
+
+The API will be available at `http://<EXTERNAL-IP>:8000`.
+
+## Configuration
+
+Configuration for all services is managed through environment variables. You can customize the configuration by creating a `.env` file in the root of the `backend-architecture` directory. Refer to the `config.py` file in each service package for available configuration options.
+
+## Monitoring
+
+We provide a Grafana dashboard for monitoring the health and performance of all services. To access the dashboard, forward the Grafana port:
+
+```bash
+kubectl port-forward svc/grafana 8080:3000 -n backend-intelligence
+```
+
+Open your browser and navigate to `http://localhost:8080`. The default credentials are `admin/admin`.
+
+

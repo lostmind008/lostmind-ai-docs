@@ -1,0 +1,2087 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# Google GenAI SDK Developer Guide
+## Latest Release Alignment & Comprehensive Development Reference
+
+> ⚠️ **CRITICAL SDK MIGRATION WARNING**
+> 
+> The legacy `google-generativeai` SDK reaches **end-of-life on November 30, 2025**. All new projects MUST use the new `google-genai` SDK. This guide provides comprehensive migration patterns and best practices.
+> 
+> **For production readiness assessment, see:** [Production Technical Analysis](./PRODUCTION_TECHNICAL_ANALYSIS.md)
+
+### Table of Contents
+1. [Overview & Migration Context](#overview--migration-context)
+2. [Installation & Environment Setup](#installation--environment-setup)
+3. [Client Configuration & Authentication](#client-configuration--authentication)  
+4. [Core Models & Capabilities](#core-models--capabilities)
+5. [Content Generation Patterns](#content-generation-patterns)
+6. [File Handling & Multimodal Support](#file-handling--multimodal-support)
+7. [Content Caching Implementation](#content-caching-implementation)
+8. [Grounding & Search Integration](#grounding--search-integration)
+9. [URL Context & External Data](#url-context--external-data)
+10. [Prompt Enhancement Pipeline](#prompt-enhancement-pipeline)
+11. [Task-Specific Implementations](#task-specific-implementations)
+12. [Common Pitfalls & Solutions](#common-pitfalls--solutions)
+13. [Performance & Best Practices](#performance--best-practices)
+14. [Migration from Legacy SDK](#migration-from-legacy-sdk)
+
+---
+
+## Overview & Migration Context
+
+### Critical SDK Transition Information
+
+The Google GenAI SDK (`google-genai`) is the **official replacement** for the legacy `google-generativeai` SDK. This transition became critical with the Gemini 2.0 release in late 2024.
+
+**Key Timeline:**
+- **May 2025**: Google GenAI SDK reached General Availability (GA)
+- **November 30, 2025**: Legacy SDK (`google-generativeai`) end-of-life
+- **Current Status**: All new features exclusively available in `google-genai`
+
+**Why This Matters:**
+```python
+# ❌ DEPRECATED - Legacy SDK (End of Life Nov 2025)
+import google.generativeai as genai
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel('gemini-pro')
+
+# ✅ CURRENT - Google GenAI SDK (Recommended)
+from google import genai
+from google.genai import types
+client = genai.Client(api_key="YOUR_API_KEY")
+```
+
+### Unified API Access
+
+The new SDK provides unified access to:
+- **Gemini Developer API**: Direct access with API key
+- **Vertex AI API**: Enterprise features with Google Cloud integration
+
+---
+
+## Installation & Environment Setup
+
+### Installation
+
+```bash
+# Primary installation
+pip install google-genai
+
+# Optional: For improved async performance
+pip install google-genai[aiohttp]
+```
+
+### Version Verification
+
+```python
+import google.genai
+print(f"Google GenAI SDK Version: {google.genai.__version__}")
+```
+
+### Environment Configuration
+
+#### Gemini Developer API Setup
+```bash
+export GOOGLE_API_KEY='your-gemini-api-key'
+```
+
+#### Vertex AI Setup
+```bash
+export GOOGLE_GENAI_USE_VERTEXAI=True
+export GOOGLE_CLOUD_PROJECT='your-project-id'
+export GOOGLE_CLOUD_LOCATION='us-central1'
+```
+
+---
+
+## Client Configuration & Authentication
+
+### Basic Client Creation
+
+```python
+from google import genai
+from google.genai import types
+
+# Method 1: Environment variables (Recommended)
+client = genai.Client()  # Automatically uses GOOGLE_API_KEY
+
+# Method 2: Explicit API key
+client = genai.Client(api_key='your-api-key')
+
+# Method 3: Vertex AI
+client = genai.Client(
+    vertexai=True,
+    project='your-project-id',
+    location='us-central1'
+)
+```
+
+### API Version Selection
+
+```python
+# Use stable v1 API (Recommended for production)
+client = genai.Client(
+    http_options=types.HttpOptions(api_version='v1')
+)
+
+# Use beta API (For latest features)
+client = genai.Client(
+    http_options=types.HttpOptions(api_version='v1beta')
+)
+```
+
+### Advanced HTTP Configuration
+
+```python
+# Proxy configuration
+http_options = types.HttpOptions(
+    client_args={'proxy': 'http://proxy:8080'},
+    async_client_args={'proxy': 'http://proxy:8080'}
+)
+client = genai.Client(http_options=http_options)
+
+# SOCKS5 proxy
+http_options = types.HttpOptions(
+    client_args={'proxy': 'socks5://user:pass@host:port'},
+    async_client_args={'proxy': 'socks5://user:pass@host:port'}
+)
+```
+
+---
+
+## Core Models & Capabilities
+
+### Current Model Specifications
+
+#### Gemini 2.5 Pro
+```python
+# Specifications:
+# - Input tokens: 1,048,576 (1M)  
+# - Output tokens: 65,535 (default)
+# - Context window: 2,097,152 tokens
+# - Knowledge cutoff: Current
+# - Modalities: Text, Image, Video, Audio, PDF
+
+model_name = "gemini-2.5-pro"
+```
+
+#### Gemini 2.5 Flash  
+```python
+# Specifications:
+# - Input tokens: 32,768
+# - Output tokens: 32,768
+# - Context window: 1,048,576 tokens
+# - Knowledge cutoff: Current
+# - Modalities: Text, Image, Video, Audio
+
+model_name = "gemini-2.5-flash"
+```
+
+#### Gemini 2.0 Flash
+```python
+# Specifications:
+# - Input tokens: 1,000,000
+# - Output tokens: 8,192 (default)
+# - Context window: 1,000,000 tokens
+# - Built for Agents & Live API
+# - Image generation capabilities
+
+model_name = "gemini-2.0-flash"
+```
+
+### Model Selection Best Practices
+
+```python
+def select_optimal_model(task_type: str, content_length: int) -> str:
+    """
+    Select the most appropriate model based on task requirements.
+    
+    Args:
+        task_type: Type of task ('transcription', 'analysis', 'generation', 'chat')
+        content_length: Approximate input length in tokens
+        
+    Returns:
+        Optimal model name
+    """
+    if task_type == 'transcription':
+        # Low temperature, high accuracy needed
+        return "gemini-2.5-pro" if content_length > 100000 else "gemini-2.5-flash"
+    
+    elif task_type == 'analysis' and content_length > 500000:
+        # Long context analysis
+        return "gemini-2.5-pro"
+    
+    elif task_type == 'chat' or task_type == 'agents':
+        # Interactive applications
+        return "gemini-2.0-flash"
+    
+    else:
+        # General purpose, cost-effective
+        return "gemini-2.5-flash"
+
+# Usage example
+model = select_optimal_model('transcription', 150000)
+```
+
+---
+
+## Content Generation Patterns
+
+### Basic Text Generation
+
+```python
+# Simple text generation
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents='Explain quantum computing in simple terms'
+)
+print(response.text)
+```
+
+### Advanced Configuration
+
+```python
+# Comprehensive configuration example
+response = client.models.generate_content(
+    model='gemini-2.5-pro',
+    contents='Write a technical analysis of neural networks',
+    config=types.GenerateContentConfig(
+        system_instruction="You are a technical writer specializing in AI/ML topics.",
+        max_output_tokens=4096,
+        temperature=0.2,  # Low for technical accuracy
+        top_p=0.95,
+        top_k=40,
+        candidate_count=1,
+        presence_penalty=0.0,
+        frequency_penalty=0.1,
+        stop_sequences=['END_ANALYSIS'],
+        safety_settings=[
+            types.SafetySetting(
+                category='HARM_CATEGORY_HATE_SPEECH',
+                threshold='BLOCK_ONLY_HIGH'
+            )
+        ]
+    )
+)
+```
+
+### Streaming Generation
+
+```python
+# Synchronous streaming
+for chunk in client.models.generate_content_stream(
+    model='gemini-2.5-flash',
+    contents='Tell me a story about AI development'
+):
+    print(chunk.text, end='', flush=True)
+
+# Asynchronous streaming
+async def async_stream_example():
+    async for chunk in await client.aio.models.generate_content_stream(
+        model='gemini-2.5-flash',
+        contents='Explain machine learning concepts'
+    ):
+        print(chunk.text, end='', flush=True)
+```
+
+---
+
+## File Handling & Multimodal Support
+
+### File Upload (Gemini Developer API)
+
+```python
+# Upload and process files
+def upload_and_process_file(file_path: str, prompt: str):
+    """Upload file and generate content with proper error handling."""
+    try:
+        # Upload file
+        uploaded_file = client.files.upload(file=file_path)
+        print(f"Uploaded: {uploaded_file.name}")
+        
+        # Generate content
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[prompt, uploaded_file]
+        )
+        
+        return response.text
+        
+    except Exception as e:
+        print(f"Error processing file: {e}")
+        return None
+
+# Example usage
+result = upload_and_process_file(
+    'document.pdf', 
+    'Summarize the key points in this document'
+)
+```
+
+### Video Processing
+
+```python
+# Upload and analyze video
+def process_video_file(video_path: str):
+    """Process video with size and duration considerations."""
+    import os
+    
+    file_size = os.path.getsize(video_path)
+    
+    if file_size > 20 * 1024 * 1024:  # > 20MB
+        # Use File API for large files
+        video_file = client.files.upload(file=video_path)
+        
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[
+                video_file,
+                "Provide a detailed analysis of this video content"
+            ]
+        )
+    else:
+        # Inline for small files
+        with open(video_path, 'rb') as f:
+            video_bytes = f.read()
+            
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=[
+                types.Part(
+                    inline_data=types.Blob(
+                        data=video_bytes, 
+                        mime_type='video/mp4'
+                    )
+                ),
+                "Analyze this video content"
+            ]
+        )
+    
+    return response.text
+```
+
+### YouTube URL Processing
+
+```python
+# Process YouTube videos directly
+def analyze_youtube_video(youtube_url: str, analysis_prompt: str):
+    """
+    Analyze YouTube video content directly via URL.
+    
+    Limitations:
+    - Free tier: 8 hours/day limit
+    - Public videos only
+    - Max 10 videos per request (Gemini 2.5+)
+    """
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=[
+            types.Part(
+                file_data=types.FileData(file_uri=youtube_url)
+            ),
+            analysis_prompt
+        ]
+    )
+    
+    return response.text
+
+# Example usage
+analysis = analyze_youtube_video(
+    'https://www.youtube.com/watch?v=example',
+    'Summarize the main points discussed in this video'
+)
+```
+
+### Audio Transcription & Analysis
+
+```python
+def transcribe_audio_with_timestamps(audio_path: str, start_time: str = None, end_time: str = None):
+    """
+    Transcribe audio with optional timestamp ranges.
+    
+    Args:
+        audio_path: Path to audio file
+        start_time: Start timestamp (MM:SS format)
+        end_time: End timestamp (MM:SS format)
+    """
+    # Upload audio file
+    audio_file = client.files.upload(file=audio_path)
+    
+    # Construct prompt with timestamps if provided
+    if start_time and end_time:
+        prompt = f'Provide a transcript of the speech from {start_time} to {end_time}.'
+    else:
+        prompt = 'Generate a complete transcript of this audio.'
+    
+    response = client.models.generate_content(
+        model='gemini-2.5-pro',  # Better for transcription accuracy
+        contents=[prompt, audio_file],
+        config=types.GenerateContentConfig(
+            temperature=0.1,  # Low temperature for accuracy
+            max_output_tokens=8192
+        )
+    )
+    
+    return response.text
+
+# Usage examples
+full_transcript = transcribe_audio_with_timestamps('meeting.mp3')
+segment_transcript = transcribe_audio_with_timestamps('meeting.mp3', '02:30', '05:45')
+```
+
+---
+
+## Content Caching Implementation
+
+### Explicit Caching
+
+```python
+def setup_content_cache(documents: list, system_instruction: str, ttl_seconds: int = 3600):
+    """
+    Create content cache for repeated queries on the same documents.
+    
+    Args:
+        documents: List of file URIs or content
+        system_instruction: System instruction for the cache
+        ttl_seconds: Time to live in seconds
+    """
+    
+    # Prepare content for caching
+    cache_contents = []
+    for doc in documents:
+        if isinstance(doc, str) and doc.startswith(('gs://', 'http')):
+            # URI content
+            cache_contents.append(
+                types.Content(
+                    role='user',
+                    parts=[types.Part.from_uri(file_uri=doc, mime_type='application/pdf')]
+                )
+            )
+        else:
+            # File upload
+            uploaded = client.files.upload(file=doc)
+            cache_contents.append(
+                types.Content(
+                    role='user', 
+                    parts=[types.Part.from_uri(file_uri=uploaded.uri, mime_type=uploaded.mime_type)]
+                )
+            )
+    
+    # Create cache
+    cached_content = client.caches.create(
+        model='gemini-2.5-pro',
+        config=types.CreateCachedContentConfig(
+            contents=cache_contents,
+            system_instruction=system_instruction,
+            display_name='Document Analysis Cache',
+            ttl=f'{ttl_seconds}s'
+        )
+    )
+    
+    return cached_content
+
+def query_with_cache(cached_content, query: str):
+    """Query using cached content."""
+    response = client.models.generate_content(
+        model='gemini-2.5-pro',
+        contents=query,
+        config=types.GenerateContentConfig(
+            cached_content=cached_content.name
+        )
+    )
+    
+    return response.text
+
+# Usage example
+documents = ['report1.pdf', 'report2.pdf', 'report3.pdf']
+cache = setup_content_cache(
+    documents, 
+    "You are an expert document analyzer. Focus on extracting key insights.",
+    ttl_seconds=7200  # 2 hours
+)
+
+# Multiple queries using the same cache
+summary = query_with_cache(cache, "Summarize the main findings across all documents")
+analysis = query_with_cache(cache, "What are the common themes in these reports?")
+```
+
+### Implicit Caching (Gemini 2.5 Models)
+
+```python
+def optimize_for_implicit_cache(base_context: str, queries: list):
+    """
+    Structure requests to maximize implicit cache benefits.
+    
+    Gemini 2.5 models automatically cache common prefixes:
+    - 75% token discount on cached content
+    - Minimum 1024 tokens (Flash) or 2048 tokens (Pro)
+    """
+    
+    results = []
+    
+    for query in queries:
+        # Keep base context consistent at the beginning
+        full_prompt = f"{base_context}\n\nQuery: {query}"
+        
+        response = client.models.generate_content(
+            model='gemini-2.5-pro',
+            contents=full_prompt
+        )
+        
+        # Check usage metadata for cache hits
+        if hasattr(response, 'usage_metadata'):
+            cached_tokens = getattr(response.usage_metadata, 'cached_content_token_count', 0)
+            if cached_tokens > 0:
+                print(f"Cache hit: {cached_tokens} tokens cached")
+        
+        results.append(response.text)
+    
+    return results
+
+# Example usage
+base_context = """
+You are an AI research assistant with expertise in machine learning.
+Your task is to provide detailed, technical answers based on current ML best practices.
+Please ensure your responses are accurate and cite relevant concepts.
+
+Background knowledge:
+- Deep learning architectures
+- Natural language processing
+- Computer vision techniques
+- Reinforcement learning principles
+""" * 10  # Ensure minimum token requirement
+
+queries = [
+    "Explain transformer architecture",
+    "Compare CNNs vs Vision Transformers", 
+    "Discuss RLHF in language models"
+]
+
+responses = optimize_for_implicit_cache(base_context, queries)
+```
+
+---
+
+## Grounding & Search Integration
+
+### Google Search Grounding
+
+```python
+def grounded_search_query(query: str, model: str = 'gemini-2.5-flash'):
+    """
+    Perform grounded search with Google Search integration.
+    
+    Pricing (paid tier):
+    - 1,500 requests/day free
+    - $35 per 1,000 requests after limit
+    """
+    
+    grounding_tool = types.Tool(
+        google_search=types.GoogleSearch()
+    )
+    
+    config = types.GenerateContentConfig(
+        tools=[grounding_tool]
+    )
+    
+    response = client.models.generate_content(
+        model=model,
+        contents=query,
+        config=config
+    )
+    
+    # Access grounding metadata
+    if response.candidates and len(response.candidates) > 0:
+        candidate = response.candidates[0]
+        if hasattr(candidate, 'grounding_metadata'):
+            print(f"Grounding sources: {candidate.grounding_metadata}")
+    
+    return response.text
+
+# Example usage
+result = grounded_search_query(
+    "What are the latest developments in quantum computing in 2024?"
+)
+print(result)
+```
+
+### Custom Search API Grounding
+
+```python
+def setup_custom_search_grounding(search_endpoint: str, headers: dict):
+    """
+    Configure custom search API for grounding.
+    Useful for enterprise-specific data sources.
+    """
+    
+    # This is conceptual - actual implementation depends on your search API
+    custom_search_tool = types.Tool(
+        # Note: This is a placeholder for custom search configuration
+        # Actual implementation may vary based on API updates
+        function_declarations=[
+            types.FunctionDeclaration(
+                name='custom_search',
+                description='Search enterprise knowledge base',
+                parameters=types.Schema(
+                    type='OBJECT',
+                    properties={
+                        'query': types.Schema(type='STRING', description='Search query')
+                    },
+                    required=['query']
+                )
+            )
+        ]
+    )
+    
+    return custom_search_tool
+
+# Usage in generation
+def query_with_custom_grounding(user_query: str, search_tool):
+    """Query with custom search grounding."""
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=user_query,
+        config=types.GenerateContentConfig(
+            tools=[search_tool]
+        )
+    )
+    
+    return response.text
+```
+
+---
+
+## URL Context & External Data
+
+### URL Context Tool
+
+```python
+def analyze_urls_with_context(urls: list, analysis_prompt: str):
+    """
+    Analyze content from URLs directly without manual fetching.
+    
+    Supported in Gemini 2.5+ models.
+    """
+    
+    url_context_tool = types.Tool(
+        url_context=types.UrlContext()
+    )
+    
+    # Embed URLs directly in the prompt
+    url_list = '\n'.join([f"- {url}" for url in urls])
+    full_prompt = f"{analysis_prompt}\n\nURLs to analyze:\n{url_list}"
+    
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=full_prompt,
+        config=types.GenerateContentConfig(
+            tools=[url_context_tool],
+            response_modalities=['TEXT']
+        )
+    )
+    
+    # Check which URLs were retrieved
+    if response.candidates and len(response.candidates) > 0:
+        candidate = response.candidates[0]
+        if hasattr(candidate, 'url_context_metadata'):
+            print(f"Retrieved URLs: {candidate.url_context_metadata}")
+    
+    return response.text
+
+# Example usage
+urls = [
+    'https://example.com/article1',
+    'https://example.com/article2'
+]
+
+comparison = analyze_urls_with_context(
+    urls,
+    "Compare the main arguments presented in these articles"
+)
+```
+
+### Combined URL Context + Search Grounding
+
+```python
+def comprehensive_research(topic: str, reference_urls: list = None):
+    """
+    Combine URL context with Google Search for comprehensive research.
+    """
+    
+    tools = [
+        types.Tool(google_search=types.GoogleSearch())
+    ]
+    
+    prompt_parts = [f"Research the topic: {topic}"]
+    
+    if reference_urls:
+        tools.append(types.Tool(url_context=types.UrlContext()))
+        url_list = '\n'.join([f"- {url}" for url in reference_urls])
+        prompt_parts.append(f"\nAlso reference these specific sources:\n{url_list}")
+    
+    full_prompt = '\n'.join(prompt_parts)
+    
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=full_prompt,
+        config=types.GenerateContentConfig(
+            tools=tools
+        )
+    )
+    
+    return response.text
+
+# Usage example
+research_result = comprehensive_research(
+    "Latest trends in renewable energy technology",
+    reference_urls=[
+        'https://www.nature.com/articles/energy-trends-2024',
+        'https://www.iea.org/reports/renewable-energy-outlook'
+    ]
+)
+```
+
+---
+
+## Prompt Enhancement Pipeline
+
+### Prompt Assist Layer
+
+```python
+class PromptAssist:
+    """
+    Intelligent prompt enhancement system for various task types.
+    """
+    
+    TASK_TEMPLATES = {
+        'transcription': {
+            'system_instruction': """You are a professional transcriptionist. 
+                Provide accurate, verbatim transcriptions with proper formatting.
+                Include speaker labels when multiple speakers are present.
+                Use standard punctuation and capitalization.""",
+            'temperature': 0.1,
+            'max_output_tokens': 8192
+        },
+        
+        'summarization': {
+            'system_instruction': """You are an expert summarizer.
+                Create concise, comprehensive summaries that capture key points.
+                Maintain the original tone and important context.
+                Structure your summary with clear sections.""",
+            'temperature': 0.3,
+            'max_output_tokens': 4096
+        },
+        
+        'analysis': {
+            'system_instruction': """You are a detailed analyst.
+                Provide thorough analysis with supporting evidence.
+                Consider multiple perspectives and potential implications.
+                Structure your analysis with clear reasoning.""",
+            'temperature': 0.4,
+            'max_output_tokens': 6144
+        },
+        
+        'creative_writing': {
+            'system_instruction': """You are a creative writer.
+                Use vivid language and engaging storytelling techniques.
+                Maintain consistency in tone, style, and character development.
+                Create compelling and original content.""",
+            'temperature': 0.8,
+            'max_output_tokens': 8192
+        }
+    }
+    
+    STYLE_PRESETS = {
+        'verbatim_transcript': "Provide a word-for-word transcription including all utterances, hesitations, and interruptions.",
+        'clean_transcript': "Provide a clean transcription removing filler words and false starts while maintaining meaning.",
+        'meeting_notes': "Structure as professional meeting notes with action items and key decisions highlighted.",
+        'executive_summary': "Create an executive-level summary focusing on strategic implications and key takeaways.",
+        'technical_documentation': "Write in technical documentation style with clear structure and precise terminology."
+    }
+    
+    def enhance_prompt(self, user_intent: str, task_type: str, style_preset: str = None, 
+                      custom_instructions: str = None) -> dict:
+        """
+        Enhance user prompt with task-specific optimizations.
+        
+        Args:
+            user_intent: User's original request
+            task_type: Type of task ('transcription', 'summarization', etc.)
+            style_preset: Predefined style template
+            custom_instructions: Additional custom instructions
+            
+        Returns:
+            Enhanced configuration dictionary
+        """
+        
+        if task_type not in self.TASK_TEMPLATES:
+            raise ValueError(f"Unsupported task type: {task_type}")
+        
+        template = self.TASK_TEMPLATES[task_type].copy()
+        
+        # Enhance system instruction
+        enhanced_instruction = template['system_instruction']
+        
+        if style_preset and style_preset in self.STYLE_PRESETS:
+            enhanced_instruction += f"\n\nStyle guidance: {self.STYLE_PRESETS[style_preset]}"
+        
+        if custom_instructions:
+            enhanced_instruction += f"\n\nAdditional requirements: {custom_instructions}"
+        
+        # Enhance user prompt
+        enhanced_prompt = f"""Task: {user_intent}
+
+Please follow the system instructions carefully and deliver high-quality results appropriate for this task type."""
+        
+        return {
+            'enhanced_prompt': enhanced_prompt,
+            'system_instruction': enhanced_instruction,
+            'temperature': template['temperature'],
+            'max_output_tokens': template['max_output_tokens']
+        }
+    
+    def generate_with_enhancement(self, user_intent: str, task_type: str, 
+                                 model: str = None, **kwargs) -> str:
+        """Generate content with prompt enhancement."""
+        
+        # Select optimal model if not specified
+        if not model:
+            if task_type == 'transcription':
+                model = 'gemini-2.5-pro'  # Better accuracy for transcription
+            else:
+                model = 'gemini-2.5-flash'  # Cost-effective for other tasks
+        
+        # Enhance the prompt
+        config = self.enhance_prompt(user_intent, task_type, **kwargs)
+        
+        # Generate content
+        response = client.models.generate_content(
+            model=model,
+            contents=config['enhanced_prompt'],
+            config=types.GenerateContentConfig(
+                system_instruction=config['system_instruction'],
+                temperature=config['temperature'],
+                max_output_tokens=config['max_output_tokens']
+            )
+        )
+        
+        return response.text
+
+# Usage example
+assist = PromptAssist()
+
+# Transcription task
+transcript = assist.generate_with_enhancement(
+    user_intent="Convert this audio to text",
+    task_type="transcription",
+    style_preset="meeting_notes",
+    custom_instructions="Include timestamps for major topic changes"
+)
+
+# Summarization task  
+summary = assist.generate_with_enhancement(
+    user_intent="Summarize this document",
+    task_type="summarization", 
+    style_preset="executive_summary"
+)
+```
+
+---
+
+## Task-Specific Implementations
+
+### Advanced Transcription Pipeline
+
+```python
+class TranscriptionPipeline:
+    """
+    Comprehensive transcription system with speaker diarization and formatting.
+    """
+    
+    def __init__(self, client):
+        self.client = client
+        self.assist = PromptAssist()
+    
+    def transcribe_with_speakers(self, audio_file_path: str, 
+                               expected_speakers: int = None,
+                               speaker_names: dict = None) -> dict:
+        """
+        Transcribe audio with speaker diarization.
+        
+        Args:
+            audio_file_path: Path to audio file
+            expected_speakers: Expected number of speakers
+            speaker_names: Dict mapping speaker IDs to names {1: "Alice", 2: "Bob"}
+            
+        Returns:
+            Dictionary with transcript and metadata
+        """
+        
+        # Upload audio file
+        audio_file = self.client.files.upload(file=audio_file_path)
+        
+        # Construct diarization prompt
+        diarization_prompt = """
+        Transcribe this audio and identify different speakers. 
+        Format the output as follows:
+        
+        Speaker 1: [transcript for speaker 1]
+        Speaker 2: [transcript for speaker 2]
+        
+        Rules:
+        - Identify speaker changes accurately
+        - Maintain chronological order
+        - Include natural pauses and transitions
+        """
+        
+        if expected_speakers:
+            diarization_prompt += f"\n- Expected number of speakers: {expected_speakers}"
+        
+        # First pass: Transcription with diarization
+        diarization_response = self.client.models.generate_content(
+            model='gemini-2.5-pro',
+            contents=[diarization_prompt, audio_file],
+            config=types.GenerateContentConfig(
+                temperature=0.1,
+                max_output_tokens=8192
+            )
+        )
+        
+        raw_transcript = diarization_response.text
+        
+        # Second pass: Clean up and format
+        cleanup_prompt = f"""
+        Clean up and improve this speaker-diarized transcript:
+        
+        {raw_transcript}
+        
+        Instructions:
+        - Remove filler words (um, uh, like) but maintain natural flow
+        - Fix obvious transcription errors
+        - Ensure proper punctuation and capitalization  
+        - Maintain speaker labels and timing
+        - Format as professional meeting transcript
+        """
+        
+        if speaker_names:
+            cleanup_prompt += f"\n- Replace speaker numbers with names: {speaker_names}"
+        
+        final_response = self.client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=cleanup_prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.2,
+                max_output_tokens=8192
+            )
+        )
+        
+        return {
+            'raw_transcript': raw_transcript,
+            'clean_transcript': final_response.text,
+            'audio_file_info': {
+                'name': audio_file.name,
+                'uri': audio_file.uri,
+                'mime_type': audio_file.mime_type
+            }
+        }
+    
+    def extract_action_items(self, transcript: str) -> list:
+        """Extract action items from meeting transcript."""
+        
+        action_prompt = f"""
+        Extract all action items from this meeting transcript:
+        
+        {transcript}
+        
+        Format each action item as JSON:
+        {{
+            "task": "Description of the task",
+            "assignee": "Person responsible (if mentioned)",
+            "deadline": "Deadline (if mentioned)",
+            "priority": "high/medium/low (if determinable)"
+        }}
+        
+        Return as a JSON array of action items.
+        """
+        
+        response = self.client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=action_prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type='application/json',
+                temperature=0.3
+            )
+        )
+        
+        import json
+        return json.loads(response.text)
+
+# Usage example
+pipeline = TranscriptionPipeline(client)
+
+result = pipeline.transcribe_with_speakers(
+    'team_meeting.mp3',
+    expected_speakers=3,
+    speaker_names={1: "Alice (Manager)", 2: "Bob (Developer)", 3: "Carol (Designer)"}
+)
+
+print("Clean Transcript:")
+print(result['clean_transcript'])
+
+action_items = pipeline.extract_action_items(result['clean_transcript'])
+print("\nAction Items:")
+for item in action_items:
+    print(f"- {item['task']} (Assigned to: {item.get('assignee', 'TBD')})")
+```
+
+### Document Analysis & Extraction
+
+```python
+class DocumentProcessor:
+    """
+    Advanced document processing with structured data extraction.
+    """
+    
+    def __init__(self, client):
+        self.client = client
+    
+    def extract_structured_data(self, document_path: str, schema: dict, 
+                              extraction_prompt: str = None) -> dict:
+        """
+        Extract structured data from documents using JSON schema.
+        
+        Args:
+            document_path: Path to document file
+            schema: Pydantic model or dict schema for expected output
+            extraction_prompt: Custom extraction instructions
+            
+        Returns:
+            Structured data matching the schema
+        """
+        
+        # Upload document
+        doc_file = self.client.files.upload(file=document_path)
+        
+        # Default extraction prompt
+        if not extraction_prompt:
+            extraction_prompt = """
+            Analyze this document and extract structured information.
+            Be thorough and accurate in your extraction.
+            If information is not available, use null values.
+            """
+        
+        response = self.client.models.generate_content(
+            model='gemini-2.5-pro',
+            contents=[extraction_prompt, doc_file],
+            config=types.GenerateContentConfig(
+                response_mime_type='application/json',
+                response_schema=schema,
+                temperature=0.1
+            )
+        )
+        
+        return json.loads(response.text)
+    
+    def analyze_contract(self, contract_path: str) -> dict:
+        """
+        Analyze legal contracts with structured extraction.
+        """
+        
+        from pydantic import BaseModel
+        from typing import List, Optional
+        
+        class ContractAnalysis(BaseModel):
+            contract_type: str
+            parties: List[str]
+            effective_date: Optional[str]
+            expiration_date: Optional[str]
+            key_terms: List[str]
+            obligations: List[dict]
+            risks: List[str]
+            renewal_terms: Optional[str]
+            termination_clauses: List[str]
+        
+        extraction_prompt = """
+        Analyze this legal contract and extract key information.
+        Focus on:
+        - Contract type and parties involved
+        - Important dates and terms
+        - Key obligations for each party
+        - Potential risks or concerning clauses
+        - Renewal and termination conditions
+        """
+        
+        return self.extract_structured_data(
+            contract_path, 
+            ContractAnalysis, 
+            extraction_prompt
+        )
+    
+    def process_financial_report(self, report_path: str) -> dict:
+        """
+        Process financial reports with numerical data extraction.
+        """
+        
+        from pydantic import BaseModel
+        from typing import Optional
+        
+        class FinancialMetrics(BaseModel):
+            revenue: Optional[float]
+            net_income: Optional[float]
+            total_assets: Optional[float]
+            total_liabilities: Optional[float]
+            cash_flow: Optional[float]
+            key_highlights: List[str]
+            concerns: List[str]
+            growth_metrics: dict
+        
+        extraction_prompt = """
+        Analyze this financial report and extract key metrics.
+        
+        Instructions:
+        - Extract numerical values in the original currency
+        - Identify key financial highlights and concerns
+        - Calculate or extract growth metrics where available
+        - Be precise with numerical data
+        """
+        
+        return self.extract_structured_data(
+            report_path,
+            FinancialMetrics,
+            extraction_prompt
+        )
+
+# Usage examples
+processor = DocumentProcessor(client)
+
+# Contract analysis
+contract_data = processor.analyze_contract('service_agreement.pdf')
+print(f"Contract Type: {contract_data['contract_type']}")
+print(f"Parties: {', '.join(contract_data['parties'])}")
+
+# Financial report processing
+financial_data = processor.process_financial_report('quarterly_report.pdf')
+print(f"Revenue: ${financial_data['revenue']:,.2f}")
+print(f"Net Income: ${financial_data['net_income']:,.2f}")
+```
+
+---
+
+## Common Pitfalls & Solutions
+
+### 1. SDK Confusion - Old vs New
+
+```python
+# ❌ COMMON MISTAKE: Using deprecated SDK patterns
+try:
+    import google.generativeai as genai  # OLD SDK
+    genai.configure(api_key="KEY")
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content("Hello")
+except ImportError:
+    print("Please install google-genai, not google-generativeai")
+
+# ✅ CORRECT: Using new SDK patterns
+from google import genai
+from google.genai import types
+
+client = genai.Client(api_key="KEY")  # NEW SDK
+response = client.models.generate_content(
+    model='gemini-2.5-flash', 
+    contents="Hello"
+)
+```
+
+### 2. Incorrect Model Names
+
+```python
+# ❌ COMMON MISTAKE: Using outdated model names
+wrong_models = [
+    'gemini-pro',        # Old naming
+    'gemini-pro-vision', # Deprecated
+    'gemini-1.5-flash',  # Missing specific version
+]
+
+# ✅ CORRECT: Using current model names
+correct_models = [
+    'gemini-2.5-pro',
+    'gemini-2.5-flash', 
+    'gemini-2.0-flash',
+    'gemini-2.5-flash-002'  # Specific version when needed
+]
+
+def validate_model_name(model_name: str) -> bool:
+    """Validate if model name is current and supported."""
+    try:
+        # Test with a simple request
+        response = client.models.generate_content(
+            model=model_name,
+            contents="Test"
+        )
+        return True
+    except Exception as e:
+        print(f"Invalid model name '{model_name}': {e}")
+        return False
+```
+
+### 3. Content Structure Errors
+
+```python
+# ❌ COMMON MISTAKE: Incorrect content structuring
+def wrong_content_usage():
+    # This will cause errors
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=types.Part.from_text(text="Hello")  # Wrong structure
+        )
+    except Exception as e:
+        print(f"Error: {e}")
+
+# ✅ CORRECT: Proper content structuring  
+def correct_content_usage():
+    # Method 1: Simple string (automatically converted)
+    response1 = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents="Hello"  # Simple and correct
+    )
+    
+    # Method 2: Explicit Part creation
+    response2 = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=[types.Part(text="Hello")]  # Explicit structure
+    )
+    
+    # Method 3: Full Content object
+    response3 = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=types.UserContent(
+            parts=[types.Part(text="Hello")]
+        )
+    )
+    
+    return response1.text, response2.text, response3.text
+```
+
+### 4. Function Calling Configuration Errors
+
+```python
+# ❌ COMMON MISTAKES: Function calling setup
+def wrong_function_calling():
+    def get_weather(location: str) -> str:
+        return "Sunny"
+    
+    # Mistake 1: Trying to pass tools to chat creation
+    try:
+        chat = client.chats.create(
+            model='gemini-2.5-flash',
+            tools=[get_weather]  # ❌ This won't work
+        )
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    # Mistake 2: Wrong config structure
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents="What's the weather in Boston?",
+            tools=[get_weather]  # ❌ Should be in config
+        )  
+    except Exception as e:
+        print(f"Error: {e}")
+
+# ✅ CORRECT: Proper function calling setup
+def correct_function_calling():
+    def get_weather(location: str) -> str:
+        """Get weather for a location."""
+        return f"Weather in {location}: Sunny, 72°F"
+    
+    # For direct generation
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents="What's the weather in Boston?",
+        config=types.GenerateContentConfig(
+            tools=[get_weather]  # ✅ Tools go in config
+        )
+    )
+    
+    # For chat with functions
+    chat = client.chats.create(
+        model='gemini-2.5-flash',
+        config=types.GenerateContentConfig(
+            tools=[get_weather]  # ✅ Config includes tools
+        )
+    )
+    
+    chat_response = chat.send_message("What's the weather in Boston?")
+    
+    return response.text, chat_response.text
+```
+
+### 5. File Upload and Processing Errors
+
+```python
+# ❌ COMMON MISTAKES: File handling
+def wrong_file_handling():
+    # Mistake 1: Not checking file size
+    large_file = "huge_video.mp4"  # 100MB file
+    try:
+        # Will fail for files > 20MB without File API
+        with open(large_file, 'rb') as f:
+            data = f.read()
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[
+                    types.Part(inline_data=types.Blob(data=data, mime_type='video/mp4')),
+                    "Analyze this video"
+                ]
+            )
+    except Exception as e:
+        print(f"File too large for inline: {e}")
+
+# ✅ CORRECT: Proper file handling with size checks
+def correct_file_handling():
+    import os
+    
+    def process_file_smartly(file_path: str, prompt: str):
+        """Handle files with appropriate method based on size."""
+        
+        file_size = os.path.getsize(file_path)
+        max_inline_size = 20 * 1024 * 1024  # 20MB
+        
+        if file_size > max_inline_size:
+            # Use File API for large files
+            print(f"Large file ({file_size} bytes), using File API")
+            uploaded_file = client.files.upload(file=file_path)
+            
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[uploaded_file, prompt]
+            )
+        else:
+            # Use inline for small files
+            print(f"Small file ({file_size} bytes), using inline")
+            mime_type = 'video/mp4' if file_path.endswith('.mp4') else 'application/pdf'
+            
+            with open(file_path, 'rb') as f:
+                file_data = f.read()
+                
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=[
+                    types.Part(
+                        inline_data=types.Blob(data=file_data, mime_type=mime_type)
+                    ),
+                    prompt
+                ]
+            )
+        
+        return response.text
+    
+    return process_file_smartly
+```
+
+### 6. Authentication and Environment Errors
+
+```python
+# ❌ COMMON MISTAKES: Authentication issues
+def wrong_auth_patterns():
+    # Mistake 1: Hard-coding API keys
+    client = genai.Client(api_key="AIzaSy...")  # ❌ Never do this
+    
+    # Mistake 2: Wrong environment variable names
+    import os
+    api_key = os.getenv("GEMINI_KEY")  # ❌ Wrong variable name
+    if not api_key:
+        print("API key not found")
+
+# ✅ CORRECT: Proper authentication patterns
+def correct_auth_patterns():
+    import os
+    from pathlib import Path
+    
+    # Method 1: Environment variables (Recommended)
+    api_key = os.getenv("GOOGLE_API_KEY")  # ✅ Correct variable name
+    if api_key:
+        client = genai.Client(api_key=api_key)
+    
+    # Method 2: Environment file
+    def load_env_file():
+        env_file = Path(".env")
+        if env_file.exists():
+            with open(env_file) as f:
+                for line in f:
+                    if line.strip() and not line.startswith('#'):
+                        key, value = line.strip().split('=', 1)
+                        os.environ[key] = value
+    
+    load_env_file()
+    
+    # Method 3: Google Cloud authentication for Vertex AI
+    vertex_client = genai.Client(
+        vertexai=True,
+        project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+        location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+    )
+    
+    return client, vertex_client
+
+# Validation helper
+def validate_client_setup(client):
+    """Validate that client is properly configured."""
+    try:
+        # Test with simple request
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents="Hello"
+        )
+        print("✅ Client authentication successful")
+        return True
+    except Exception as e:
+        print(f"❌ Client authentication failed: {e}")
+        return False
+```
+
+---
+
+## Performance & Best Practices
+
+### Rate Limiting and Error Handling
+
+```python
+import time
+import random
+from typing import Optional
+
+class RobustClient:
+    """
+    Wrapper for Google GenAI client with built-in retry logic and rate limiting.
+    """
+    
+    def __init__(self, client, max_retries: int = 3, base_delay: float = 1.0):
+        self.client = client
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+    
+    def exponential_backoff(self, attempt: int) -> float:
+        """Calculate exponential backoff delay."""
+        delay = self.base_delay * (2 ** attempt)
+        jitter = random.uniform(0, 0.1) * delay
+        return delay + jitter
+    
+    def generate_content_with_retry(self, model: str, contents, config=None) -> Optional[str]:
+        """
+        Generate content with automatic retry on rate limits and temporary failures.
+        """
+        
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = self.client.models.generate_content(
+                    model=model,
+                    contents=contents,
+                    config=config
+                )
+                return response.text
+                
+            except Exception as e:
+                error_str = str(e).lower()
+                
+                # Handle rate limiting
+                if "rate limit" in error_str or "quota" in error_str:
+                    if attempt < self.max_retries:
+                        delay = self.exponential_backoff(attempt)
+                        print(f"Rate limited. Retrying in {delay:.2f} seconds...")
+                        time.sleep(delay)
+                        continue
+                    else:
+                        print("Max retries exceeded for rate limiting")
+                        raise
+                
+                # Handle temporary server errors
+                elif "internal error" in error_str or "unavailable" in error_str:
+                    if attempt < self.max_retries:
+                        delay = self.exponential_backoff(attempt)
+                        print(f"Server error. Retrying in {delay:.2f} seconds...")
+                        time.sleep(delay)
+                        continue
+                    else:
+                        print("Max retries exceeded for server errors")
+                        raise
+                
+                # Handle other errors (don't retry)
+                else:
+                    print(f"Non-retryable error: {e}")
+                    raise
+        
+        return None
+    
+    def batch_process_with_rate_limiting(self, requests: list, delay_between_requests: float = 0.5):
+        """
+        Process multiple requests with rate limiting.
+        
+        Args:
+            requests: List of (model, contents, config) tuples
+            delay_between_requests: Delay between requests in seconds
+        """
+        
+        results = []
+        
+        for i, (model, contents, config) in enumerate(requests):
+            print(f"Processing request {i+1}/{len(requests)}")
+            
+            result = self.generate_content_with_retry(model, contents, config)
+            results.append(result)
+            
+            # Add delay between requests (except for the last one)
+            if i < len(requests) - 1:
+                time.sleep(delay_between_requests)
+        
+        return results
+
+# Usage example
+robust_client = RobustClient(client, max_retries=3)
+
+# Single request with retry
+result = robust_client.generate_content_with_retry(
+    model='gemini-2.5-flash',
+    contents="Explain quantum computing"
+)
+
+# Batch processing
+requests = [
+    ('gemini-2.5-flash', 'Explain AI', None),
+    ('gemini-2.5-flash', 'Summarize machine learning', None),
+    ('gemini-2.5-flash', 'What is deep learning?', None)
+]
+
+batch_results = robust_client.batch_process_with_rate_limiting(requests)
+```
+
+### Cost Optimization Strategies
+
+```python
+class CostOptimizedClient:
+    """
+    Client wrapper with cost tracking and optimization features.
+    """
+    
+    def __init__(self, client):
+        self.client = client
+        self.usage_tracker = {
+            'total_input_tokens': 0,
+            'total_output_tokens': 0,
+            'cached_tokens': 0,
+            'requests_made': 0
+        }
+    
+    def estimate_cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
+        """
+        Estimate cost based on current pricing (as of 2024).
+        Prices are per 1M tokens.
+        """
+        
+        pricing = {
+            'gemini-2.5-flash': {'input': 0.10, 'output': 0.40},
+            'gemini-2.5-pro': {'input': 1.25, 'output': 5.00},
+            'gemini-2.0-flash': {'input': 0.10, 'output': 0.40}
+        }
+        
+        if model not in pricing:
+            return 0.0  # Unknown model
+        
+        input_cost = (input_tokens / 1_000_000) * pricing[model]['input']
+        output_cost = (output_tokens / 1_000_000) * pricing[model]['output']
+        
+        return input_cost + output_cost
+    
+    def select_cost_optimal_model(self, task_complexity: str, expected_output_length: int) -> str:
+        """
+        Select the most cost-effective model for the task.
+        
+        Args:
+            task_complexity: 'simple', 'medium', 'complex'
+            expected_output_length: Expected output length in tokens
+        """
+        
+        if task_complexity == 'simple' and expected_output_length < 1000:
+            return 'gemini-2.5-flash'  # Most cost-effective
+        elif task_complexity == 'complex' or expected_output_length > 5000:
+            # For complex tasks, the quality improvement of Pro may justify cost
+            return 'gemini-2.5-pro'
+        else:
+            return 'gemini-2.5-flash'  # Default to cost-effective option
+    
+    def generate_with_cost_tracking(self, model: str, contents, config=None) -> dict:
+        """Generate content with cost tracking."""
+        
+        # Count input tokens (approximation)
+        if isinstance(contents, str):
+            estimated_input_tokens = len(contents.split()) * 1.3  # Rough estimate
+        else:
+            estimated_input_tokens = 1000  # Default estimate for complex content
+        
+        response = self.client.models.generate_content(
+            model=model,
+            contents=contents,
+            config=config
+        )
+        
+        # Count output tokens (approximation)
+        estimated_output_tokens = len(response.text.split()) * 1.3
+        
+        # Track usage
+        self.usage_tracker['total_input_tokens'] += estimated_input_tokens
+        self.usage_tracker['total_output_tokens'] += estimated_output_tokens
+        self.usage_tracker['requests_made'] += 1
+        
+        # Calculate cost
+        estimated_cost = self.estimate_cost(model, estimated_input_tokens, estimated_output_tokens)
+        
+        return {
+            'text': response.text,
+            'estimated_cost': estimated_cost,
+            'input_tokens': estimated_input_tokens,
+            'output_tokens': estimated_output_tokens
+        }
+    
+    def get_usage_report(self) -> dict:
+        """Get current usage and cost report."""
+        
+        total_cost = (
+            self.estimate_cost('gemini-2.5-flash', 
+                             self.usage_tracker['total_input_tokens'],
+                             self.usage_tracker['total_output_tokens'])
+        )
+        
+        return {
+            'total_requests': self.usage_tracker['requests_made'],
+            'total_input_tokens': self.usage_tracker['total_input_tokens'],
+            'total_output_tokens': self.usage_tracker['total_output_tokens'],
+            'estimated_total_cost': total_cost,
+            'average_cost_per_request': total_cost / max(1, self.usage_tracker['requests_made'])
+        }
+
+# Usage example
+cost_client = CostOptimizedClient(client)
+
+# Automatic model selection
+optimal_model = cost_client.select_cost_optimal_model('simple', 500)
+print(f"Selected model: {optimal_model}")
+
+# Generate with cost tracking
+result = cost_client.generate_with_cost_tracking(
+    model=optimal_model,
+    contents="Summarize the benefits of renewable energy"
+)
+
+print(f"Response: {result['text']}")
+print(f"Estimated cost: ${result['estimated_cost']:.4f}")
+
+# Get usage report
+report = cost_client.get_usage_report()
+print(f"Total estimated cost: ${report['estimated_total_cost']:.4f}")
+```
+
+### Memory and Resource Management
+
+```python
+import weakref
+import gc
+from contextlib import contextmanager
+
+class ResourceManagedClient:
+    """
+    Client wrapper with automatic resource management and cleanup.
+    """
+    
+    def __init__(self, client):
+        self.client = client
+        self._uploaded_files = weakref.WeakSet()
+        self._active_caches = weakref.WeakSet()
+    
+    @contextmanager
+    def managed_file_upload(self, file_path: str):
+        """Context manager for automatic file cleanup."""
+        
+        uploaded_file = None
+        try:
+            uploaded_file = self.client.files.upload(file=file_path)
+            self._uploaded_files.add(uploaded_file)
+            yield uploaded_file
+            
+        finally:
+            if uploaded_file:
+                try:
+                    self.client.files.delete(name=uploaded_file.name)
+                    print(f"Cleaned up file: {uploaded_file.name}")
+                except Exception as e:
+                    print(f"Warning: Could not delete file {uploaded_file.name}: {e}")
+    
+    @contextmanager  
+    def managed_cache(self, model: str, contents, ttl_seconds: int = 3600):
+        """Context manager for automatic cache cleanup."""
+        
+        cache = None
+        try:
+            cache = self.client.caches.create(
+                model=model,
+                config=types.CreateCachedContentConfig(
+                    contents=contents,
+                    ttl=f'{ttl_seconds}s'
+                )
+            )
+            self._active_caches.add(cache)
+            yield cache
+            
+        finally:
+            if cache:
+                try:
+                    self.client.caches.delete(name=cache.name)
+                    print(f"Cleaned up cache: {cache.name}")
+                except Exception as e:
+                    print(f"Warning: Could not delete cache {cache.name}: {e}")
+    
+    def cleanup_all_resources(self):
+        """Manually cleanup all tracked resources."""
+        
+        # Clean up files
+        for file_ref in list(self._uploaded_files):
+            try:
+                self.client.files.delete(name=file_ref.name)
+                print(f"Cleaned up file: {file_ref.name}")
+            except Exception as e:
+                print(f"Warning: Could not delete file: {e}")
+        
+        # Clean up caches
+        for cache_ref in list(self._active_caches):
+            try:
+                self.client.caches.delete(name=cache_ref.name)
+                print(f"Cleaned up cache: {cache_ref.name}")
+            except Exception as e:
+                print(f"Warning: Could not delete cache: {e}")
+        
+        # Force garbage collection
+        gc.collect()
+
+# Usage examples
+resource_client = ResourceManagedClient(client)
+
+# Automatic file cleanup
+with resource_client.managed_file_upload('large_document.pdf') as doc_file:
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=['Summarize this document', doc_file]
+    )
+    print(response.text)
+# File is automatically cleaned up here
+
+# Automatic cache cleanup
+contents = [types.UserContent(parts=[types.Part(text="Long context content...")])]
+with resource_client.managed_cache('gemini-2.5-pro', contents) as cache:
+    # Use cache for multiple queries
+    response1 = client.models.generate_content(
+        model='gemini-2.5-pro',
+        contents='Query 1',
+        config=types.GenerateContentConfig(cached_content=cache.name)
+    )
+    
+    response2 = client.models.generate_content(
+        model='gemini-2.5-pro', 
+        contents='Query 2',
+        config=types.GenerateContentConfig(cached_content=cache.name)
+    )
+# Cache is automatically cleaned up here
+
+# Manual cleanup if needed
+resource_client.cleanup_all_resources()
+```
+
+---
+
+## Migration from Legacy SDK
+
+### Automated Migration Helper
+
+```python
+class LegacyToNewMigrationHelper:
+    """
+    Helper class to migrate code from google-generativeai to google-genai.
+    """
+    
+    @staticmethod
+    def show_migration_patterns():
+        """Display common migration patterns."""
+        
+        patterns = {
+            "Basic Setup": {
+                "old": """
+import google.generativeai as genai
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel('gemini-pro')
+                """,
+                "new": """
+from google import genai
+from google.genai import types
+client = genai.Client(api_key="YOUR_API_KEY")
+                """
+            },
+            
+            "Simple Generation": {
+                "old": """
+response = model.generate_content("Hello world")
+print(response.text)
+                """,
+                "new": """
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents="Hello world"
+)
+print(response.text)
+                """
+            },
+            
+            "With Configuration": {
+                "old": """
+model = genai.GenerativeModel(
+    'gemini-pro',
+    generation_config=genai.types.GenerationConfig(
+        temperature=0.7,
+        max_output_tokens=1000
+    )
+)
+response = model.generate_content("Hello")
+                """,
+                "new": """
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents="Hello",
+    config=types.GenerateContentConfig(
+        temperature=0.7,
+        max_output_tokens=1000
+    )
+)
+                """
+            },
+            
+            "Chat Sessions": {
+                "old": """
+chat = model.start_chat()
+response = chat.send_message("Hello")
+                """,
+                "new": """
+chat = client.chats.create(model='gemini-2.5-flash')
+response = chat.send_message("Hello")
+                """
+            },
+            
+            "Function Calling": {
+                "old": """
+model = genai.GenerativeModel(
+    'gemini-pro',
+    tools=[my_function]
+)
+response = model.generate_content("Call function")
+                """,
+                "new": """
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents="Call function",
+    config=types.GenerateContentConfig(
+        tools=[my_function]
+    )
+)
+                """
+            }
+        }
+        
+        for category, examples in patterns.items():
+            print(f"\n=== {category} ===")
+            print("OLD (google-generativeai):")
+            print(examples["old"])
+            print("\nNEW (google-genai):")
+            print(examples["new"])
+            print("-" * 50)
+    
+    @staticmethod
+    def create_compatibility_wrapper():
+        """
+        Create a compatibility wrapper for easier migration.
+        This allows gradual migration of existing code.
+        """
+        
+        class LegacyCompatibilityWrapper:
+            """Wrapper to ease migration from old SDK patterns."""
+            
+            def __init__(self, api_key: str = None):
+                from google import genai
+                self.client = genai.Client(api_key=api_key)
+            
+            def GenerativeModel(self, model_name: str, **kwargs):
+                """Mimic old GenerativeModel interface."""
+                
+                # Map old model names to new ones
+                model_mapping = {
+                    'gemini-pro': 'gemini-2.5-flash',
+                    'gemini-pro-vision': 'gemini-2.5-flash',
+                    'gemini-1.5-pro': 'gemini-2.5-pro',
+                    'gemini-1.5-flash': 'gemini-2.5-flash'
+                }
+                
+                new_model_name = model_mapping.get(model_name, model_name)
+                
+                return LegacyModelWrapper(self.client, new_model_name, **kwargs)
+        
+        class LegacyModelWrapper:
+            """Wrapper to mimic old GenerativeModel interface."""
+            
+            def __init__(self, client, model_name: str, **kwargs):
+                self.client = client
+                self.model_name = model_name
+                self.default_config = self._convert_legacy_config(kwargs)
+            
+            def _convert_legacy_config(self, kwargs):
+                """Convert legacy configuration to new format."""
+                from google.genai import types
+                
+                config_params = {}
+                
+                if 'generation_config' in kwargs:
+                    gen_config = kwargs['generation_config']
+                    if hasattr(gen_config, 'temperature'):
+                        config_params['temperature'] = gen_config.temperature
+                    if hasattr(gen_config, 'max_output_tokens'):
+                        config_params['max_output_tokens'] = gen_config.max_output_tokens
+                
+                if 'safety_settings' in kwargs:
+                    config_params['safety_settings'] = kwargs['safety_settings']
+                
+                if 'tools' in kwargs:
+                    config_params['tools'] = kwargs['tools']
+                
+                return types.GenerateContentConfig(**config_params) if config_params else None
+            
+            def generate_content(self, contents, **kwargs):
+                """Mimic old generate_content method."""
+                
+                config = self.default_config
+                if kwargs:
+                    # Merge with additional config if provided
+                    pass  # Simplified for example
+                
+                return self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=contents,
+                    config=config
+                )
+            
+            def start_chat(self, **kwargs):
+                """Mimic old start_chat method."""
+                
+                return LegacyChatWrapper(self.client, self.model_name, self.default_config)
+        
+        class LegacyChatWrapper:
+            """Wrapper to mimic old chat interface."""
+            
+            def __init__(self, client, model_name: str, config):
+                self.chat = client.chats.create(model=model_name, config=config)
+            
+            def send_message(self, message):
+                """Mimic old send_message method."""
+                return self.chat.send_message(message)
+        
+        return LegacyCompatibilityWrapper
+    
+    @staticmethod
+    def check_code_for_migration_needs(code_string: str) -> dict:
+        """
+        Analyze code string for migration requirements.
+        
+        Args:
+            code_string: Python code as string
+            
+        Returns:
+            Dictionary with migration analysis
+        """
+        
+        issues = []
+        suggestions = []
+        
+        # Check for old imports
+        if "google.generativeai" in code_string:
+            issues.append("Using deprecated google.generativeai import")
+            suggestions.append("Replace with: from google import genai")
+        
+        # Check for old model names
+        old_models = ['gemini-pro', 'gemini-pro-vision', 'gemini-1.5-pro']
+        for old_model in old_models:
+            if old_model in code_string:
+                issues.append(f"Using potentially outdated model name: {old_model}")
+                suggestions.append(f"Consider updating to: gemini-2.5-flash or gemini-2.5-pro")
+        
+        # Check for old configuration patterns
+        if "GenerationConfig" in code_string:
+            issues.append("Using old GenerationConfig")
+            suggestions.append("Replace with: types.GenerateContentConfig")
+        
+        # Check for old client patterns
+        if "genai.configure" in code_string:
+            issues.append("Using old configuration method")
+            suggestions.append("Replace with: client = genai.Client(api_key=...)")
+        
+        return {
+            "issues_found": len(issues),
+            "issues": issues,
+            "suggestions": suggestions,
+            "migration_needed": len(issues) > 0
+        }
+
+# Usage examples
+helper = LegacyToNewMigrationHelper()
+
+# Show migration patterns
+helper.show_migration_patterns()
+
+# Check existing code
+old_code = """
+import google.generativeai as genai
+genai.configure(api_key="key")
+model = genai.GenerativeModel('gemini-pro')
+response = model.generate_content("Hello")
+"""
+
+analysis = helper.check_code_for_migration_needs(old_code)
+print(f"Migration needed: {analysis['migration_needed']}")
+for issue in analysis['issues']:
+    print(f"Issue: {issue}")
+for suggestion in analysis['suggestions']:
+    print(f"Suggestion: {suggestion}")
+
+# Create compatibility wrapper for gradual migration
+CompatWrapper = helper.create_compatibility_wrapper()
+legacy_client = CompatWrapper(api_key="your-key")
+
+# This allows old patterns to work during migration
+model = legacy_client.GenerativeModel('gemini-pro')
+response = model.generate_content("Hello world")
+print(response.text)
+```
+
+---
+
+## Conclusion
+
+This comprehensive guide covers the latest Google GenAI SDK capabilities and best practices. Key takeaways:
+
+1. **Migrate immediately** from `google-generativeai` to `google-genai` before November 2025 deadline
+2. **Use specific model names** like `gemini-2.5-flash` and `gemini-2.5-pro`
+3. **Leverage advanced features** like content caching, grounding, and URL context
+4. **Implement proper error handling** with retry logic and rate limiting
+5. **Optimize costs** through smart model selection and caching strategies
+6. **Structure code properly** with correct content formatting and configuration
+
+The Google GenAI SDK represents a significant evolution in accessing Gemini models, providing unified access to both Developer API and Vertex AI with enhanced capabilities for modern AI applications.
+
+For the most current information, always refer to the [official documentation](https://googleapis.github.io/python-genai/) and [API reference](https://ai.google.dev/gemini-api/docs).

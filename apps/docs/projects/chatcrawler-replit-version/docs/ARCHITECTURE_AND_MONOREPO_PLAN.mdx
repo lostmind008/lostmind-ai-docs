@@ -1,0 +1,208 @@
+<Info>
+This content was automatically extracted from ChatCrawler-Replit-version.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# ChatCrawler: Current Architecture and Monorepo Blueprint
+
+Status: Development prototype (approximately 40% complete). This document describes the current system, reconciles documentation with reality, and proposes a path to a Next.js 15 Turborepo monorepo with a marketing site and additional apps.
+
+## 1) Current System Overview
+
+- Frontend: Two UIs exist
+  - `client/`: Vite + React app with shadcn/ui.
+  - `apps/chatcrawler/`: Next.js app (App Router) with routes for dashboard, chat, documents, scrape, account.
+- Backend API: `server/` Express 4 + TypeScript
+  - Auth: Replit OIDC (`server/replitAuth.ts`) with PostgreSQL-backed sessions.
+  - Routes: `server/routes.ts` for auth, dashboard stats, jobs, documents, chat, billing, and subscription creation.
+  - AI: `server/openai.ts` selects OpenAI (if key) or Gemini fallback; provides chat, embeddings, summarization.
+  - Storage: `server/storage.ts` implements `MemStorage` — all data in memory (lossy, single-instance-only).
+  - Build/dev: `server/vite.ts` wires Express + Vite for the `client/` app in dev.
+- Worker Service: `services/worker/` FastAPI (Python)
+  - Scraper: Async crawler with robots.txt compliance, basic link traversal, content/image extraction.
+  - API: `/scrape` background jobs with in-memory status, `/health`, stubs for upload/chat/visualise.
+- Webhook Service: `services/webhook/` Express (Node.js)
+  - Stripe webhook receiver and forwarder to main app (endpoints not yet implemented in `server/`).
+- Data Layer
+  - Drizzle schema: `shared/schema.ts` defines users, jobs, docs, conversations, messages, credits, etc.
+  - Drizzle DB clients: `server/db.ts` and `apps/chatcrawler/lib/db.ts` configure `drizzle-orm` + `pg` (unused by `server/storage.ts`).
+  - Prisma schema exists in `shared/prisma/schema.prisma` but is not used by the running code.
+- Payments: Stripe subscription creation implemented; lifecycle webhooks not integrated into main server.
+- Observability: Console logging with safer API response logging in dev; no metrics or tracing.
+
+## 2) Reality Check vs Documentation
+
+Accurate
+- `DEVELOPMENT_STATUS.md`: Reflects prototype state (40% complete) and key gaps.
+
+Outdated or Overstated
+- `README.md`: Mixed messaging — correctly flags "DEVELOPMENT PROTOTYPE" but elsewhere implies production readiness and "Ready to Launch" steps.
+- `docs/ARCHITECTURE.md`: Describes a future/alternate stack (Next.js 15 + Prisma + Auth.js) rather than the current Express + Drizzle + Replit Auth stack.
+- `SETUP_COMPLETE.md` and `PRODUCTION_SETUP_GUIDE.md`: Overstate readiness and include concrete Stripe IDs; not aligned with actual implementation.
+
+Actions taken in this commit
+- Added this authoritative document consolidating current architecture and the future monorepo plan.
+- Plan: align `README.md` language and update `docs/ARCHITECTURE.md` to reflect current stack with a note on future target.
+
+Security note
+- The repository currently contains secrets in `.env`. Rotate immediately and remove from VCS. Reference `.env.example` for placeholders only.
+
+## 3) Detailed Current Architecture
+
+### 3.1 Frontend
+- `client/` (Vite + React):
+  - Routing: wouter
+  - State: TanStack Query
+  - UI: shadcn/ui components
+  - Talks to Express API under `/api/*`
+
+- `apps/chatcrawler/` (Next.js App Router):
+  - Pages: `/`, `/dashboard`, `/chat`, `/documents`, `/scrape`, `/account`
+  - API routes (example): `app/api/upload/route.ts` creates jobs and posts to worker (contains a minor missing import of `eq`)
+  - DB: `app/lib/db.ts` uses `drizzle-orm` + `pg` with `shared/schema.ts`
+  - Middleware: present but does not fully enforce auth
+
+Coexistence: Both apps exist; consolidation is recommended in the monorepo plan.
+
+### 3.2 Backend API (Express)
+- Auth: Replit OIDC via `passport` with PostgreSQL session store (`connect-pg-simple`).
+- Routes in `server/routes.ts`:
+  - Auth: `GET /api/auth/user`
+  - Dashboard: `GET /api/dashboard/stats`
+  - Jobs: `GET /api/jobs`, `POST /api/jobs/scrape` (contacts worker)
+  - Documents: `GET /api/documents`, `POST /api/upload` (stubbed)
+  - Chat: `POST /api/chat` (OpenAI/Gemini)
+  - Conversations: `GET /api/conversations/:id`
+  - Billing: `GET /api/billing`, `POST /api/create-subscription`
+- Error handling/logging: `server/index.ts` avoids logging bodies in prod and avoids process crashes in prod.
+- Persistence: Absent. `server/storage.ts` keeps everything in memory.
+
+### 3.3 Worker (FastAPI)
+- `/scrape`: Enqueues and processes scraping jobs (in-process background task). Tracks progress and results in in-memory dict.
+- `WebScraper`: robots.txt respect, link traversal with depth and page limits, extracted content and metadata.
+- Future: Upload parsing, embeddings, RAG/search integrations.
+
+### 3.4 Webhook Service
+- Stripe webhook endpoint with signature verification, forwards to main app endpoints (`/api/webhooks/*`) that are not yet implemented in `server/`.
+
+### 3.5 Data and AI
+- Drizzle schema covers: users, jobs, docs (kb_docs with pgvector), conversations/messages, credits, plans/subscriptions/audit logs.
+- AI provider: OpenAI preferred, Gemini fallback; abstractions for chat, embeddings, summarization, and token estimation.
+
+## 4) Gaps and Risks (Priority)
+
+1. Persistence: Replace `MemStorage` with DB-backed storage using `drizzle-orm`.
+2. Validation/Security: Add Zod validation for all endpoints; rate limiting (express-rate-limit), CSRF where applicable, sanitize inputs.
+3. Stripe Lifecycle: Implement `/api/webhooks/*` in main server and persist subscription state + credits.
+4. Worker Integration: Persist job progress/results; add polling or webhook callbacks to update job status; consider a simple queue.
+5. Docs Hygiene: Remove/replace misleading "production ready" claims; scrub secrets from repo.
+6. Package Hygiene: Fix broken `packages/*` stubs or remove until implemented.
+7. CI Alignment: Update CI to match npm usage and current test reality, or add tests to satisfy CI.
+
+## 5) Monorepo (Turborepo) Blueprint for Next.js 15
+
+Target goals
+- Single repo with clear boundaries: apps, services, packages, shared types/schema.
+- Standardized tooling: PNPM workspaces or npm workspaces + Turborepo for caching.
+- One web app (Next.js 15 App Router) plus a separate marketing site.
+- Optional: keep Express API or migrate to Next.js Route Handlers gradually.
+
+Proposed structure
+```
+apps/
+  web/                # Next.js 15 app (product UI + API route handlers)
+  marketing/          # Next.js 15 marketing site
+  api/                # Optional: Express API (if kept initially)
+services/
+  worker/             # FastAPI worker (Python)
+  webhook/            # Stripe webhooks (could merge into api)
+packages/
+  ui/                 # shadcn/ui components (actual src present)
+  auth/               # NextAuth or OIDC helpers (choose one)
+  config/             # eslint, prettier, tailwind presets
+  schema/             # shared Drizzle schema + zod validators
+  rag/                # vector store + embeddings abstraction
+  sdk/                # typed client for API
+  ai-sdk/             # UI hooks for chat/completions (optional)
+tools/
+  tsconfig/
+  eslint/
+```
+
+Key decisions
+- Backend choice:
+  - Option A (All-in Next.js): move API endpoints to Route Handlers; deprecate Express; reuse Drizzle and session strategy with Next middleware.
+  - Option B (Hybrid): keep Express in `apps/api` and frontends consume it; later migrate endpoints into the Next.js app.
+- Auth:
+  - Unify on NextAuth (JWT) for Next.js apps, or continue with Replit OIDC using NextAuth’s custom provider. If Express remains, keep passport there until migration is complete.
+- Data:
+  - Standardize on Drizzle across apps; remove unused Prisma artifacts to reduce confusion.
+- Packages:
+  - Implement `packages/ui/src`, `packages/sdk/src`, `packages/ai-sdk/src` to avoid broken exports. Share code instead of duplicating between `client/` and `apps/chatcrawler/`.
+
+Build and tooling
+- Use Turborepo pipelines: `build`, `lint`, `typecheck`, `test`
+- Configure per-package `tsconfig.json` and shared `@chatcrawler/config` presets.
+- Set up environment variable contracts via `.env.example` and per-app `.env.local`.
+
+## 6) Migration Plan (Phased)
+
+Phase 0: Safety (Immediate)
+- Rotate and remove committed secrets from `.env`; rely on `.env.example` and secrets manager.
+
+Phase 1: Stabilize Core (2–4 weeks)
+- Implement `DbStorage` (replace `MemStorage`) for users/jobs/docs/conversations/messages/credits.
+- Add Zod validation + rate limiting to all Express routes.
+- Implement Stripe webhook endpoints in main server and persist subscription lifecycle + credit top-ups.
+- Fix Next.js API route bugs (e.g., import `eq`), ensure auth passed properly.
+- Update documentation to reflect actual state; remove misleading docs.
+
+Phase 2: Monorepo Restructure (1–2 weeks)
+- Introduce Turborepo + workspaces.
+- Create `packages/schema` (export Drizzle tables + zod schemas), move from `shared/`.
+- Consolidate UI to `packages/ui` with actual `src/` code used by both apps.
+- Decide between Option A (Route Handlers) or B (keep Express temporarily); scaffold chosen path.
+
+Phase 3: Frontend Consolidation (1–2 weeks)
+- Choose one product app: migrate features from `client/` to `apps/web/` (Next.js).
+- Keep `apps/marketing/` as separate Next.js site.
+
+Phase 4: Worker Integration (2–3 weeks)
+- Persist job statuses in DB; worker updates via webhook or polling; store scrape results into `kb_docs` + embeddings (Qdrant or pgvector).
+- Add RAG provider implementation in `packages/rag` and integrate into chat.
+
+Phase 5: Observability and Hardening (1–2 weeks)
+- Logging, metrics, tracing; add error tracking (Sentry). Security reviews, rate limits, and monitoring.
+
+## 7) Use This Repo vs Greenfield
+
+Reasons to keep and evolve this repo
+- Drizzle schema and types are complete and usable.
+- Existing UI components and two UIs to cherry-pick from.
+- AI, auth, and Stripe plumbing exist and can be hardened.
+
+Reasons to consider greenfield
+- Duplicate apps and broken packages create tech debt.
+- Documentation and CI are out of sync, requiring cleanup.
+
+Recommendation
+- Keep this repo and evolve it under Turborepo. Perform Phase 0–2 to reduce debt quickly, then consolidate apps. Greenfield is only recommended if timelines are extremely tight and you want to avoid untangling Express + duplicate frontends.
+
+## 8) Immediate Next Steps
+
+1. Approve removal of secrets from repo and rotate credentials.
+2. Approve `DbStorage` implementation to replace `MemStorage`.
+3. Approve creation of `/api/webhooks/*` in main server.
+4. Decide on backend path (Next.js Route Handlers vs keep Express initially).
+5. Adopt Turborepo and restructure packages/apps accordingly.
+
+---
+
+Appendix: File References
+- Express API: `server/index.ts`, `server/routes.ts`, `server/storage.ts`, `server/openai.ts`, `server/replitAuth.ts`
+- Worker: `services/worker/main.py`, `services/worker/app/api/scrape.py`, `services/worker/app/core/scraper.py`
+- Webhook: `services/webhook/index.ts`
+- Schema: `shared/schema.ts`
+- Next.js app: `apps/chatcrawler/*`
+- Vite app: `client/*`
+

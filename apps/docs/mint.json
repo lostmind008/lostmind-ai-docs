@@ -1,0 +1,149 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "LostMind AI Documentation",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#6366f1",
+    "light": "#8b5cf6",
+    "dark": "#5b21b6",
+    "anchors": {
+      "from": "#6366f1",
+      "to": "#8b5cf6"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Main Platform",
+      "url": "https://ask.lostmindai.com"
+    },
+    {
+      "name": "Contact",
+      "url": "mailto:hello@lostmindai.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Try LostMind AI",
+    "url": "https://ask.lostmindai.com"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Main Platform",
+      "icon": "rocket",
+      "url": "https://ask.lostmindai.com"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/lostmind-ai"
+    },
+    {
+      "name": "Website",
+      "icon": "globe",
+      "url": "https://lostmindai.com"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "development"
+      ]
+    },
+    {
+      "group": "Essentials",
+      "pages": [
+        "essentials/markdown",
+        "essentials/code",
+        "essentials/images",
+        "essentials/settings",
+        "essentials/navigation",
+        "essentials/reusable-snippets"
+      ]
+    },
+    {
+      "group": "🚀 Main Platforms",
+      "pages": [
+        "projects/lostmindai-turborepo/introduction",
+        "projects/lostmindai-turborepo/readme",
+        "projects/lostmindai-turborepo/development",
+        "projects/lostmindai-turborepo/architecture",
+        "projects/back-end-architecture-for-turborepo-with-rag-embeddings/introduction",
+        "projects/back-end-architecture-for-turborepo-with-rag-embeddings/development",
+        "projects/back-end-architecture-for-turborepo-with-rag-embeddings/architecture"
+      ]
+    },
+    {
+      "group": "🛠️ Development Tools",
+      "pages": [
+        "projects/updated-mcp-tools/introduction",
+        "projects/updated-mcp-tools/readme",
+        "projects/updated-mcp-tools/development",
+        "projects/updated-mcp-tools/architecture",
+        "projects/github-repository-analyzer-with-gemini-25-pro/introduction",
+        "projects/github-repository-analyzer-with-gemini-25-pro/readme",
+        "projects/github-repository-analyzer-with-gemini-25-pro/architecture"
+      ]
+    },
+    {
+      "group": "📊 Other Projects",
+      "pages": [
+        "projects/lostmind-ai-documentation-site/introduction",
+        "projects/lostmind-ai-documentation-site/readme",
+        "projects/lostmind-ai-documentation-site/architecture",
+        "projects/lostmind-ai-project-documentation/introduction",
+        "projects/lostmind-ai-project-documentation/readme",
+        "projects/lostmind-ai-project-documentation/architecture",
+        "projects/claude-code-framework-by-lostmind-ai/introduction",
+        "projects/claude-code-framework-by-lostmind-ai/development",
+        "projects/claude-code-framework-by-lostmind-ai/architecture",
+        "projects/lostmind-ai-memorycontext-protocol/introduction",
+        "projects/lostmind-ai-memorycontext-protocol/readme",
+        "projects/lostmind-ai-memorycontext-protocol/development",
+        "projects/lostmind-ai-memorycontext-protocol/architecture",
+        "projects/bd-news-task/introduction",
+        "projects/bd-news-task/readme",
+        "projects/bd-news-task/architecture",
+        "projects/gemini-cloud-service-v2/introduction",
+        "projects/gemini-cloud-service-v2/readme",
+        "projects/gemini-cloud-service-v2/architecture",
+        "projects/chatcrawler-replit-version/introduction",
+        "projects/chatcrawler-replit-version/readme",
+        "projects/chatcrawler-replit-version/architecture",
+        "projects/new-website-template-claude-code-engineering/introduction",
+        "projects/new-website-template-claude-code-engineering/development",
+        "projects/new-website-template-claude-code-engineering/architecture"
+      ]
+    },
+    {
+      "group": "API Documentation",
+      "pages": [
+        "api-reference/introduction"
+      ]
+    },
+    {
+      "group": "Endpoint Examples",
+      "pages": [
+        "api-reference/endpoint/get",
+        "api-reference/endpoint/create",
+        "api-reference/endpoint/delete"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/lostmindai",
+    "github": "https://github.com/lostmind-ai",
+    "linkedin": "https://www.linkedin.com/company/lostmind-ai"
+  }
+}

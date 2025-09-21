@@ -1,0 +1,343 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# Critical Environment Variables Analysis for Your LostMindAI Repository
+
+Let me provide a comprehensive explanation of what's missing and why it's critical, with enough detail for your AI agents to verify and cross-check.
+
+## 🚨 **Critical Context: Why These Variables Matter**
+
+Based on my repository analysis and research, your architecture has **unique requirements** that aren't covered in your current environment guide. Here's the evidence-based breakdown:
+
+***
+
+## **1. MICROSERVICES ARCHITECTURE REQUIREMENTS**
+
+### **Problem Identified:**
+
+Your repository shows you have **separate FastAPI services** (`services/ai-compute`, `services/document-processor`) that need to communicate with your Next.js apps. This creates **service discovery and authentication challenges** that LobeChat doesn't have (since it's all in one Next.js app).
+
+### **Missing Variables (High Priority):**
+
+```bash
+# SERVICE DISCOVERY - Your microservices need to find each other
+AI_COMPUTE_SERVICE_URL="http://localhost:8000"
+DOCUMENT_PROCESSOR_URL="http://localhost:8001" 
+CRAWLER_ENGINE_URL="http://localhost:8002"
+
+# PRODUCTION URLs (when deployed to Google Cloud Run)
+AI_COMPUTE_SERVICE_URL="https://ai-compute-coral-muse-469919-m0.a.run.app"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `docker-compose.yml` shows services on different ports (3000, 3001, 8000)
+- **File**: `infra/terraform/gcp/main.tf` shows Cloud Run services being created
+- **Code**: Your frontend apps need to know where your FastAPI services are running
+
+
+### **Why It's Critical:**
+
+Without these, your frontend apps can't communicate with your backend services. Your AI features will fail.
+
+***
+
+## **2. GOOGLE CLOUD RUN AUTHENTICATION**
+
+### **Problem Identified:**
+
+Your `services/ai-compute` service implements **Google IAM OIDC authentication** (found in your code), but your environment guide doesn't include the required authentication variables.
+
+### **Missing Variables (Critical):**
+
+```bash
+# OIDC AUTHENTICATION - Required for service-to-service calls
+OIDC_ISSUER_URL="https://accounts.google.com"
+OIDC_AUDIENCE="coral-muse-469919-m0"  # Your GCP project ID
+GOOGLE_CLOUD_PROJECT="coral-muse-469919-m0"
+
+# SERVICE ACCOUNT AUTHENTICATION
+GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `infra/terraform/gcp/main.tf` lines 200+ show OIDC service account creation
+- **File**: `services/ai-compute` (referenced in your analysis) implements OIDC middleware
+- **Your Tech Stack**: States "Google Cloud Run (FastAPI)" deployment
+
+
+### **Why It's Critical:**
+
+Without these, your microservices can't authenticate with each other. All service-to-service calls will fail with 401 errors.
+
+***
+
+## **3. TURBOREPO-SPECIFIC CONFIGURATION**
+
+### **Problem Identified:**
+
+Your `turbo.json` shows task orchestration, but you're missing environment variables that Turborepo needs to know about for proper caching and builds.
+
+### **Missing Variables (Medium Priority):**
+
+```bash
+# BUILD-TIME VARIABLES - Turborepo needs these for consistent builds
+NEXT_PUBLIC_APP_URL="http://localhost:3000"   # marketing app
+NEXT_PUBLIC_ASK_APP_URL="http://localhost:3001"  # ask app
+NEXT_PUBLIC_API_BASE_URL="http://localhost:8000"  # FastAPI backend
+
+# DEPLOYMENT URLS (production)
+NEXT_PUBLIC_APP_URL="https://lostmindai.com"
+NEXT_PUBLIC_ASK_APP_URL="https://ask.lostmindai.com"
+NEXT_PUBLIC_API_BASE_URL="https://api.lostmindai.com"
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `turbo.json` - Your build orchestration config
+- **File**: `pnpm-workspace.yaml` - Shows multiple app workspaces
+- **Research**: [Turborepo docs](https://turborepo.com/docs/crafting-your-repository/using-environment-variables) confirm this requirement
+
+
+### **Why It's Critical:**
+
+Without these, your builds will be inconsistent across environments, and your frontend apps won't know how to reach your APIs.
+
+***
+
+## **4. FASTAPI-SPECIFIC CONFIGURATION**
+
+### **Problem Identified:**
+
+Your FastAPI services need specific configuration that's different from Next.js apps.
+
+### **Missing Variables (High Priority):**
+
+```bash
+# FASTAPI CONFIGURATION - Required for your Python services
+FASTAPI_ENV="development"  # development | staging | production
+API_BASE_URL="http://localhost:8000"
+CORS_ALLOWED_ORIGINS="http://localhost:3000,http://localhost:3001"
+MAX_WORKERS=4
+WORKER_TIMEOUT=3600
+UVICORN_HOST="0.0.0.0"
+UVICORN_PORT=8000
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `docker-compose.yml` shows FastAPI services with specific ports
+- **Directory**: `services/ai-compute` exists (FastAPI service)
+- **Research**: [FastAPI environment docs](https://fastapi.tiangolo.com/advanced/settings/) confirm this pattern
+
+
+### **Why It's Critical:**
+
+Without these, your FastAPI services won't start or will have incorrect CORS policies, blocking frontend communication.
+
+***
+
+## **5. SECURITY CONFIGURATION GAPS**
+
+### **Problem Identified:**
+
+Your CLAUDE.md mentions "enterprise-grade security" but your environment guide is missing security-specific variables.
+
+### **Missing Variables (High Priority):**
+
+```bash
+# SECURITY CONFIGURATION - Your enterprise features need these
+SECURITY_MODE="development"  # development | production
+AUDIT_LOG_LEVEL="MEDIUM"     # LOW | MEDIUM | HIGH  
+RATE_LIMIT_ENABLED=true
+JWT_SECRET="[generate with: openssl rand -base64 32]"
+ENCRYPTION_KEY="[generate with: openssl rand -base64 32]"
+GDPR_COMPLIANCE_ENABLED=false
+SOC2_AUDIT_MODE=false
+```
+
+
+### **Evidence from Your Repository:**
+
+- **File**: `CLAUDE.md` extensively mentions security requirements
+- **Architecture**: Your enterprise positioning requires audit logging
+- **Code Analysis**: Security middleware mentioned in your services
+
+
+### **Why It's Critical:**
+
+Without these, your security features won't work, and you can't deliver on your enterprise security promises.
+
+***
+
+## **6. ENVIRONMENT-SPECIFIC PORT CONFLICTS**
+
+### **Problem Identified:**
+
+Your environment guide shows inconsistent port usage compared to your actual configuration.
+
+### **Current Issue:**
+
+- **Your Guide Says**: Multiple apps on port 3000
+- **Your `docker-compose.yml` Shows**: Different ports (3000, 3001, 8000)
+
+
+### **Missing Clarification:**
+
+```bash
+# DEVELOPMENT PORTS (from your docker-compose.yml)
+MARKETING_APP_PORT=3000
+ASK_APP_PORT=3001
+AI_COMPUTE_PORT=8000
+DOCUMENT_PROCESSOR_PORT=8001
+POSTGRES_PORT=5432
+REDIS_PORT=6379
+```
+
+
+### **Why It's Critical:**
+
+Port conflicts will prevent your services from starting locally, blocking development.
+
+***
+
+## **7. FEATURE FLAGS FOR INCOMPLETE FEATURES**
+
+### **Problem Identified:**
+
+Your repository analysis shows incomplete implementations (like `@lostmind/ai-clients` package). You need feature flags to safely develop.
+
+### **Missing Variables (Medium Priority):**
+
+```bash
+# FEATURE FLAGS - Control incomplete features
+FEATURE_FLAG_PRIVATE_DOCS=false
+FEATURE_FLAG_VOICE_ENABLED=false
+FEATURE_FLAG_3D_ORB=true
+FEATURE_FLAG_ENTERPRISE_FEATURES=false
+FEATURE_FLAG_AI_CLIENTS_PACKAGE=false  # Since it's not implemented
+```
+
+
+### **Evidence from Your Repository:**
+
+- **Analysis**: Shows incomplete `@lostmind/ai-clients` implementation
+- **Architecture**: Multiple planned but unimplemented apps
+- **Development**: Safer to toggle features during development
+
+
+### **Why It's Critical:**
+
+Without feature flags, incomplete features will break your application.
+
+***
+
+## **📋 AI AGENT VERIFICATION CHECKLIST**
+
+For your AI agents to verify and cross-check:
+
+### **1. Check Repository Files:**
+
+```bash
+# Verify these files exist and check their configurations:
+- docker-compose.yml (check service ports)
+- turbo.json (check task configuration)
+- infra/terraform/gcp/main.tf (check Cloud Run services)
+- services/*/package.json (check service dependencies)
+- apps/*/package.json (check app configurations)
+```
+
+
+### **2. Verify Service Communication:**
+
+```bash
+# Check if services can actually communicate:
+- Can frontend apps reach FastAPI services?
+- Are CORS headers properly configured?
+- Do authentication tokens work between services?
+```
+
+
+### **3. Check Environment File Consistency:**
+
+```bash
+# Verify environment files match actual architecture:
+- Do port numbers match docker-compose.yml?
+- Are service URLs correct for your deployment?
+- Do security variables match CLAUDE.md requirements?
+```
+
+
+### **4. Test Local Development:**
+
+```bash
+# Verify complete local stack works:
+pnpm install
+docker-compose up -d  # Does this start without errors?
+pnpm run dev          # Do all apps start successfully?
+```
+
+
+## **🎯 IMMEDIATE ACTION REQUIRED**
+
+1. **Update your environment guide** with these missing variables
+2. **Test your complete local stack** - many configurations might be broken
+3. **Verify service-to-service communication** works with proper authentication
+4. **Add environment validation script** to catch missing variables early
+
+The core issue is that your **microservices architecture** has different requirements than simpler Next.js-only applications, but your environment guide doesn't reflect this complexity. These missing variables will cause **service discovery failures, authentication errors, and deployment issues**.
+
+Your AI agents should verify each of these points against your actual repository structure to confirm what's missing and what needs to be implemented.
+<span style="display:none">[^1][^10][^11][^12][^13][^14][^15][^16][^17][^18][^19][^2][^20][^3][^4][^5][^6][^7][^8][^9]</span>
+
+<div style="text-align: center">⁂</div>
+
+[^1]: https://nextjs.org/docs/pages/guides/environment-variables
+
+[^2]: https://www.reddit.com/r/nextjs/comments/1l6ke8h/nextjs_docker_and_environment_variables/
+
+[^3]: https://stackoverflow.com/questions/79190673/nextjs-environment-variables-and-secrets-in-production
+
+[^4]: https://github.com/vercel/next.js/discussions/44628
+
+[^5]: https://configu.com/blog/next-js-environment-variables-built-in-public-and-private/
+
+[^6]: https://www.youtube.com/watch?v=TI1jU2YbIPA
+
+[^7]: https://dotenvx.com/docs/monorepos/turborepo
+
+[^8]: https://docs.aws.amazon.com/amplify/latest/userguide/ssr-environment-variables.html
+
+[^9]: https://www.reddit.com/r/FastAPI/comments/1d7ubws/switching_dev_staging_prod/
+
+[^10]: https://turborepo.com/docs/crafting-your-repository/using-environment-variables
+
+[^11]: https://refine.dev/blog/next-js-environment-variables/
+
+[^12]: https://www.getorchestra.io/guides/fast-api-environment-variables-a-comprehensive-tutorial
+
+[^13]: https://turborepo.com/docs/reference/configuration
+
+[^14]: https://javascript.plainenglish.io/setting-up-environment-variables-in-next-js-6a790021aceb
+
+[^15]: https://fastapi.tiangolo.com/advanced/settings/
+
+[^16]: https://www.reddit.com/r/nextjs/comments/1inqor8/how_to_properly_handle_environment_variables_in_a/
+
+[^17]: https://fastapi.tiangolo.com/environment-variables/
+
+[^18]: https://github.com/vercel/turborepo/issues/3928
+
+[^19]: https://www.blueshoe.io/blog/fastapi-in-production/
+
+[^20]: https://stackoverflow.com/questions/70528983/share-env-variable-beween-turborepo-monorepo-project
+

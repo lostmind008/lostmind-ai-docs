@@ -1,0 +1,145 @@
+---
+title: "README - LostMind AI - Memory&Context Protocol"
+description: "Complete project README and setup instructions"
+---
+
+<Info>
+This content was automatically extracted from LostMind AI - Memory&Context Protocol.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# The LostMind AI Engine: A Protocol-Driven Framework for Claude Code
+
+**Version:** 3.0 (Portable Engine Release)
+**Author:** LostMind AI (Conceptualized by Sumit Mondal, Engineered by Gemini)
+
+---
+
+## 1. Philosophy: The "Why"
+
+This framework is a comprehensive enhancement for the standard Universal Claude Framework (UCF). It was born from the real-world experience of a solo founder building a complex AI company through relentless, self-taught agentic development.
+
+It solves the most critical challenges faced in long-running agentic projects:
+-   **Context Loss:** Prevents agents from forgetting the plan.
+-   **Agent Drift:** Stops agents from working on the wrong thing.
+-   **Lack of Discipline:** Enforces a professional, structured, and repeatable workflow.
+-   **Project Chaos:** Replaces a messy collection of files with a clean, organized, and self-documenting system.
+
+This is not just a set of tools; it is a **protocol-driven methodology** for professional, agentic software development. It is designed to be a **global system enhancement** that integrates seamlessly with Claude Code to provide disciplined, reliable AI capabilities to all your projects.
+
+---
+
+## 2. The Architecture: Global System Enhancement
+
+The framework is now installed as a global Claude Code system enhancement at `~/.claude/lostmind_ai_engine/`.
+
+-   **The Engine (`~/.claude/lostmind_ai_engine/`):** This is the heart of the framework. It contains all the Python scripts, agent templates, and the master `run_engine.sh` script. Installed once as a system-level component, it provides LostMind AI capabilities to all your projects.
+-   **The Context (`.lostmind_ai_context/`):** When you onboard a project, the engine creates this local directory. It contains the project-specific context files (`PROJECT_MAP.md`, `chat_history.md`), keeping the project's "brain" separate from the engine's "gears."
+
+---
+
+## 3. Step-by-Step Installation & Setup
+
+### Step 1: Install the Base UCF (One-Time Global Setup)
+
+This framework requires the base Universal Claude Framework. If you haven't already, run the foundational installer script once:
+
+```bash
+bash /path/to/your/install_ucf_complete_safe.sh
+```
+
+### Step 2: Install the LostMind AI Framework (One-Time Global Setup)
+
+Install the framework as a global Claude Code system enhancement.
+
+1.  **Run the Installation Script:**
+    ```bash
+    ./install_lostmind_ai_framework.sh
+    ```
+    This installs the engine to `~/.claude/lostmind_ai_engine/` and sets up all UCF commands.
+
+2.  **Configure Your API Key:**
+    -   Navigate to the installed engine: `cd ~/.claude/lostmind_ai_engine/`
+    -   Copy `.env.example` to `.env`: `cp .env.example .env`
+    -   Open `.env` and add your `GEMINI_API_KEY`.
+
+3.  **Clean Up (Optional):**
+    ```bash
+    cd .. && rm -rf /path/to/repository
+    ```
+    You can safely delete the repository after installation since the framework is now globally available.
+
+---
+
+## 4. The Protocol-Driven Workflow: A Practical Guide
+
+This is the core workflow for using the framework on any project.
+
+### Phase 1: Onboard the Project (One Command to Start)
+
+For any new or existing project, run this single command to prepare it for the LostMind AI protocol.
+
+1.  **Run the Onboarding Command:**
+    ```
+    /ucf-onboard-project
+    ```
+2.  **What it Does:** This command automatically detects the globally installed engine and runs the `onboarder.py` script. It automatically scans your project, creates the `PROJECT_MAP.md`, and pulls in the relevant chat history, saving them to a new `.lostmind_ai_context/` directory in your project.
+
+Your project is now fully prepared for disciplined, agentic development.
+
+### Phase 2: The "Office Team" Workflow
+
+This is the day-to-day development cycle.
+
+1.  **Create a Task Briefing:** The "Project Manager" (main Claude) plans a task.
+    ```
+    /ucf-create-task-brief "Create a new user authentication endpoint"
+    ```
+    Claude will then open the newly created brief file for you to fill in the details.
+
+2.  **Scaffold the Plan (If Needed):** The "Architect" agent creates the skeleton files.
+    ```
+    /ucf-scaffold file python "src/auth.py" --purpose "Handles authentication logic"
+    ```
+
+3.  **Hire a Specialist (If Needed):** "The Forge" creates a new agent.
+    ```
+    /ucf-agent-create "A Python engineer specializing in FastAPI security"
+    ```
+
+4.  **Delegate the Task:** The "Project Manager" assigns the brief to the specialist.
+    ```
+    /ucf-delegate-task ".claude/task_briefs/brief_...md" "python-engineer-fastapi-security"
+    ```
+
+5.  **Review the Work:** The `qa-code-reviewer` provides the final quality gate.
+
+---
+
+## 5. The Engine's Contents: File Manifest
+
+This is the complete list of all files that make up the portable `lostmind_ai_engine/`.
+
+```
+lostmind_ai_engine/
+├── README.md
+├── agent_templates/
+│   ├── architect_template.md
+│   ├── documenter_template.md
+│   ├── python_engineer_template.md
+│   ├── qa_reviewer_template.md
+│   └── shell_scripter_template.md
+├── forge_agent.py
+├── onboarder.py
+├── run_engine.sh
+├── scaffolder.py
+├── scaffold_templates/
+│   ├── directory_claude_template.md
+│   ├── directory_readme_template.md
+│   ├── javascript_template.md
+│   └── python_template.md
+├── task_brief_generator.py
+├── requirements.txt
+├── setup_environment.sh
+└── .env.example
+```

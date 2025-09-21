@@ -1,0 +1,425 @@
+<Info>
+This content was automatically extracted from LostMindAI-TurboRepo.
+For the most up-to-date information, refer to the source project.
+</Info>
+
+# LostMind AI — Internal Agent Tasks & Prompts (Do Not Publish)
+
+Status: Internal-only playbook for Claude Code, Codex, and Cursor agents.
+Owner: Sumit
+
+## Quick Response To Agent’s Proposal
+
+Thanks for the analysis. Corrections to align with the current repository state:
+
+- Core shared packages are not implemented yet. Only `packages/config/package.json` exists; `packages/ui`, `packages/db`, `packages/auth`, `packages/billing`, `packages/ai-clients`, `packages/rag`, `packages/utils` are placeholders with CLAUDE notes and no source code.
+- Ask app is implemented with R3F orb + mock AI and runs locally: `apps/ask/*`.
+- Marketing app is not scaffolded beyond planning docs: `apps/marketing/CLAUDE.md`.
+- Docs app exists as a Next.js app: `apps/docs/*`.
+- CI workflow file exists: `.github/workflows/ci.yml`.
+- Real secrets are committed in `.env` and `.env.local`. This is a security risk and must be remediated immediately.
+- Terraform plan exists as `terraform-gcp-config.txt` in root and should be moved to `infra/terraform/gcp/` with `project_id` unified to `coral-muse-469919-m0`.
+
+We’ll finish foundations first, keep Ask on mock AI for now, add soft‑launch auth allowlist, and rehome Terraform with Secret Manager usage.
+
+## Immediate Security & Hygiene (Blocking)
+
+- Rotate and remove secrets:
+  - Remove committed `.env` and `.env.local` from git tracking; keep only `.env.example`. Rotate all exposed Stripe, GCP, Gemini, DB credentials before any deploy or PR.
+  - Remove all references to old domains (e.g., studio.lostmindai.com) from any local env files. `.env.example` is neutral; keep it as the only committed env file.
+- Store secrets properly:
+  - Vercel Environment Variables for Next.js apps (dev/preview/prod).
+  - GCP Secret Manager for backend services, referenced by Cloud Run env vars via secret_key_ref.
+- Unify GCP project: `coral-muse-469919-m0` consistently in Terraform and docs.
+
+Git steps (run locally):
+- Branch: `feat/security-env-rotation`
+- Commands: `git rm --cached .env .env.local`
+- Commit: `chore(security): remove committed env files and rotate secrets`
+- Regenerate keys and set them only in Vercel/GCP Secret Manager. Update `.env.example` placeholders if needed.
+
+Pitfalls:
+- Do not leave valid keys anywhere in repo history or PR text.
+- Do not rely on serverless functions to run DB migrations.
+
+## Execution Plan (Chronological + Parallel Lanes)
+
+Phase 0 (Blocking)
+- Secrets rotation and env policy; unify project ID; remove stale domains.
+
+Phase 1 Foundations (Parallel where indicated)
+- A: `@lostmind/config` (blocking for apps) — TypeScript, ESLint, Tailwind presets.
+- B: `@lostmind/ui` (parallel after A) — Button, Input, Card, Badge, Avatar, Spinner using class-variance-authority.
+- C: `@lostmind/db` (parallel) — Prisma schema and client; no runtime migrations; prep RLS.
+- D: `@lostmind/auth` (after C) — Auth.js v5, Google provider, middleware gating.
+
+Phase 2 App Wiring (Parallel)
+- E: Ask gating — middleware + tester allowlist; keep mock AI.
+- F: Marketing MVP — Home, Pricing, Sign in; use `@lostmind/ui`.
+- G: Billing — `@lostmind/billing` + Stripe webhook route; entitlement updates in DB; tester onboarding path.
+
+Phase 3 Infra
+- H: Terraform reorg — move to `infra/terraform/gcp`; remote state; secret injections; LB/DNS.
+- I: CI plumbing — build/push images for services (stubs acceptable until Week 5–6).
+
+Phase 4 AI Abstraction
+- J: `@lostmind/ai-clients` — Google Generative AI abstraction; later flip from mock.
+
+Acceptance criteria per task group are listed in each prompt below.
+
+## Prompts For Agents (Copy/Paste Sections)
+
+General guardrails for all agents:
+- Never commit real secrets. Only edit `.env.example`.
+- Keep changes small and focused. Follow conventional commits and branch naming.
+- Reference files by exact paths. Do not invent new structure unless specified.
+- Do not add default exports in shared packages (use named exports).
+- Do not run DB migrations from serverless handlers.
+
+---
+
+### Task Group A — @lostmind/config (Foundational)
+
+Objective:
+Create shared TS/ESLint/Tailwind presets and export them for consumers.
+
+Scope and files:
+- `packages/config/tsconfig.json` — base strict TS config for monorepo
+- `packages/config/eslint/base.js` — TS + Prettier rules
+- `packages/config/eslint/next.js` — Next.js 15 + React 19 RC rules
+- `packages/config/tailwind/base.js` — tokens + shadcn defaults
+- `packages/config/src/index.ts` — export “paths” (re-exported presets)
+- Update `packages/config/package.json` “files” and “exports” to include:
+  - `"."` → `"./src/index.ts"`
+  - `"./eslint/*"` → `"./eslint/*.js"`
+  - `"./tailwind/*"` → `"./tailwind/*.js"`
+  - `"./tsconfig.json"` → `"./tsconfig.json"`
+
+Consume in Ask app:
+- `apps/ask/tsconfig.json` → `"extends": "@lostmind/config/tsconfig.json"`
+- `apps/ask/.eslintrc.js` → `module.exports = { extends: ["@lostmind/config/eslint/next"] }`
+- `apps/ask/tailwind.config.js` → `require("@lostmind/config/tailwind/base")`
+
+Commands:
+- `pnpm type-check`
+- `pnpm lint`
+
+Pitfalls:
+- Ensure export paths match exactly; bad exports will break consumers.
+- Avoid default exports; use named exports in `src/index.ts`.
+
+Git:
+- Branch: `feat/config-foundation`
+- Commits: `feat(config): add shared ts/eslint/tailwind presets`
+- PR: “feat(config): monorepo shared presets; ask app extending presets”
+
+Acceptance:
+- Ask app builds and type-checks using shared config.
+- ESLint runs successfully with new presets.
+
+---
+
+### Task Group B — @lostmind/ui (Parallel after A)
+
+Objective:
+Ship core UI components using shadcn patterns and class-variance-authority.
+
+Scope and files:
+- `packages/ui/src/components/{button.tsx,input.tsx,card.tsx,badge.tsx,avatar.tsx,spinner.tsx}`
+- `packages/ui/src/index.ts` — export all components
+- Optional: `packages/ui/tailwind.css` with component layer classes
+
+Requirements:
+- Strict TypeScript props; accessible components (role/aria).
+- Use cva for variants; no inline default exports.
+
+Consumption:
+- In `apps/ask`, replace ad-hoc elements with `@lostmind/ui/Button` etc. where reasonable.
+
+Git:
+- Branch: `feat/ui-core`
+- Commits: `feat(ui): add core components with cva variants`
+- PR: “feat(ui): shadcn-style base components ready for apps”
+
+Acceptance:
+- Both ask/marketing can import `{ Button }` from `"@lostmind/ui"` without config churn.
+- Types and styles work in dev.
+
+---
+
+### Task Group C — @lostmind/db (Parallel)
+
+Objective:
+Provide Prisma schema and client with multi-tenant models and prepare for RLS.
+
+Scope and files:
+- `packages/db/prisma/schema.prisma`:
+  - models: `User`, `Tenant`, `Subscription`, `Entitlement`, `Usage`
+  - datasource: postgresql with `env(DATABASE_URL)`
+  - generator: prisma-client-js
+- `packages/db/src/client.ts`:
+  - Singleton `PrismaClient` with `NODE_ENV`-aware instantiation
+- `packages/db/src/index.ts`:
+  - export `{ prisma }` and types
+
+Commands (dev DB only):
+- `pnpm db:generate`
+- `pnpm db:push` (dev only) OR `pnpm db:migrate` (when ready)
+
+Pitfalls:
+- Do not add migrations to serverless handlers.
+- Keep DB RLS policies documented for later application; do not implement SQL in this step.
+
+Git:
+- Branch: `feat/db-schema`
+- Commits: `feat(db): add prisma schema and client singleton`
+- PR: “feat(db): multi-tenant base schema + client”
+
+Acceptance:
+- prisma client builds; generate works locally.
+- No runtime migrations in app code.
+
+---
+
+### Task Group D — @lostmind/auth (Depends on C)
+
+Objective:
+Auth.js v5 with Google provider; middleware gating and allowlist support.
+
+Scope and files:
+- `packages/auth/src/index.ts`:
+  - export `{ auth, handlers, signIn, signOut } = NextAuth({...})`
+  - `PrismaAdapter(prisma)`, Google provider, session callback attaches `user.id`, `tenantId`
+- `packages/auth/src/middleware.ts`:
+  - Protect `/app/*` routes, redirect to `/signin` if unauthenticated
+  - Read `ALLOWED_TESTERS` (comma-separated) to gate preview features
+
+App integration:
+- `apps/ask/middleware.ts` → re-export from `@lostmind/auth/middleware` or wrap to protect the app root.
+- `apps/ask`: add sign-in/out actions based on handlers if desired.
+
+Pitfalls:
+- Ensure callback adds necessary claims for tenant/roles to session token.
+- Keep Google OAuth client ID/secret only in Vercel env.
+
+Git:
+- Branch: `feat/auth-core`
+- Commits: `feat(auth): add auth.js v5 with google provider and middleware gating`
+- PR: “feat(auth): base authentication with tester allowlist”
+
+Acceptance:
+- Auth redirects work locally; allowlisted testers can access app.
+- Session includes `user.id` and `tenantId`.
+
+---
+
+### Task Group E — Ask Gating (After D)
+
+Objective:
+Soft-launch gating on Ask; keep mock AI.
+
+Scope and files:
+- `apps/ask/middleware.ts` — ensure gating on `/` and `/api/chat`
+- `apps/ask/app/api/chat/route.ts` — optionally enforce auth; if mock, accept both but prefer auth for parity
+
+Env:
+- `ALLOWED_TESTERS="email1@example.com,email2@domain.com"`
+
+Pitfalls:
+- Don’t block any future health endpoints.
+- Keep chat rate limits reasonable for soft launch.
+
+Git:
+- Branch: `fix/ask-auth-gating`
+- Commits: `fix(ask): add middleware allowlist gating for soft launch`
+- PR: “fix(ask): soft-launch auth gating and allowlist”
+
+Acceptance:
+- Only allowlisted users can access core Ask functionality.
+- Non-allowlisted users see redirect/message.
+
+---
+
+### Task Group F — Marketing MVP (After A/B)
+
+Objective:
+Scaffold `apps/marketing` MVP using shared config and UI.
+
+Scope and files:
+- `apps/marketing/app/{layout.tsx,page.tsx}`
+- Tailwind config extends `@lostmind/config/tailwind/base`
+- Pages: Home (hero + CTA), Pricing (tiers), Sign in
+
+Pitfalls:
+- Keep it minimal and fast; don’t re-implement components that exist in `@lostmind/ui`.
+
+Git:
+- Branch: `feat/marketing-mvp`
+- Commits: `feat(marketing): scaffold next.js 15 app with ui integration`
+- PR: “feat(marketing): MVP site with pricing and sign-in”
+
+Acceptance:
+- App runs locally and deploys to Vercel preview.
+
+---
+
+### Task Group G — Billing + Webhook (After C/D)
+
+Objective:
+Stripe billing foundation with product mapping and webhook handling.
+
+Scope and files:
+- `packages/billing/src/stripe.ts` — client factory
+- `packages/billing/src/products.ts` — product/price map → internal plans/features
+- `packages/billing/src/webhooks.ts` — handlers for:
+  - `checkout.session.completed`
+  - `customer.subscription.created|updated|deleted`
+  - `invoice.payment_succeeded|failed`
+- `apps/ask/app/api/stripe/webhook/route.ts` — verify signature and dispatch to handlers
+
+DB:
+- Update `subscriptions` and `entitlements` atomically (via prisma).
+
+Env:
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` in Vercel; never in repo.
+
+Pitfalls:
+- Use Stripe’s signature verification; handle retries idempotently.
+- Do not gate testers via Stripe if using allowlist; support both paths.
+
+Git:
+- Branch: `feat/billing-webhooks`
+- Commits: `feat(billing): add stripe client, mappings, webhook handlers`
+- PR: “feat(billing): stripe webhook integration with entitlement updates”
+
+Acceptance:
+- Webhooks update DB correctly; entitlements reflect plan in app.
+
+---
+
+### Task Group H — Terraform Reorg (Independent after Phase 0)
+
+Objective:
+Move Terraform to `infra/terraform/gcp` and unify project config.
+
+Scope and files:
+- Move root `terraform-gcp-config.txt` → `infra/terraform/gcp/main.tf`
+- Create `infra/terraform/gcp/variables.tf`, `outputs.tf`
+- Set/require:
+  - `variable "project_id"` (default or provided) = `"coral-muse-469919-m0"`
+  - `variable "region"` = `"us-central1"`
+  - `variable "environment"` = `"prod"` (or per workspace)
+- Use Secret Manager for Cloud Run env vars:
+  - In `google_cloud_run_v2_service`, set `env { value_source { secret_key_ref { … } } }`
+- Backend state:
+  - Ensure GCS bucket exists externally (bootstrap) before applying backend "gcs".
+
+DNS:
+- Point `api.lostmindai.com` A record at `load_balancer_ip` output.
+
+Pitfalls:
+- Don’t create state bucket in the same workspace using the backend it defines.
+- Keep artifact registry image references parameterized if needed.
+
+Git:
+- Branch: `chore/terraform-reorg`
+- Commits: `chore(infra): move gcp terraform under infra/terraform/gcp and unify project_id`
+- PR: “chore(infra): terraform reorg + project alignment”
+
+Acceptance:
+- `terraform init/plan` succeeds with `-var="project_id=coral-muse-469919-m0"`
+
+---
+
+### Task Group I — Secrets & Env Policy (Phase 0)
+
+Objective:
+Enforce clean env posture.
+
+Actions:
+- Remove `.env` and `.env.local` from repo and git history (rotate keys).
+- Keep `.env.example` only with placeholders.
+- Add `docs/secrets-policy.md`:
+  - Where secrets live (Vercel, GCP Secret Manager)
+  - Rotation procedures
+  - PR review checklist items for secrets
+
+Pitfalls:
+- Don’t paste secrets into PR descriptions or CI logs.
+
+Git:
+- Branch: `chore/secrets-policy`
+- Commits: `chore(security): remove local env files and add secrets policy`
+- PR: “chore(security): enforce secrets policy and clean env”
+
+Acceptance:
+- No secrets in repo; policy documented.
+
+---
+
+### Task Group J — @lostmind/ai-clients (Phase 4)
+
+Objective:
+Google Generative AI abstraction; later flip Ask off mock.
+
+Scope and files:
+- `packages/ai-clients/src/{index.ts,google.ts}` — define `AIProvider` interface and Google client
+- `apps/ask`: swap to import from `"@lostmind/ai-clients"` when ready; guard with env flag for fallback to mock.
+
+Pitfalls:
+- Keep provider swappable; don’t bake provider specifics into app.
+
+Git:
+- Branch: `feat/ai-clients`
+- Commits: `feat(ai-clients): google provider and provider interface`
+- PR: “feat(ai-clients): abstraction with google provider”
+
+Acceptance:
+- Ask uses real provider behind flag; mock remains for local/dev.
+
+---
+
+## Git Workflow & Conventions
+
+- Branch naming:
+  - `feat/...`, `fix/...`, `chore/...`, `refactor/...`, `docs/...`
+- Conventional commits:
+  - `feat(scope): summary`
+  - `fix(scope): summary`
+  - `chore(scope): summary`
+- PR checklist:
+  - Lint, type-check, tests passing
+  - No secrets added
+  - References exact files changed; screenshots if UI
+  - Notes on perf/SEO when relevant
+- CI:
+  - Keep `.github/workflows/ci.yml` active; avoid removing tests/build steps
+
+## Cost & Product Mapping
+
+- Add `docs/costs/{ask,marketing,chatcrawler,justdropit}.md` with:
+  - Expected usage (QPS, concurrency)
+  - Cloud Run min/max instances, timeouts, concurrency targets
+  - Storage/egress assumptions and levers
+- Stripe product mapping seed:
+  - `packages/billing/src/products.ts`: map product IDs and price IDs to internal plan names and entitlements
+  - Keep an operational checklist to sync Stripe changes into DB
+
+## Soft-Launch Gating Summary
+
+- Use `ALLOWED_TESTERS` env to allow access to premium features during testing.
+- Auth gate the Ask app root and core APIs.
+- Stripe webhooks to set `subscriptions` and `entitlements` for paid testers.
+- Optional: Manual allowlist path that bypasses Stripe for invited testers.
+
+## Verification Steps After Each Phase
+
+- Lint + type-check + build must pass (`pnpm lint`, `pnpm type-check`, `pnpm build`).
+- For billing: exercise webhook locally with Stripe CLI and confirm DB state.
+- For Terraform: `terraform validate` and `plan` with correct `project_id`.
+
+Notes
+- Python services are planned under `services/` only. The previously accidental `lostmind_ai_engine/` has been removed; keep all service code under `services/` per map.
+- Align all GCP references to `coral-muse-469919-m0` in Terraform and docs.
+- Keep Ask on mock AI until `@lostmind/ai-clients` is implemented and tested.
+
