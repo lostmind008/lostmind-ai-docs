@@ -150,6 +150,92 @@ pnpm clean
 - Uses environment variables for external service configuration
 - Sentry integration for error monitoring
 
+## Vercel Deployment Best Practices (2024/2025)
+
+### Critical Deployment Insights
+
+Based on extensive research and troubleshooting (September 2025), the following deployment patterns are essential for success:
+
+**Common Issues:**
+- Vercel web interface locks build command editing for monorepo + Mintlify combinations
+- Framework detection fails for Mintlify sites in monorepo structures
+- CLI deployment may encounter project naming validation errors
+- Default build settings don't work for Mintlify documentation sites
+
+**Proven Solutions:**
+
+### 1. Use vercel.json Configuration (Recommended)
+The most reliable deployment method is **configuration as code** using `vercel.json`:
+
+```json
+{
+  "buildCommand": "cd apps/docs && mintlify build",
+  "outputDirectory": "apps/docs/_site",
+  "installCommand": "pnpm install",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/apps/docs/$1"
+    }
+  ]
+}
+```
+
+**Key Configuration Elements:**
+- `framework: null` - Bypasses automatic framework detection
+- `cd apps/docs && mintlify build` - Ensures correct directory context
+- `apps/docs/_site` - Full path to Mintlify build output
+- Simplified routing for static documentation
+
+### 2. Web Interface Deployment Process
+When using Vercel web interface:
+
+1. **Repository**: Import `lostmind008/lostmind-ai-docs`
+2. **Framework Preset**: Select "Other" (never use Next.js preset)
+3. **Root Directory**: Leave as default (vercel.json handles this)
+4. **Build Commands**: Will be overridden by vercel.json
+5. **Environment Variables**: None required for basic Mintlify
+
+### 3. CLI Deployment (Alternative)
+If web interface fails:
+```bash
+# From project root
+vercel --prod --yes
+```
+
+**CLI Troubleshooting:**
+- Project naming errors: Use web interface for initial setup
+- Authentication issues: Run `gh auth refresh` with proper scopes
+- Build failures: Verify vercel.json configuration
+
+### 4. Deployment Verification
+After deployment, verify:
+- Documentation site loads correctly
+- Navigation functions properly
+- Search functionality works
+- Custom domain setup (if configured)
+
+### 5. Custom Domain Setup
+For `docs.lostmindai.com`:
+```
+Type: CNAME
+Name: docs
+Value: cname.vercel-dns.com
+TTL: 300
+```
+
+### Research Source
+These best practices are based on comprehensive research from Perplexity (September 2025) covering:
+- Vercel monorepo deployment patterns
+- Mintlify documentation platform integration
+- 2024/2025 industry best practices
+- Configuration as code approaches
+- Troubleshooting common deployment failures
+
+**Repository**: https://github.com/lostmind008/lostmind-ai-docs
+**Live Site**: docs.lostmindai.com (when deployed)
+
 ## Important Patterns
 
 ### Package Dependencies
