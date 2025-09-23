@@ -1,0 +1,51 @@
+---
+title: "Add a New Project"
+description: "How to add a new project to the docs and keep it consistent"
+---
+
+# Adding a New Project
+
+Use this checklist to add projects in a consistent way.
+
+## Steps
+
+1. Create a folder under `projects/<project-slug>/` with:
+   - `introduction.mdx`
+   - `readme.mdx`
+   - `architecture.mdx`
+   - `development.mdx` (optional)
+2. Add the pages to `mint.json` navigation under the appropriate group
+3. Link to upstream sources for canonical details (README, ADRs, runbooks)
+4. Keep frontmatter minimal: `title`, `description`, `category`, `lastUpdated`, `project`
+5. Use shared sections and components (Cards, Info, Tip, Warning)
+
+## Frontmatter Template
+
+```mdx
+---
+title: "<Project Name> - <Page>"
+description: "<short description>"
+category: "<category>"   
+lastUpdated: "<YYYY-MM-DD>" 
+project: "<project-slug>"
+---
+```
+
+## Section Template
+
+```mdx
+## Overview
+
+One paragraph on the purpose and scope.
+
+## Navigation
+
+- [README](./readme)
+- [Architecture](./architecture)
+- [Development](./development)
+
+## Key Details
+
+Bulleted highlights specific to this project.
+```
+

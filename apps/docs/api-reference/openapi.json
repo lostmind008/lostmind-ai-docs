@@ -1,17 +1,13 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
+    "title": "LostMind AI Example API",
+    "description": "Example OpenAPI used to demonstrate the docs API playground",
+    "license": { "name": "MIT" },
     "version": "1.0.0"
   },
   "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
+    { "url": "https://api.lostmindai.com" }
   ],
   "security": [
     {

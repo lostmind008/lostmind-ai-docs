@@ -1,6 +1,6 @@
 ---
 title: 'Development'
-description: 'Learn how to preview changes locally'
+description: 'Local preview, ports, deployment, and troubleshooting'
 ---
 
 <Info>
@@ -8,31 +8,27 @@ description: 'Learn how to preview changes locally'
   higher).
 </Info>
 
-Step 1. Install Mintlify on your OS:
+Step 1. Install the CLI:
 
 <CodeGroup>
 
-```bash npm
+```bash
 npm i -g mintlify
-```
-
-```bash yarn
-yarn global add mintlify
 ```
 
 </CodeGroup>
 
-Step 2. Go to the docs are located (where you can find `mint.json`) and run the following command:
+Step 2. From `apps/docs`, run the local server:
 
 ```bash
-mintlify dev
+mintlify dev --port 3004
 ```
 
-The documentation website is now available at `http://localhost:3000`.
+The documentation website is now available at `http://localhost:3004`.
 
 ### Custom Ports
 
-Mintlify uses port 3000 by default. You can use the `--port` flag to customize the port Mintlify runs on. For example, use this command to run in port 3333:
+Mintlify uses port 3000 by default. We run on 3004 to avoid conflicts. You can customize with `--port`:
 
 ```bash
 mintlify dev --port 3333
@@ -44,28 +40,15 @@ You will see an error like this if you try to run Mintlify in a port that's alre
 Error: listen EADDRINUSE: address already in use :::3000
 ```
 
-## Mintlify Versions
+## Keep the CLI updated
 
-Each CLI is linked to a specific version of Mintlify. Please update the CLI if your local website looks different than production.
+Update the CLI if local output diverges from production:
 
-<CodeGroup>
-
-```bash npm
+```bash
 npm i -g mintlify@latest
 ```
 
-```bash yarn
-yarn global upgrade mintlify
-```
-
-</CodeGroup>
-
 ## Deployment
-
-<Tip>
-  Unlimited editors available under the [Startup
-  Plan](https://mintlify.com/pricing)
-</Tip>
 
 You should see the following if the deploy successfully went through:
 
@@ -78,8 +61,8 @@ You should see the following if the deploy successfully went through:
 Here's how to solve some common problems when working with the CLI.
 
 <AccordionGroup>
-  <Accordion title="Mintlify is not loading">
-    Update to Node v18. Run `mintlify install` and try again.
+  <Accordion title="Site is not loading">
+    Use Node v18+. Reinstall the CLI and try again.
   </Accordion>
   <Accordion title="No such file or directory on Windows">
 Go to the `C:/Users/Username/.mintlify/` directory and remove the `mint`
@@ -95,4 +78,3 @@ Repeat step 3.
   </Accordion>
 </AccordionGroup>
 
-Curious about what changed in a CLI version? [Check out the CLI changelog.](/changelog/command-line)
