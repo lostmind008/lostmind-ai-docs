@@ -29,12 +29,7 @@
     "name": "Try LostMind AI",
     "url": "https://ask.lostmindai.com"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
+  
   "anchors": [
     {
       "name": "Main Platform",
@@ -62,14 +57,12 @@
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Docs System",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "docs-system/writing-content",
+        "docs-system/navigation",
+        "docs-system/branding",
+        "docs-system/snippets"
       ]
     },
     {
@@ -103,18 +96,13 @@
         "projects/lostmind-ai-contextkeeper/architecture"
       ]
     },
+    
     {
-      "group": "API Documentation",
+      "group": "Contributing",
       "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "contributing/overview",
+        "contributing/adding-projects",
+        "contributing/content-style"
       ]
     }
   ],
