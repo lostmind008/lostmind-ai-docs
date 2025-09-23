@@ -29,12 +29,7 @@
     "name": "Try LostMind AI",
     "url": "https://ask.lostmindai.com"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
+  
   "anchors": [
     {
       "name": "Main Platform",
@@ -101,12 +96,7 @@
         "projects/lostmind-ai-contextkeeper/architecture"
       ]
     },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
-    },
+    
     {
       "group": "Contributing",
       "pages": [
